@@ -1,7 +1,6 @@
 package advertiser
 
 import (
-	"dotanet/db"
 	"log"
 	"net/http"
 
