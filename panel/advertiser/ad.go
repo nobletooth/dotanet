@@ -3,19 +3,10 @@ package advertiser
 import (
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
-
-type AdInfo struct {
-	Id           uint    `json:"id"`
-	Title        string  `json:"title"`
-	Image        string  `json:"image"`
-	Price        float64 `json:"price"`
-	Status       bool    `json:"status"`
-	Url          string  `json:"url"`
-	AdvertiserId uint    `gorm:"foreignKey:advertiserid"`
-}
 
 type Ad struct {
 	Id           uint    `gorm:"column:id;primary_key"`
@@ -26,49 +17,41 @@ type Ad struct {
 	Clicks       int     `gorm:"column:clicks"`
 	Impressions  int     `gorm:"column:impressions"`
 	Url          string  `gorm:"column:url"`
-	AdvertiserId uint    `gorm:"foreignKey:advertiserid"`
+	AdvertiserId uint64  `gorm:"foreignKey:AdvertiserId"`
 }
 
-type AdService struct {
-	db *Database
+func CreateAdHandler(c *gin.Context) {
+	var ad Ad
+	ad.Title = c.PostForm("title")
+	ad.Image = c.PostForm("image")
+	ad.Price, _ = strconv.ParseFloat(c.PostForm("price"), 64)
+	ad.Url = c.PostForm("url")
+	ad.AdvertiserId, _ = strconv.ParseUint(c.PostForm("advertiser_id"), 10, 32)
+	ad.Status = true
+
+	if err := DB.Create(&ad).Error; err != nil {
+		log.Printf("Creating ad failed: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Creating ad failed"})
+		return
+	}
+	c.Redirect(http.StatusSeeOther, "/advertisers/"+strconv.Itoa(int(ad.AdvertiserId))+"/ads")
 }
 
-func NewAdService(db *Database) AdService {
-	return AdService{db: db}
-}
-
-func (ad *AdInfo) CreateAd(db *Database) gin.HandlerFunc {
-
-	return func(c *gin.Context) {
-		if ad.Title == "" || ad.Image == "" || ad.Price == 0 || ad.Url == "" || ad.AdvertiserId == 0 {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Missing required fields"})
-			return
-		}
-		ad.Status = true
-		entity := MapEntity(*ad)
-
-		if err := db.DB.Create(&entity).Error; err != nil {
-			log.Printf("Creating ad failed: %v", err)
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Creating ad failed"})
-			return
-		}
-		c.JSON(http.StatusCreated, gin.H{"message": "Ad created successfully", "ad": entity})
+func ListAdsByAdvertiserHandler(c *gin.Context) {
+	idStr := c.Param("id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		c.HTML(http.StatusBadRequest, "index", gin.H{"error": "Invalid advertiser ID"})
+		return
 	}
 
-}
-
-func MapEntity(ad AdInfo) Ad {
-	return Ad{
-		Id:           ad.Id,
-		Title:        ad.Title,
-		Image:        ad.Image,
-		Price:        ad.Price,
-		Status:       ad.Status,
-		Url:          ad.Url,
-		AdvertiserId: ad.AdvertiserId,
-		Clicks:       0,
-		Impressions:  0,
+	ads, err := ListAdsByAdvertiser(uint(id))
+	if err != nil {
+		c.HTML(http.StatusInternalServerError, "index", gin.H{"error": err.Error()})
+		return
 	}
+
+	c.HTML(http.StatusOK, "advertiser_ads", gin.H{"Ads": ads})
 }
 
 func CTR(entity Ad) float64 {
@@ -77,7 +60,7 @@ func CTR(entity Ad) float64 {
 	}
 	return float64(entity.Clicks) / float64(entity.Impressions)
 }
+
 func CostCalculator(entity Ad) float64 {
 	return float64(entity.Clicks) * entity.Price
-
 }

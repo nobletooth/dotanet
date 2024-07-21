@@ -12,6 +12,7 @@ type Entity struct {
 	ID     uint   `gorm:"primaryKey;autoIncrement"`
 	Name   string `gorm:"unique;not null"`
 	Credit int    `gorm:"column:credit"`
+	Ads    []Ad   `gorm:"foreignKey:AdvertiserId"`
 }
 
 type Service interface {
@@ -19,6 +20,7 @@ type Service interface {
 	CreateAdvertiserEntity(name string, credit int)
 	ListAllAdvertiserEntities() []Entity
 	FindAdvertiserByName(name string) (Entity, error)
+	ListAdsByAdvertiser(advertiserId uint) ([]Ad, error)
 }
 
 func GetCreditOfAdvertiser(adId int) (int, error) {
@@ -53,11 +55,20 @@ func FindAdvertiserByName(name string) (Entity, error) {
 	return entity, nil
 }
 
+func ListAdsByAdvertiser(advertiserId uint) ([]Ad, error) {
+	var ads []Ad
+	result := DB.Where("advertiser_id = ?", advertiserId).Find(&ads)
+	return ads, result.Error
+}
+
 func LoadTemplates(templatesDir string) multitemplate.Renderer {
 	r := multitemplate.NewRenderer()
 	r.AddFromFiles("index", templatesDir+"/index.html")
 	r.AddFromFiles("create_advertiser", templatesDir+"/create_advertiser.html")
 	r.AddFromFiles("advertiser_credit", templatesDir+"/advertiser_credit.html")
+	r.AddFromFiles("ads", templatesDir+"/ads.html")
+	r.AddFromFiles("create_ad", templatesDir+"/create_ad.html")
+	r.AddFromFiles("advertiser_ads", templatesDir+"/advertiser_ads.html")
 	return r
 }
 
