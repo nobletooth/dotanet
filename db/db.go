@@ -1,7 +1,10 @@
 package db
 
 import (
+	"flag"
 	"fmt"
+
+	"example.com/dotanet/advertiser/advertiser"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -11,13 +14,21 @@ type Database struct {
 	DB *gorm.DB
 }
 
-const (
-	user     = "postgres"
-	password = "Ala.13495782"
-	dbname   = "todo"
-	port     = "5432"
-	host     = "localhost"
+var (
+	user     string
+	password string
+	dbname   string
+	port     string
+	host     string
 )
+
+func init() {
+	flag.StringVar(&user, "dbuser", "postgres", "Database user")
+	flag.StringVar(&password, "dbpassword", "Ala.13495782", "Database password")
+	flag.StringVar(&dbname, "dbname", "todo", "Database name")
+	flag.StringVar(&port, "dbport", "5432", "Database port")
+	flag.StringVar(&host, "dbhost", "localhost", "Database host")
+}
 
 func NewDatabase() (*Database, error) {
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable",
@@ -27,7 +38,9 @@ func NewDatabase() (*Database, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to connect to database: %w", err)
 	}
-	err = db.AutoMigrate(&entitys.TodoLists{})
+
+	err = db.AutoMigrate(&advertiser.AdvertiserEntity{})
+	err = db.AutoMigrate(&advertiser.AdvertiserEntity{})
 	if err != nil {
 		return nil, fmt.Errorf("failed to migrate database: %w", err)
 	}
