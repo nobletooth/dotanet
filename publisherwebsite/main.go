@@ -27,7 +27,7 @@ func main() {
 	// digikalaHandler
 	router.GET("/digikala", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "digikala/index.tmpl", gin.H{
-			"title": "Digikala",
+			"title": "Digikalaaaaaaaaa",
 		})
 	})
 
