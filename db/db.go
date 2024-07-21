@@ -1,3 +1,5 @@
+package db
+
 import (
  "flag"
  "fmt"
