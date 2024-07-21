@@ -3,14 +3,14 @@ package advertiser
 import "example.com/dotanet/db"
 
 type AdvertiserRequestDto struct {
- Creadit int    json:"amount"
- Name    string json:"name"
+ Creadit int    `json:"amount"`
+ Name    string `json:"name"`
 }
 
 type AdvertiserEntity struct {
- ID     uint   gorm:"primaryKey;autoIncrement" // Unique identifier, auto-incrementing
- Name   string gorm:"unique;not null"          // Unique name, optional but ensures that the name is unique
- Credit int    gorm:"column:credit"            // Fixed typo for the column name
+ ID     uint   `gorm:"primaryKey;autoIncrement"` // Unique identifier, auto-incrementing
+ Name   string `gorm:"unique;not null"`          // Unique name, optional but ensures that the name is unique
+ Credit int    `gorm:"column:credit"`            // Fixed typo for the column name
 }
 
 type Advertiserservice interface {
