@@ -53,6 +53,10 @@ func ListAdsByAdvertiserHandler(c *gin.Context) {
 
 	c.HTML(http.StatusOK, "advertiser_ads", gin.H{"Ads": ads})
 }
+func CreateAdForm(c *gin.Context) {
+	advertiserID := c.Query("advertiser_id")
+	c.HTML(http.StatusOK, "create_ad", gin.H{"AdvertiserID": advertiserID})
+}
 
 func CTR(entity Ad) float64 {
 	if entity.Impressions == 0 {
