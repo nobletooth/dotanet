@@ -1,36 +1,21 @@
 package main
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
-	"net/http"
 )
+
+func formatAsDate(t time.Time) string {
+	year, month, day := t.Date()
+	return fmt.Sprintf("%d/%02d/%02d", year, month, day)
+}
 
 func main() {
 	//pgConnection()
 	router := gin.Default()
-	router.LoadHTMLGlob("./publisherwebsite/html/*")
 
-	router.GET("/torob", torobHandler())
-	router.GET("/samsung", samsungHandler())
-	router.GET("/digiland", digilandHandler())
+	router.GET("/")
+	router.POST("/")
 
 	router.Run(":6060")
-}
-
-func torobHandler() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		c.HTML(http.StatusOK, "varzesh3.html", gin.H{})
-	}
-}
-
-func samsungHandler() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		c.HTML(http.StatusOK, "varzesh3.html", gin.H{})
-	}
-}
-
-func digilandHandler() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		c.HTML(http.StatusOK, "varzesh3.html", gin.H{})
-	}
 }
