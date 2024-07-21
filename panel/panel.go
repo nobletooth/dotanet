@@ -1,0 +1,5 @@
+package panel
+
+func PanelHandler() {
+
+}
