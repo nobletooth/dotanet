@@ -12,7 +12,15 @@ func main() {
 	router := gin.Default()
 	router.LoadHTMLGlob("./publisherwebsite/html/*")
 
-	router.GET("/:sitename", siteHandler())
+	// digikalaHandler
+	router.GET("/digikala", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "digikala/index.tmpl", gin.H{
+			"title": "Digikala",
+		})
+	})
+
+	router.GET("/", defaultHandler)
+	router.POST("/", defaultHandler)
 
 	router.Run(":6060")
 }
