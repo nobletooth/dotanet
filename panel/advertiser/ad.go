@@ -6,9 +6,9 @@ type Ad struct {
 	Image       string  `json:"image"`
 	Price       float64 `json:"price"`
 	Status      bool    `json:"status"`
-	Url         string  `json:"url"`
 	Clicks      int     `json:"clicks"`
 	Impressions int     `json:"impressions"`
+	Url         string  `json:"url"`
 }
 
 func CTR(ad *Ad) float64 {
