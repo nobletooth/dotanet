@@ -11,7 +11,7 @@ import (
 type Ad struct {
 	Id           uint    `gorm:"column:id;primary_key"`
 	Title        string  `gorm:"column:title"`
-	Image        string  `:image"`
+	Image        string  `gorm:"column:image"`
 	Price        float64 `gorm:"column:price"`
 	Status       bool    `gorm:"column:status"`
 	Clicks       int     `gorm:"column:clicks"`
@@ -20,6 +20,18 @@ type Ad struct {
 	AdvertiserId uint    `gorm:"foreignKey:advertiserid"`
 }
 
+// type Ad struct {
+// 	Id           uint    `json:"id"`
+// 	Title        string  `json:"title"`
+// 	Image        string  `json:"image"`
+// 	Price        float64 `json:"price"`
+// 	Status       bool   `json:"status"`
+// 	Clicks       int     `json:"clicks"`
+// 	Impressions  int     `json:"impressions"`
+// 	Url          string  `json:"url"`
+// 	AdvertiserId uint    `gorm:"foreignKey:advertiserid"`
+// }
+
 func CreateAd(db *gorm.DB) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var form Ad
@@ -27,7 +39,7 @@ func CreateAd(db *gorm.DB) gin.HandlerFunc {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
-		if form.Title == "" || form.Image == "" || form.Price == 0 || form.Url == "" || form.AdvertiserId == 0 {
+		if form.Title == "" || form.Image == "" || form.Price == 0 || form.Url == "" {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Missing required fields"})
 			return
 		}
@@ -90,4 +102,8 @@ func UpdateAd(db *gorm.DB) gin.HandlerFunc {
 		}
 		c.JSON(http.StatusOK, gin.H{"message": "Ad updated successfully", "ad": updatedForm})
 	}
+}
+
+func RenderCreateAdForm(c *gin.Context) {
+	c.HTML(http.StatusOK, "create_ad.html", gin.H{})
 }
