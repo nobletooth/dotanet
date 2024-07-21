@@ -1,59 +1,99 @@
 package advertiser
 
-type AdvertiserRequestDto struct {
-	Creadit int    `json:"amount"`
-	Name    string `json:"name"`
+import (
+	"net/http"
+	"strconv"
+
+	"github.com/gin-contrib/multitemplate"
+	"github.com/gin-gonic/gin"
+)
+
+type Entity struct {
+	ID     uint   `gorm:"primaryKey;autoIncrement"`
+	Name   string `gorm:"unique;not null"`
+	Credit int    `gorm:"column:credit"`
 }
 
-type AdvertiserEntity struct {
-	ID     uint   `gorm:"primaryKey;autoIncrement"` // Unique identifier, auto-incrementing
-	Name   string `gorm:"unique;not null"`          // Unique name, optional but ensures that the name is unique
-	Credit int    `gorm:"column:credit"`            // Fixed typo for the column name
+type Service interface {
+	GetCreditOfAdvertiser(adId int) (int, error)
+	CreateAdvertiserEntity(name string, credit int)
+	ListAllAdvertiserEntities() []Entity
+	FindAdvertiserByName(name string) (Entity, error)
 }
 
-type Advertiserservice interface {
-	GetCreaditOfAdvertiser(adId int) (int, error)
-	CreateAdvertiserEntity(AdvertiserRequestDto)
-	ListAllAdvertiserEntity() []AdvertiserEntity
-	FindAdvertiserByName(name string) (AdvertiserEntity, error)
-}
-
-type AdvertiService struct {
-	db *Database
-}
-
-func NewAdvertiserService(db *Database) AdvertiService {
-	return AdvertiService{db: db}
-}
-
-func (p *AdvertiService) CreateAdvertiserEntity(dto AdvertiserRequestDto) {
-	entity := AdvertiserEntity{
-		Credit: dto.Creadit,
-		Name:   dto.Name,
-	}
-	p.db.DB.Save(&entity)
-}
-
-func (p *AdvertiService) ListAllAdvertiserEntity() []AdvertiserEntity {
-	var advertisers []AdvertiserEntity
-	p.db.DB.Find(&advertisers)
-	return advertisers
-}
-
-func (p *AdvertiService) GetCreaditOfAdvertiser(adId int) (int, error) {
-	var entity AdvertiserEntity
-	result := p.db.DB.First(&entity, adId)
+func GetCreditOfAdvertiser(adId int) (int, error) {
+	var entity Entity
+	result := DB.First(&entity, adId)
 	if result.Error != nil {
 		return 0, result.Error
 	}
 	return entity.Credit, nil
 }
 
-func (p *AdvertiService) FindAdvertiserByName(name string) (AdvertiserEntity, error) {
-	var entity AdvertiserEntity
-	result := p.db.DB.Where("name = ?", name).First(&entity)
+func CreateAdvertiserEntity(name string, credit int) {
+	entity := Entity{
+		Name:   name,
+		Credit: credit,
+	}
+	DB.Create(&entity)
+}
+
+func ListAllAdvertiserEntities() []Entity {
+	var advertisers []Entity
+	DB.Find(&advertisers)
+	return advertisers
+}
+
+func FindAdvertiserByName(name string) (Entity, error) {
+	var entity Entity
+	result := DB.Where("name = ?", name).First(&entity)
 	if result.Error != nil {
-		return AdvertiserEntity{}, result.Error
+		return Entity{}, result.Error
 	}
 	return entity, nil
+}
+
+func LoadTemplates(templatesDir string) multitemplate.Renderer {
+	r := multitemplate.NewRenderer()
+	r.AddFromFiles("index", templatesDir+"/index.html")
+	r.AddFromFiles("create_advertiser", templatesDir+"/create_advertiser.html")
+	r.AddFromFiles("advertiser_credit", templatesDir+"/advertiser_credit.html")
+	return r
+}
+
+func ListAdvertisers(c *gin.Context) {
+	advertisers := ListAllAdvertiserEntities()
+	c.HTML(http.StatusOK, "index", gin.H{"Advertisers": advertisers})
+}
+
+func NewAdvertiserForm(c *gin.Context) {
+	c.HTML(http.StatusOK, "create_advertiser", nil)
+}
+
+func CreateAdvertiser(c *gin.Context) {
+	name := c.PostForm("name")
+	credit, err := strconv.Atoi(c.PostForm("credit"))
+	if err != nil {
+		c.HTML(http.StatusBadRequest, "create_advertiser", gin.H{"error": "Invalid credit amount"})
+		return
+	}
+	CreateAdvertiserEntity(name, credit)
+	c.Redirect(http.StatusSeeOther, "/")
+}
+
+func GetAdvertiserCredit(c *gin.Context) {
+	idStr := c.Param("id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		c.HTML(http.StatusBadRequest, "index", gin.H{"error": "Invalid advertiser ID"})
+		return
+	}
+
+	credit, err := GetCreditOfAdvertiser(id)
+	if err != nil {
+		c.HTML(http.StatusInternalServerError, "index", gin.H{"error": err.Error()})
+		return
+	}
+
+	c.HTML(http.StatusOK, "advertiser_credit", credit)
 }

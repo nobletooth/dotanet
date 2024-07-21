@@ -19,7 +19,7 @@ func main() {
 	}
 	defer database.Close()
 
-	if err := database.AutoMigrate(&advertiser.AdvertiserEntity{}); err != nil {
+	if err := database.AutoMigrate(&advertiser.Entity{}); err != nil {
 		log.Fatalf("failed to migrate database: %v", err)
 	}
 

@@ -29,7 +29,15 @@ type Ad struct {
 	AdvertiserId uint    `gorm:"foreignKey:advertiserid"`
 }
 
-func (ad *AdInfo) CreateAd(db *db.Database) gin.HandlerFunc {
+type AdService struct {
+	db *Database
+}
+
+func NewAdService(db *Database) AdService {
+	return AdService{db: db}
+}
+
+func (ad *AdInfo) CreateAd(db *Database) gin.HandlerFunc {
 
 	return func(c *gin.Context) {
 		if ad.Title == "" || ad.Image == "" || ad.Price == 0 || ad.Url == "" || ad.AdvertiserId == 0 {
@@ -38,6 +46,7 @@ func (ad *AdInfo) CreateAd(db *db.Database) gin.HandlerFunc {
 		}
 		ad.Status = true
 		entity := MapEntity(*ad)
+
 		if err := db.DB.Create(&entity).Error; err != nil {
 			log.Printf("Creating ad failed: %v", err)
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Creating ad failed"})
@@ -70,4 +79,5 @@ func CTR(entity Ad) float64 {
 }
 func CostCalculator(entity Ad) float64 {
 	return float64(entity.Clicks) * entity.Price
+
 }
