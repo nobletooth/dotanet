@@ -12,21 +12,27 @@ import (
 
 func LoadTemplates(templatesDir string) multitemplate.Renderer {
 	r := multitemplate.NewRenderer()
-	r.AddFromFiles("index.html", templatesDir+"/index.html")
-	r.AddFromFiles("advertisers.html", templatesDir+"/advertisers.html")
-	r.AddFromFiles("publishers.html", templatesDir+"/publishers.html")
-	r.AddFromFiles("create_publisher.html", templatesDir+"/create_publisher.html")
-	r.AddFromFiles("view.html", templatesDir+"/view.html")
-	r.AddFromFiles("create_advertiser.html", templatesDir+"/create_advertiser.html")
-	r.AddFromFiles("advertiser_credit.html", templatesDir+"/advertiser_credit.html")
-	r.AddFromFiles("create_ad.html", templatesDir+"/create_ad.html")
-	r.AddFromFiles("advertiser_ads.html", templatesDir+"/advertiser_ads.html")
+	r.AddFromFiles("index", templatesDir+"/index.html")
+	r.AddFromFiles("create_advertiser", templatesDir+"/create_advertiser.html")
+	r.AddFromFiles("advertisers", templatesDir+"/advertisers.html") // Add this line
+	r.AddFromFiles("advertiser_credit", templatesDir+"/advertiser_credit.html")
+	r.AddFromFiles("create_ad", templatesDir+"/create_ad.html")
+	r.AddFromFiles("advertiser_ads", templatesDir+"/advertiser_ads.html")
+	r.AddFromFiles("publishers", templatesDir+"/publishers.html")
+	r.AddFromFiles("create_publisher", templatesDir+"/create_publisher.html")
+	r.AddFromFiles("view_publisher", templatesDir+"/view.html")
 	return r
 }
 
 func main() {
 	if err := common.NewDatabase(); err != nil {
 		log.Fatalf("failed to initialize database: %v", err)
+	}
+	err := common.DB.AutoMigrate(&publisher.Publisher{})
+	err = common.DB.AutoMigrate(&advertiser.Ad{}, &advertiser.Ad{})
+	if err != nil {
+		log.Fatalf("failed to migrate database: %v", err)
+
 	}
 
 	router := gin.Default()
@@ -55,5 +61,5 @@ func main() {
 }
 
 func homeHandler(c *gin.Context) {
-	c.HTML(http.StatusOK, "index.html", nil)
+	c.HTML(http.StatusOK, "index", nil)
 }

@@ -4,20 +4,11 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a950d744-e0de-442f-a1f9-7b47d9f265f2" name="Changes" comment=".">
-      <change afterPath="$PROJECT_DIR$/panel/templates/advertisers.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/panel/templates/combined.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/panel/templates/create_publisher.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/panel/templates/publishers.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/panel/templates/view.html" afterDir="false" />
+    <list default="true" id="a950d744-e0de-442f-a1f9-7b47d9f265f2" name="Changes" comment="add basic function of publishers and change the code  architecture">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/panel/advertiser/ad.go" beforeDir="false" afterPath="$PROJECT_DIR$/panel/advertiser/ad.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/panel/advertiser/advertiser.go" beforeDir="false" afterPath="$PROJECT_DIR$/panel/advertiser/advertiser.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/panel/advertiser/db.go" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/panel/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/panel/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/panel/publisher/db.go" beforeDir="false" afterPath="$PROJECT_DIR$/panel/common/db.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/panel/publisher/publisher.go" beforeDir="false" afterPath="$PROJECT_DIR$/panel/publisher/publisher.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/panel/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/panel/templates/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -89,7 +80,8 @@
     <MESSAGE value="gitignore correction." />
     <MESSAGE value="script of digiland and digiland.html changed" />
     <MESSAGE value="." />
-    <option name="LAST_COMMIT_MESSAGE" value="." />
+    <MESSAGE value="add basic function of publishers and change the code  architecture" />
+    <option name="LAST_COMMIT_MESSAGE" value="add basic function of publishers and change the code  architecture" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
