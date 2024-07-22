@@ -1,10 +1,10 @@
 package advertiser
 
 import (
+	"example.com/dotanet/panel/common"
+	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
-
-	"github.com/gin-gonic/gin"
 )
 
 type Entity struct {
@@ -22,9 +22,18 @@ type Service interface {
 	ListAdsByAdvertiser(advertiserId uint) ([]Ad, error)
 }
 
+func init() {
+	err := common.DB.AutoMigrate(&Ad{}, &Entity{})
+	if err != nil {
+		panic(err)
+	}
+
+}
+
 func GetCreditOfAdvertiser(adId int) (Entity, error) {
 	var entity Entity
-	result := DB.First(&entity, adId)
+
+	result := common.DB.First(&entity, adId)
 	if result.Error != nil {
 		return entity, result.Error
 	}
@@ -36,18 +45,18 @@ func CreateAdvertiserEntity(name string, credit int) {
 		Name:   name,
 		Credit: credit,
 	}
-	DB.Create(&entity)
+	common.DB.Create(&entity)
 }
 
 func ListAllAdvertiserEntities() []Entity {
 	var advertisers []Entity
-	DB.Find(&advertisers)
+	common.DB.Find(&advertisers)
 	return advertisers
 }
 
 func FindAdvertiserByName(name string) (Entity, error) {
 	var entity Entity
-	result := DB.Where("name = ?", name).First(&entity)
+	result := common.DB.Where("name = ?", name).First(&entity)
 	if result.Error != nil {
 		return Entity{}, result.Error
 	}
@@ -56,7 +65,7 @@ func FindAdvertiserByName(name string) (Entity, error) {
 
 func ListAdsByAdvertiser(advertiserId uint) ([]Ad, error) {
 	var ads []Ad
-	result := DB.Where("advertiser_id = ?", advertiserId).Find(&ads)
+	result := common.DB.Where("advertiser_id = ?", advertiserId).Find(&ads)
 	return ads, result.Error
 }
 
@@ -106,7 +115,7 @@ func EditAdForm(c *gin.Context) {
 	}
 
 	var ad Ad
-	result := DB.First(&ad, adID)
+	result := common.DB.First(&ad, adID)
 	if result.Error != nil {
 		c.HTML(http.StatusInternalServerError, "index", gin.H{"error": result.Error.Error()})
 		return
@@ -124,7 +133,7 @@ func UpdateAdHandler(c *gin.Context) {
 	}
 
 	var ad Ad
-	result := DB.First(&ad, adID)
+	result := common.DB.First(&ad, adID)
 	if result.Error != nil {
 		c.HTML(http.StatusInternalServerError, "index", gin.H{"error": result.Error.Error()})
 		return
@@ -135,7 +144,7 @@ func UpdateAdHandler(c *gin.Context) {
 	ad.Price, _ = strconv.ParseFloat(c.PostForm("price"), 64)
 	ad.Url = c.PostForm("url")
 
-	if err := DB.Save(&ad).Error; err != nil {
+	if err := common.DB.Save(&ad).Error; err != nil {
 		c.HTML(http.StatusInternalServerError, "edit_ad", gin.H{"error": "Updating ad failed", "Ad": ad})
 		return
 	}
