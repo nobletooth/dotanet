@@ -4,7 +4,10 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a950d744-e0de-442f-a1f9-7b47d9f265f2" name="Changes" comment="adding feture such as script passing  and script writing &#10;adding html to the code that be able to get script&#10;---------------------&#10;&#10;&#10;writing an api that can pass the image to the  publisher" />
+    <list default="true" id="a950d744-e0de-442f-a1f9-7b47d9f265f2" name="Changes" comment="gitignore correction.">
+      <change afterPath="$PROJECT_DIR$/panel/script/digikala" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/publisherwebsite/html/digikala.html" beforeDir="false" afterPath="$PROJECT_DIR$/publisherwebsite/html/digikala.html" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -14,8 +17,6 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="JavaScript File" />
-        <option value="Go File" />
-        <option value="HTML File" />
       </list>
     </option>
   </component>
@@ -36,10 +37,6 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "DefaultGoTemplateProperty": "Go File",
-    "DefaultHtmlFileTemplate": "HTML File",
-    "Notification.DisplayName-DoNotAsk-GitHub Copilot": "GitHub Copilot",
-    "Notification.DoNotAsk-GitHub Copilot": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.go.formatter.settings.were.checked": "true",
     "RunOnceActivity.go.migrated.go.modules.settings": "true",
@@ -54,13 +51,6 @@
     "nodejs_package_manager_path": "npm"
   }
 }]]></component>
-  <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\Click\Desktop\dotanet\panel" />
-      <recent name="C:\Users\Click\Desktop\dotanet\panel\common" />
-      <recent name="C:\Users\Click\Desktop\dotanet\panel\publisher" />
-    </key>
-  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -73,25 +63,9 @@
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
-  <component name="Vcs.Log.Tabs.Properties">
-    <option name="TAB_STATES">
-      <map>
-        <entry key="MAIN">
-          <value>
-            <State />
-          </value>
-        </entry>
-      </map>
-    </option>
-  </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="gitignore correction." />
-    <MESSAGE value="script of digiland and digiland.html changed" />
-    <MESSAGE value="." />
-    <MESSAGE value="add basic function of publishers and change the code  architecture" />
-    <MESSAGE value="done the structure and imp of pael , publisher ui" />
-    <MESSAGE value="adding feture such as script passing  and script writing &#10;adding html to the code that be able to get script&#10;---------------------&#10;&#10;&#10;writing an api that can pass the image to the  publisher" />
-    <option name="LAST_COMMIT_MESSAGE" value="adding feture such as script passing  and script writing &#10;adding html to the code that be able to get script&#10;---------------------&#10;&#10;&#10;writing an api that can pass the image to the  publisher" />
+    <option name="LAST_COMMIT_MESSAGE" value="gitignore correction." />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
