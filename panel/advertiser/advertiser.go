@@ -22,6 +22,14 @@ type Service interface {
 	ListAdsByAdvertiser(advertiserId uint) ([]Ad, error)
 }
 
+func init() {
+	err := common.DB.AutoMigrate(&Ad{}, &Entity{})
+	if err != nil {
+		panic(err)
+	}
+
+}
+
 func GetCreditOfAdvertiser(adId int) (Entity, error) {
 	var entity Entity
 
@@ -46,27 +54,6 @@ func ListAllAdvertiserEntities() []Entity {
 	return advertisers
 }
 
-func ListAdsByAdvertiserHandler(c *gin.Context) {
-	idStr := c.Param("id")
-	id, err := strconv.Atoi(idStr)
-	if err != nil {
-		c.HTML(http.StatusBadRequest, "index", gin.H{"error": "Invalid advertiser ID"})
-		return
-	}
-	ads, err := ListAdsByAdvertiser(uint(id))
-	if err != nil {
-		c.HTML(http.StatusInternalServerError, "index", gin.H{"error": err.Error()})
-		return
-	}
-
-	advertiser, err := FindAdvertiserByID(uint(id))
-	if err != nil {
-		c.HTML(http.StatusInternalServerError, "index", gin.H{"error": err.Error()})
-		return
-	}
-
-	c.HTML(http.StatusOK, "advertiser_ads", gin.H{"Ads": ads, "Advertiser": advertiser})
-}
 func FindAdvertiserByName(name string) (Entity, error) {
 	var entity Entity
 	result := common.DB.Where("name = ?", name).First(&entity)
@@ -84,8 +71,9 @@ func ListAdsByAdvertiser(advertiserId uint) ([]Ad, error) {
 
 func ListAdvertisers(c *gin.Context) {
 	advertisers := ListAllAdvertiserEntities()
-	c.HTML(http.StatusOK, "advertisers", gin.H{"Advertisers": advertisers})
+	c.HTML(http.StatusOK, "index", gin.H{"Advertisers": advertisers})
 }
+
 func NewAdvertiserForm(c *gin.Context) {
 	c.HTML(http.StatusOK, "create_advertiser", nil)
 }
@@ -134,4 +122,32 @@ func EditAdForm(c *gin.Context) {
 	}
 
 	c.HTML(http.StatusOK, "edit_ad", gin.H{"Ad": ad})
+}
+
+func UpdateAdHandler(c *gin.Context) {
+	adIDStr := c.Param("id")
+	adID, err := strconv.Atoi(adIDStr)
+	if err != nil {
+		c.HTML(http.StatusBadRequest, "index", gin.H{"error": "Invalid ad ID"})
+		return
+	}
+
+	var ad Ad
+	result := common.DB.First(&ad, adID)
+	if result.Error != nil {
+		c.HTML(http.StatusInternalServerError, "index", gin.H{"error": result.Error.Error()})
+		return
+	}
+
+	ad.Title = c.PostForm("title")
+	ad.Image = c.PostForm("image")
+	ad.Price, _ = strconv.ParseFloat(c.PostForm("price"), 64)
+	ad.Url = c.PostForm("url")
+
+	if err := common.DB.Save(&ad).Error; err != nil {
+		c.HTML(http.StatusInternalServerError, "edit_ad", gin.H{"error": "Updating ad failed", "Ad": ad})
+		return
+	}
+
+	c.Redirect(http.StatusSeeOther, "/advertisers/"+strconv.Itoa(int(ad.AdvertiserId))+"/ads")
 }

@@ -6,10 +6,14 @@
 <body>
 <h1>Create Publisher</h1>
 <form action="/publishers" method="POST">
-    <label for="url">URL:</label>
-    <input type="text" id="url" name="url" required>
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required>
+    <br>
+    <label for="script">Script:</label>
+    <textarea id="script" name="script" required></textarea>
+    <br>
     <button type="submit">Create</button>
 </form>
-<a href="/publishers">Back to Publishers</a>
+<a href="/">Back to Publishers</a>
 </body>
 </html>

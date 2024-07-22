@@ -2,27 +2,13 @@
 <html>
 <head>
     <title>Publisher Details</title>
-    <script>
-    function fetchScript(publisherId) {
-    fetch('/publishers/' + publisherId + '/script')
-    .then(response => response.text())
-    .then(data => {
-    document.getElementById('script-content').innerText = data;
-    })
-    .catch(error => console.error('Error fetching script:', error));
-    }
-    </script>
 </head>
 <body>
-<h1>Publisher: {{.Publisher.URL}}</h1>
+<h1>Publisher: {{.Publisher.Name}}</h1>
 <p>Credit: {{.Publisher.Credit}}</p>
+<p>Script: {{.Publisher.Script}}</p>
 <p>Clicks: {{.Publisher.Clicks}}</p>
 <p>Impressions: {{.Publisher.Impressions}}</p>
-
-<button onclick="fetchScript({{.Publisher.ID}})">Get Script</button>
-
-<pre id="script-content"></pre>
-
-<a href="/publishers">Back to Publishers</a>
+<a href="/">Back to Publishers</a>
 </body>
 </html>

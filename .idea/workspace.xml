@@ -4,11 +4,20 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a950d744-e0de-442f-a1f9-7b47d9f265f2" name="Changes" comment="gitignore correction.">
-      <change afterPath="$PROJECT_DIR$/panel/publisher/db.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/panel/publisher/publisher.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/panel/script/digiland" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/publisherwebsite/html/digiland.html" beforeDir="false" afterPath="$PROJECT_DIR$/publisherwebsite/html/digiland.html" afterDir="false" />
+    <list default="true" id="a950d744-e0de-442f-a1f9-7b47d9f265f2" name="Changes" comment=".">
+      <change afterPath="$PROJECT_DIR$/panel/templates/advertisers.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/panel/templates/combined.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/panel/templates/create_publisher.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/panel/templates/publishers.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/panel/templates/view.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/panel/advertiser/ad.go" beforeDir="false" afterPath="$PROJECT_DIR$/panel/advertiser/ad.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/panel/advertiser/advertiser.go" beforeDir="false" afterPath="$PROJECT_DIR$/panel/advertiser/advertiser.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/panel/advertiser/db.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/panel/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/panel/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/panel/publisher/db.go" beforeDir="false" afterPath="$PROJECT_DIR$/panel/common/db.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/panel/publisher/publisher.go" beforeDir="false" afterPath="$PROJECT_DIR$/panel/publisher/publisher.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/panel/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/panel/templates/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,6 +28,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="JavaScript File" />
+        <option value="Go File" />
+        <option value="HTML File" />
       </list>
     </option>
   </component>
@@ -37,22 +48,31 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.modules.automatic.dependencies.download&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.modules.go.list.on.any.changes.was.set&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;publisher-ui&quot;,
-    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
-    &quot;go.sdk.automatically.set&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/dena/dotanet/dotanet&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultGoTemplateProperty": "Go File",
+    "DefaultHtmlFileTemplate": "HTML File",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.go.formatter.settings.were.checked": "true",
+    "RunOnceActivity.go.migrated.go.modules.settings": "true",
+    "RunOnceActivity.go.modules.automatic.dependencies.download": "true",
+    "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
+    "git-widget-placeholder": "publisher-ui",
+    "go.import.settings.migrated": "true",
+    "go.sdk.automatically.set": "true",
+    "last_opened_file_path": "/Users/dena/dotanet/dotanet",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm"
   }
-}</component>
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Click\Desktop\dotanet\panel" />
+      <recent name="C:\Users\Click\Desktop\dotanet\panel\common" />
+      <recent name="C:\Users\Click\Desktop\dotanet\panel\publisher" />
+    </key>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -67,7 +87,9 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="gitignore correction." />
-    <option name="LAST_COMMIT_MESSAGE" value="gitignore correction." />
+    <MESSAGE value="script of digiland and digiland.html changed" />
+    <MESSAGE value="." />
+    <option name="LAST_COMMIT_MESSAGE" value="." />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
