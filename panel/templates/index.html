@@ -1,15 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Advertisers</title>
+    <title>Home</title>
 </head>
 <body>
-<h1>Advertisers</h1>
-<ul>
-    {{range .Advertisers}}
-    <li>{{.Name}} - Credit: {{.Credit}} - <a href="/advertisers/{{.ID}}">View Credit</a> - <a href="/advertisers/{{.ID}}/ads">View Ads</a> - <a href="/ads/new?advertiser_id={{.ID}}">Create Ad</a></li>
-    {{end}}
-</ul>
-<a href="/advertisers/new">Create New Advertiser</a>
+<h1>Welcome to the Management System</h1>
+<a href="/advertisers">Manage Advertisers</a><br>
+<a href="/publishers">Manage Publishers</a>
 </body>
 </html>

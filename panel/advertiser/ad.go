@@ -1,6 +1,7 @@
 package advertiser
 
 import (
+	"example.com/dotanet/panel/common"
 	"net/http"
 	"strconv"
 
@@ -41,7 +42,7 @@ func CreateAdHandler(c *gin.Context) {
 
 	ad.Image = imagePath
 
-	if err := DB.Create(&ad).Error; err != nil {
+	if err := common.DB.Create(&ad).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Creating ad failed"})
 		return
 	}
@@ -89,7 +90,7 @@ func CreateAdForm(c *gin.Context) {
 
 func FindAdvertiserByID(id uint) (Entity, error) {
 	var entity Entity
-	result := DB.First(&entity, id)
+	result := common.DB.First(&entity, id)
 	if result.Error != nil {
 		return Entity{}, result.Error
 	}

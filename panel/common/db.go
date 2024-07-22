@@ -1,4 +1,4 @@
-package publisher
+package common
 
 import (
 	"flag"
@@ -31,6 +31,7 @@ func NewDatabase() error {
 
 	var err error
 	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
+
 	if err != nil {
 		return fmt.Errorf("failed to connect to database: %w", err)
 	}
