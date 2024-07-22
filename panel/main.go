@@ -1,10 +1,12 @@
 package main
 
 import (
+	"log"
+	"net/http"
+
 	"example.com/dotanet/panel/advertiser"
 	"github.com/gin-contrib/multitemplate"
 	"github.com/gin-gonic/gin"
-	"log"
 )
 
 func LoadTemplates(templatesDir string) multitemplate.Renderer {
@@ -38,4 +40,14 @@ func main() {
 	if err := router.Run(":8080"); err != nil {
 		log.Fatalf("failed to run server: %v", err)
 	}
+}
+
+func ListAllAds(c *gin.Context) {
+	var ads []advertiser.Ad
+	result := advertiser.DB.Find(&ads)
+	if result.Error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Loading ads failed"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"ads": ads})
 }
