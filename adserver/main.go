@@ -33,6 +33,7 @@ func main() {
 	fmt.Println("Server running on port 8080")
 	go GetAdsListPeriodically(db, router)
 	router.Run(":8080")
+
 }
 
 func GetAdsListPeriodically(db *gorm.DB, router *gin.Engine) {
