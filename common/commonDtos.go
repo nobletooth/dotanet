@@ -1,4 +1,4 @@
-package main
+package common
 
 type AdInfo struct {
 	Id           uint    `json:"id"`
