@@ -20,8 +20,3 @@
 # Go workspace file
 go.work
 go.work.sum
-
-# Ignore IDE-specific files
-.idea/*
-*.iml
-workspace.xml
