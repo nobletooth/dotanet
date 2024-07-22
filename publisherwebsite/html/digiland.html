@@ -1,48 +1,118 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fa">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My HTML Page</title>
+    <title>News Template</title>
     <style>
         body {
             font-family: Arial, sans-serif;
+            direction: rtl;
+            text-align: right;
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+        }
+        .container {
+            width: 90%;
+            max-width: 600px;
+            border: 1px solid #000;
+            margin: 20px auto;
+            padding: 10px;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
-        .container {
-            max-width: 800px;
-            width: 100%;
-            margin: 20px;
+        .header {
+            font-size: 14px;
+            font-weight: bold;
             text-align: center;
+            margin-bottom: 10px;
         }
-        .explanation {
-            margin: 20px 0;
-            font-size: 16px;
+        .main-content, .picture-content {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
         }
-        .image-container {
-            margin-top: 20px;
+        .main-content {
+            flex: 2;
         }
-        .image-container img {
+        .picture-content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .picture-content img {
             max-width: 100%;
             height: auto;
+        }
+        .content {
+            font-size: 12px;
+        }
+        .content h2 {
+            font-size: 16px;
+            margin: 0;
+        }
+        .content p {
+            font-size: 14px;
+            margin: 10px 0 0 0;
+        }
+        .footer {
+            font-size: 12px;
+            text-align: center;
+            border-top: 1px solid #000;
+            margin-top: 10px;
+            padding-top: 10px;
+            width: 100%;
+        }
+        .ad-container {
+            margin-top: 10px;
+            text-align: center;
+        }
+        .ad-container img {
+            max-width: 100%;
+            height: auto;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
 <div class="container">
-    <h1>digiland</h1>
-    <div class="explanation">
-        مغازه دیجی لند
+    <div class="header">digiland.com</div>
+    <div class="main-content">
+        <div class="content">
+            <h2>فوری:حراج بزرگ دیجی لند</h2>
+            <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است.</p>
+            <div class="ad-container" id="ad-container"></div>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    fetch('https://example.com/api/getAdData')
+                        .then(response => response.json())
+                        .then(data => {
+                            const adContainer = document.getElementById('ad-container');
+                            const adImage = document.createElement('img');
+                            adImage.src = data.imageUrl;
+                            adImage.alt = data.altText;
+                            adImage.onclick = function() {
+                                // API call when ad is clicked
+                                fetch('https://example.com/api/adClicked', { method: 'POST' });
+                                window.location.href = data.url;
+                            };
+                            adContainer.appendChild(adImage);
+
+                            fetch('https://example.com/api/adSeen', { method: 'POST' });
+                        })
+                        .catch(error => console.error('Error fetching ad data:', error));
+                });
+            </script>
+        </div>
+        <div class="picture-content">
+            <img src="your-image-url.jpg" alt="خبر">
+        </div>
     </div>
-    <div class="image-container">
-        <a href="https://www.example.com">
-            <img src="https://via.placeholder.com/800x400" alt="Sample Image">
-        </a>
-    </div>
+    <div class="footer">جایگاه نمایش تبلیغ</div>
 </div>
 </body>
 </html>
