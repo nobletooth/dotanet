@@ -22,14 +22,6 @@ type Service interface {
 	ListAdsByAdvertiser(advertiserId uint) ([]Ad, error)
 }
 
-func init() {
-	err := common.DB.AutoMigrate(&Ad{}, &Entity{})
-	if err != nil {
-		panic(err)
-	}
-
-}
-
 func GetCreditOfAdvertiser(adId int) (Entity, error) {
 	var entity Entity
 
@@ -71,9 +63,8 @@ func ListAdsByAdvertiser(advertiserId uint) ([]Ad, error) {
 
 func ListAdvertisers(c *gin.Context) {
 	advertisers := ListAllAdvertiserEntities()
-	c.HTML(http.StatusOK, "index", gin.H{"Advertisers": advertisers})
+	c.HTML(http.StatusOK, "advertisers", gin.H{"Advertisers": advertisers})
 }
-
 func NewAdvertiserForm(c *gin.Context) {
 	c.HTML(http.StatusOK, "create_advertiser", nil)
 }
