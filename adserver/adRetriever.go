@@ -9,7 +9,7 @@ import (
 	"example.com/dotanet/common"
 )
 
-func GetAdsListPeriodically(ads []common.Ad) {
+func GetAdsListPeriodically(ads []common.AdInfo) {
 	ticker := time.NewTicker(1 * time.Minute)
 	defer ticker.Stop()
 	for {
