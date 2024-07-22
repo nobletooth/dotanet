@@ -49,5 +49,5 @@ func ListAllAds(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Loading ads failed"})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"ads": ads})
+	c.JSON(http.StatusOK, gin.H{"ads": result})
 }
