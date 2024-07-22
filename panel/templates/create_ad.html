@@ -7,14 +7,14 @@
 </head>
 <body>
     <h1>Create New Ad</h1>
-    <form action="/ads" method="POST">
+    <form action="/ads" method="POST" enctype="multipart/form-data">
         <div>
             <label for="title">Title:</label>
             <input type="text" id="title" name="title" required>
         </div>
         <div>
-            <label for="image">Image URL:</label>
-            <input type="text" id="image" name="image" required>
+            <label for="image">Image:</label>
+            <input type="file" id="image" name="image" accept="image/*" required>
         </div>
         <div>
             <label for="price">Price:</label>
