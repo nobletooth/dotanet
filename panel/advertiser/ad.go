@@ -1,11 +1,10 @@
 package advertiser
 
 import (
-	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 )
 
 type Ad struct {
@@ -17,93 +16,93 @@ type Ad struct {
 	Clicks       int     `gorm:"column:clicks"`
 	Impressions  int     `gorm:"column:impressions"`
 	Url          string  `gorm:"column:url"`
-	AdvertiserId uint    `gorm:"foreignKey:advertiserid"`
+	AdvertiserId uint64  `gorm:"foreignKey:AdvertiserId"`
 }
 
-// type Ad struct {
-// 	Id           uint    `json:"id"`
-// 	Title        string  `json:"title"`
-// 	Image        string  `json:"image"`
-// 	Price        float64 `json:"price"`
-// 	Status       bool   `json:"status"`
-// 	Clicks       int     `json:"clicks"`
-// 	Impressions  int     `json:"impressions"`
-// 	Url          string  `json:"url"`
-// 	AdvertiserId uint    `gorm:"foreignKey:advertiserid"`
-// }
+func CreateAdHandler(c *gin.Context) {
+	var ad Ad
+	ad.Title = c.PostForm("title")
+	ad.Price, _ = strconv.ParseFloat(c.PostForm("price"), 64)
+	ad.Url = c.PostForm("url")
+	ad.AdvertiserId, _ = strconv.ParseUint(c.PostForm("advertiser_id"), 10, 32)
+	ad.Status = true
 
-func CreateAd(db *gorm.DB) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		var form Ad
-		if err := c.Bind(&form); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		}
-		if form.Title == "" || form.Image == "" || form.Price == 0 || form.Url == "" {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Missing required fields"})
-			return
-		}
-
-		form.Status = true
-		if err := db.Create(&form).Error; err != nil {
-			log.Printf("Creating ad failed: %v", err)
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Creating ad failed"})
-			return
-		}
-		c.JSON(http.StatusCreated, gin.H{"message": "Ad created successfully", "ad": form})
+	file, err := c.FormFile("image")
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Image file is required"})
+		return
 	}
-}
 
-func DeleteAd(db *gorm.DB) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		adID := c.Param("id")
-		var ad Ad
-		if err := db.First(&ad, adID).Error; err != nil {
-			if err == gorm.ErrRecordNotFound {
-				c.JSON(http.StatusNotFound, gin.H{"error": "Ad not found"})
-			} else {
-				log.Printf("Error finding ad: %v", err)
-				c.JSON(http.StatusInternalServerError, gin.H{"error": "Error finding ad"})
-			}
-			return
-		}
-		if err := db.Delete(&ad).Error; err != nil {
-			log.Printf("Deleting ad failed: %v", err)
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Deleting ad failed"})
-			return
-		}
-
-		c.JSON(http.StatusOK, gin.H{"message": "Ad deleted successfully"})
+	imagePath := "./image/" + file.Filename
+	if err := c.SaveUploadedFile(file, imagePath); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save image"})
+		return
 	}
-}
-func UpdateAd(db *gorm.DB) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		adID := c.Param("id")
-		var ad Ad
-		if err := db.First(&ad, adID).Error; err != nil {
-			if err == gorm.ErrRecordNotFound {
-				c.JSON(http.StatusNotFound, gin.H{"error": "Ad not found"})
-			} else {
-				log.Printf("Error finding ad: %v", err)
-				c.JSON(http.StatusInternalServerError, gin.H{"error": "Error finding ad"})
-			}
-			return
-		}
 
-		var updatedForm Ad
-		if err := c.Bind(&updatedForm); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		}
-		if err := db.Model(&ad).Updates(updatedForm).Error; err != nil {
-			log.Printf("Updating ad failed: %v", err)
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Updating ad failed"})
-			return
-		}
-		c.JSON(http.StatusOK, gin.H{"message": "Ad updated successfully", "ad": updatedForm})
+	ad.Image = imagePath
+
+	if err := DB.Create(&ad).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Creating ad failed"})
+		return
 	}
+	c.Redirect(http.StatusSeeOther, "/advertisers/"+strconv.Itoa(int(ad.AdvertiserId))+"/ads")
 }
 
-func RenderCreateAdForm(c *gin.Context) {
-	c.HTML(http.StatusOK, "create_ad.html", gin.H{})
+func ListAdsByAdvertiserHandler(c *gin.Context) {
+	idStr := c.Param("id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		c.HTML(http.StatusBadRequest, "index", gin.H{"error": "Invalid advertiser ID"})
+		return
+	}
+
+	ads, err := ListAdsByAdvertiser(uint(id))
+	if err != nil {
+		c.HTML(http.StatusInternalServerError, "index", gin.H{"error": err.Error()})
+		return
+	}
+
+	advertiser, err := FindAdvertiserByID(uint(id))
+	if err != nil {
+		c.HTML(http.StatusInternalServerError, "index", gin.H{"error": err.Error()})
+		return
+	}
+
+	c.HTML(http.StatusOK, "advertiser_ads", gin.H{"Ads": ads, "Advertiser": advertiser})
+}
+func CreateAdForm(c *gin.Context) {
+	advertiserID := c.Query("advertiser_id")
+	id, err := strconv.Atoi(advertiserID)
+	if err != nil {
+		c.HTML(http.StatusBadRequest, "index", gin.H{"error": "Invalid advertiser ID"})
+		return
+	}
+
+	advertiser, err := FindAdvertiserByID(uint(id))
+	if err != nil {
+		c.HTML(http.StatusInternalServerError, "index", gin.H{"error": err.Error()})
+		return
+	}
+
+	c.HTML(http.StatusOK, "create_ad", gin.H{"Advertiser": advertiser})
+}
+
+func FindAdvertiserByID(id uint) (Entity, error) {
+	var entity Entity
+	result := DB.First(&entity, id)
+	if result.Error != nil {
+		return Entity{}, result.Error
+	}
+	return entity, nil
+}
+
+func CTR(entity Ad) float64 {
+	if entity.Impressions == 0 {
+		return 0
+	}
+	return float64(entity.Clicks) / float64(entity.Impressions)
+}
+
+func CostCalculator(entity Ad) float64 {
+	return float64(entity.Clicks) * entity.Price
 }
