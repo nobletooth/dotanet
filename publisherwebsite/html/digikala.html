@@ -1,37 +1,78 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fa">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My HTML Page</title>
+    <title>News Template</title>
     <style>
         body {
             font-family: Arial, sans-serif;
+            direction: rtl;
+            text-align: right;
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+        }
+        .container {
+            width: 90%;
+            max-width: 600px;
+            border: 1px solid #000;
+            margin: 20px auto;
+            padding: 10px;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
-        .container {
-            max-width: 800px;
-            width: 100%;
-            margin: 20px;
+        .header {
+            font-size: 14px;
+            font-weight: bold;
             text-align: center;
+            margin-bottom: 10px;
         }
-        .explanation {
-            margin: 20px 0;
+        .main-content, .picture-content {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .main-content {
+            flex: 2;
+        }
+        .picture-content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .picture-content img {
+            max-width: 100%;
+            height: auto;
+        }
+        .content {
+            font-size: 12px;
+        }
+        .content h2 {
             font-size: 16px;
+            margin: 0;
         }
-        .image-container {
-            margin-top: 20px;
+        .content p {
+            font-size: 14px;
+            margin: 10px 0 0 0;
         }
-        .image-container a {
-            display: inline-block;
-            border: 1px solid #000; /* Border for anchor tag */
-            padding: 10px;
+        .footer {
+            font-size: 12px;
+            text-align: center;
+            border-top: 1px solid #000;
+            margin-top: 10px;
+            padding-top: 10px;
+            width: 100%;
         }
-        .image-container img {
+        .ad {
+            width: 100%;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .ad img {
             max-width: 100%;
             height: auto;
         }
@@ -39,15 +80,83 @@
 </head>
 <body>
 <div class="container">
-    <h1>digikala</h1>
-    <div class="explanation">
-        مغازه دیجی کالا
+    <div class="header">digikala.com</div>
+    <div class="main-content">
+        <div class="content">
+            <h2>فوری: حراج بزرگ قرن در دیجیکالا!</h2>
+            <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است.</p>
+            <div class="ad">
+                <a href="#" id="ad-link">
+                    <img src="#" alt="تبلیغ" id="ad-image">
+                </a>
+            </div>
+        </div>
+        <div class="picture-content">
+            <img src="your-image-url.jpg" alt="خبر">
+        </div>
     </div>
-    <div class="image-container">
-        <a href="https://www.example.com">
-            <img src="https://via.placeholder.com/800x400" alt="Sample Image">
-        </a>
-    </div>
+    <div class="footer">جایگاه نمایش تبلیغ</div>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var adLink = document.getElementById('ad-link');
+        var adImage = document.getElementById('ad-image');
+        var adSeen = false;
+
+        // Function to get ad information when the site is loaded
+        function getAdInfo() {
+            fetch('https://your-api-url.com/get-ad-info')
+                .then(response => response.json())
+                .then(data => {
+                    adLink.href = data.url;
+                    adImage.src = data.image;
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        // Function to call API when the ad is seen
+        function callAdSeenApi() {
+            fetch('https://your-api-url.com/ad-seen', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ ad: 'your-ad-info' })
+            })
+                .then(response => response.json())
+                .then(data => console.log('Ad seen API response:', data))
+                .catch(error => console.error('Error:', error));
+        }
+
+        // Function to call API when the ad is clicked
+        adLink.addEventListener('click', function() {
+            fetch('https://your-api-url.com/ad-click', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ ad: 'your-ad-info' })
+            })
+                .then(response => response.json())
+                .then(data => console.log('Ad click API response:', data))
+                .catch(error => console.error('Error:', error));
+        });
+
+        // Intersection Observer to detect when the ad is in view
+        var observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !adSeen) {
+                    adSeen = true;
+                    callAdSeenApi();
+                }
+            });
+        }, { threshold: 0.5 });
+
+        observer.observe(adImage);
+
+        // Call the getAdInfo function to get ad details when the page loads
+        getAdInfo();
+    });
+</script>
 </body>
 </html>
