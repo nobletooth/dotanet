@@ -1,7 +1,6 @@
 package advertiser
 
 import (
-	"log"
 	"net/http"
 	"strconv"
 
@@ -23,14 +22,26 @@ type Ad struct {
 func CreateAdHandler(c *gin.Context) {
 	var ad Ad
 	ad.Title = c.PostForm("title")
-	ad.Image = c.PostForm("image")
 	ad.Price, _ = strconv.ParseFloat(c.PostForm("price"), 64)
 	ad.Url = c.PostForm("url")
 	ad.AdvertiserId, _ = strconv.ParseUint(c.PostForm("advertiser_id"), 10, 32)
 	ad.Status = true
 
+	file, err := c.FormFile("image")
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Image file is required"})
+		return
+	}
+
+	imagePath := "./image/" + file.Filename
+	if err := c.SaveUploadedFile(file, imagePath); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save image"})
+		return
+	}
+
+	ad.Image = imagePath
+
 	if err := DB.Create(&ad).Error; err != nil {
-		log.Printf("Creating ad failed: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Creating ad failed"})
 		return
 	}
@@ -51,7 +62,13 @@ func ListAdsByAdvertiserHandler(c *gin.Context) {
 		return
 	}
 
-	c.HTML(http.StatusOK, "advertiser_ads", gin.H{"Ads": ads})
+	advertiser, err := FindAdvertiserByID(uint(id))
+	if err != nil {
+		c.HTML(http.StatusInternalServerError, "index", gin.H{"error": err.Error()})
+		return
+	}
+
+	c.HTML(http.StatusOK, "advertiser_ads", gin.H{"Ads": ads, "Advertiser": advertiser})
 }
 func CreateAdForm(c *gin.Context) {
 	advertiserID := c.Query("advertiser_id")

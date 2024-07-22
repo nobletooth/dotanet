@@ -7,7 +7,7 @@
 <h1>Advertisers</h1>
 <ul>
     {{range .Advertisers}}
-    <li>{{.Name}} - Credit: {{.Credit}} - <a href="/advertisers/{{.ID}}">View Credit</a> - <a href="/ads/new?advertiser_id={{.ID}}">Create Ad</a></li>
+    <li>{{.Name}} - Credit: {{.Credit}} - <a href="/advertisers/{{.ID}}">View Credit</a> - <a href="/advertisers/{{.ID}}/ads">View Ads</a> - <a href="/ads/new?advertiser_id={{.ID}}">Create Ad</a></li>
     {{end}}
 </ul>
 <a href="/advertisers/new">Create New Advertiser</a>

@@ -20,6 +20,8 @@ func main() {
 	router.GET("/advertisers/:id/ads", advertiser.ListAdsByAdvertiserHandler)
 	router.GET("/ads/new", advertiser.CreateAdForm)
 	router.POST("/ads", advertiser.CreateAdHandler)
+	router.GET("/ads/edit/:id", advertiser.EditAdForm)
+	router.POST("/ads/update/:id", advertiser.UpdateAdHandler)
 
 	if err := router.Run(":8080"); err != nil {
 		log.Fatalf("failed to run server: %v", err)

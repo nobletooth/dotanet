@@ -4,13 +4,13 @@
     <title>Advertiser Ads</title>
 </head>
 <body>
-<h1>Ads for Advertiser {{.AdvertiserID}}</h1>
+<h1>Ads for Advertiser {{.Advertiser.Name}}</h1>
 <ul>
     {{range .Ads}}
     <li>{{.Title}} - Price: {{.Price}} - <a href="{{.Url}}">View Ad</a></li>
     {{end}}
 </ul>
-<a href="/ads/new?advertiser_id={{.AdvertiserID}}">Create New Ad</a>
+<a href="/ads/new?advertiser_id={{.Advertiser.ID}}">Create New Ad</a>
 <a href="/">Back to Advertisers</a>
 </body>
 </html>
