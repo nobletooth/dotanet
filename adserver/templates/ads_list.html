@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ .title }}</title>
+</head>
+<body>
+    <h1>{{ .title }}</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Image</th>
+                <th>Price</th>
+                <th>Status</th>
+                <th>Clicks</th>
+                <th>Impressions</th>
+                <th>URL</th>
+                <th>Advertiser ID</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{ range .ads }}
+            <tr>
+                <td>{{ .ID }}</td>
+                <td>{{ .Title }}</td>
+                <td>{{ .Image }}</td>
+                <td>{{ .Price }}</td>
+                <td>{{ .Status }}</td>
+                <td>{{ .Clicks }}</td>
+                <td>{{ .Impressions }}</td>
+                <td><a href="{{ .Url }}" target="_blank">{{ .Url }}</a></td>
+                <td>{{ .AdvertiserId }}</td>
+            </tr>
+            {{ end }}
+        </tbody>
+    </table>
+</body>
+</html>
