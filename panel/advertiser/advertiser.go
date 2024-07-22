@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/gin-contrib/multitemplate"
 	"github.com/gin-gonic/gin"
 )
 
@@ -59,17 +58,6 @@ func ListAdsByAdvertiser(advertiserId uint) ([]Ad, error) {
 	var ads []Ad
 	result := DB.Where("advertiser_id = ?", advertiserId).Find(&ads)
 	return ads, result.Error
-}
-
-func LoadTemplates(templatesDir string) multitemplate.Renderer {
-	r := multitemplate.NewRenderer()
-	r.AddFromFiles("index", templatesDir+"/index.html")
-	r.AddFromFiles("create_advertiser", templatesDir+"/create_advertiser.html")
-	r.AddFromFiles("advertiser_credit", templatesDir+"/advertiser_credit.html")
-	r.AddFromFiles("create_ad", templatesDir+"/create_ad.html")
-	r.AddFromFiles("advertiser_ads", templatesDir+"/advertiser_ads.html")
-	r.AddFromFiles("edit_ad", templatesDir+"/edit_ad.html")
-	return r
 }
 
 func ListAdvertisers(c *gin.Context) {

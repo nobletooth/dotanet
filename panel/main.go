@@ -2,9 +2,21 @@ package main
 
 import (
 	"example.com/dotanet/panel/advertiser"
+	"github.com/gin-contrib/multitemplate"
 	"github.com/gin-gonic/gin"
 	"log"
 )
+
+func LoadTemplates(templatesDir string) multitemplate.Renderer {
+	r := multitemplate.NewRenderer()
+	r.AddFromFiles("index", templatesDir+"/index.html")
+	r.AddFromFiles("create_advertiser", templatesDir+"/create_advertiser.html")
+	r.AddFromFiles("advertiser_credit", templatesDir+"/advertiser_credit.html")
+	r.AddFromFiles("create_ad", templatesDir+"/create_ad.html")
+	r.AddFromFiles("advertiser_ads", templatesDir+"/advertiser_ads.html")
+	r.AddFromFiles("edit_ad", templatesDir+"/edit_ad.html")
+	return r
+}
 
 func main() {
 	if err := advertiser.NewDatabase(); err != nil {
@@ -12,7 +24,7 @@ func main() {
 	}
 
 	router := gin.Default()
-	router.HTMLRender = advertiser.LoadTemplates("./templates")
+	router.HTMLRender = LoadTemplates("./templates")
 	router.GET("/", advertiser.ListAdvertisers)
 	router.GET("/advertisers/new", advertiser.NewAdvertiserForm)
 	router.POST("/advertisers", advertiser.CreateAdvertiser)
