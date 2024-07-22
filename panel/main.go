@@ -1,81 +1,41 @@
 package main
 
 import (
-	"flag"
-	"log"
-	"net/http"
-	"strconv"
-
 	"example.com/dotanet/panel/advertiser"
+	"github.com/gin-contrib/multitemplate"
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
+	"log"
 )
 
-func main() {
-	flag.Parse()
+func LoadTemplates(templatesDir string) multitemplate.Renderer {
+	r := multitemplate.NewRenderer()
+	r.AddFromFiles("index", templatesDir+"/index.html")
+	r.AddFromFiles("create_advertiser", templatesDir+"/create_advertiser.html")
+	r.AddFromFiles("advertiser_credit", templatesDir+"/advertiser_credit.html")
+	r.AddFromFiles("create_ad", templatesDir+"/create_ad.html")
+	r.AddFromFiles("advertiser_ads", templatesDir+"/advertiser_ads.html")
+	r.AddFromFiles("edit_ad", templatesDir+"/edit_ad.html")
+	return r
+}
 
-	database, err := db.NewDatabase()
-	if err != nil {
+func main() {
+	if err := advertiser.NewDatabase(); err != nil {
 		log.Fatalf("failed to initialize database: %v", err)
 	}
-	defer database.Close()
-
-	if err := database.AutoMigrate(&advertiser.AdvertiserEntity{}); err != nil {
-		log.Fatalf("failed to migrate database: %v", err)
-	}
-
-	advertiserService := advertiser.NewAdvertiserService(database)
 
 	router := gin.Default()
-	setupRouter(router)
-
-	router.POST("/advertisers", createAdvertiserHandler(advertiserService))
-	router.GET("/advertisers", listAdvertisersHandler(advertiserService))
-	router.GET("/advertisers/:id", getAdvertiserCreditHandler(advertiserService))
+	router.HTMLRender = LoadTemplates("./templates")
+	router.GET("/", advertiser.ListAdvertisers)
+	router.GET("/advertisers/new", advertiser.NewAdvertiserForm)
+	router.POST("/advertisers", advertiser.CreateAdvertiser)
+	router.GET("/advertisers/:id", advertiser.GetAdvertiserCredit)
+	router.GET("/advertisers/:id/ads", advertiser.ListAdsByAdvertiserHandler)
+	router.GET("/ads/new", advertiser.CreateAdForm)
+	router.POST("/ads", advertiser.CreateAdHandler)
+	router.GET("/ads/edit/:id", advertiser.EditAdForm)
+	router.POST("/ads/update/:id", advertiser.UpdateAdHandler)
 
 	if err := router.Run(":8080"); err != nil {
 		log.Fatalf("failed to run server: %v", err)
 	}
-}
-
-func createAdvertiserHandler(service advertiser.AdvertiService) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		var dto advertiser.AdvertiserRequestDto
-		if err := c.ShouldBindJSON(&dto); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		}
-		service.CreateAdvertiserEntity(dto)
-		c.JSON(http.StatusOK, gin.H{"craeted": "ok"})
-	}
-}
-
-func listAdvertisersHandler(service advertiser.AdvertiService) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		advertisers := service.ListAllAdvertiserEntity()
-		c.JSON(http.StatusOK, advertisers)
-	}
-}
-
-func getAdvertiserCreditHandler(service advertiser.AdvertiService) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		idStr := c.Param("id")
-		id, err := strconv.Atoi(idStr)
-		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "invalid advertiser ID"})
-			return
-		}
-
-		credit, err := service.GetCreaditOfAdvertiser(id)
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-			return
-		}
-
-		c.JSON(http.StatusOK, gin.H{"credit": credit})
-	}
-}
-
-func setupRouter(db *gorm.DB, router *gin.Default) {
-	router.GET("/ads/new", advertiser.RenderCreateAdForm)
 }
