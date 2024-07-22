@@ -67,6 +67,15 @@
             padding-top: 10px;
             width: 100%;
         }
+        .ad-container {
+            margin-top: 10px;
+            text-align: center;
+        }
+        .ad-container img {
+            max-width: 100%;
+            height: auto;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -76,6 +85,28 @@
         <div class="content">
             <h2>فوری:حراج بزرگ دیجی لند</h2>
             <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است.</p>
+            <div class="ad-container" id="ad-container"></div>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    fetch('https://example.com/api/getAdData')
+                        .then(response => response.json())
+                        .then(data => {
+                            const adContainer = document.getElementById('ad-container');
+                            const adImage = document.createElement('img');
+                            adImage.src = data.imageUrl;
+                            adImage.alt = data.altText;
+                            adImage.onclick = function() {
+                                // API call when ad is clicked
+                                fetch('https://example.com/api/adClicked', { method: 'POST' });
+                                window.location.href = data.url;
+                            };
+                            adContainer.appendChild(adImage);
+
+                            fetch('https://example.com/api/adSeen', { method: 'POST' });
+                        })
+                        .catch(error => console.error('Error fetching ad data:', error));
+                });
+            </script>
         </div>
         <div class="picture-content">
             <img src="your-image-url.jpg" alt="خبر">
