@@ -13,13 +13,11 @@ func main() {
 
 	router := gin.Default()
 	router.HTMLRender = advertiser.LoadTemplates("./templates")
-
 	router.GET("/", advertiser.ListAdvertisers)
 	router.GET("/advertisers/new", advertiser.NewAdvertiserForm)
 	router.POST("/advertisers", advertiser.CreateAdvertiser)
 	router.GET("/advertisers/:id", advertiser.GetAdvertiserCredit)
 	router.GET("/advertisers/:id/ads", advertiser.ListAdsByAdvertiserHandler)
-
 	router.GET("/ads/new", advertiser.CreateAdForm)
 	router.POST("/ads", advertiser.CreateAdHandler)
 

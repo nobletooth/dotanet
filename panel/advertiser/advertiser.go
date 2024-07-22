@@ -16,20 +16,20 @@ type Entity struct {
 }
 
 type Service interface {
-	GetCreditOfAdvertiser(adId int) (int, error)
+	GetCreditOfAdvertiser(adId int) (Entity, error)
 	CreateAdvertiserEntity(name string, credit int)
 	ListAllAdvertiserEntities() []Entity
 	FindAdvertiserByName(name string) (Entity, error)
 	ListAdsByAdvertiser(advertiserId uint) ([]Ad, error)
 }
 
-func GetCreditOfAdvertiser(adId int) (int, error) {
+func GetCreditOfAdvertiser(adId int) (Entity, error) {
 	var entity Entity
 	result := DB.First(&entity, adId)
 	if result.Error != nil {
-		return 0, result.Error
+		return entity, result.Error
 	}
-	return entity.Credit, nil
+	return entity, nil
 }
 
 func CreateAdvertiserEntity(name string, credit int) {
@@ -66,7 +66,6 @@ func LoadTemplates(templatesDir string) multitemplate.Renderer {
 	r.AddFromFiles("index", templatesDir+"/index.html")
 	r.AddFromFiles("create_advertiser", templatesDir+"/create_advertiser.html")
 	r.AddFromFiles("advertiser_credit", templatesDir+"/advertiser_credit.html")
-	r.AddFromFiles("ads", templatesDir+"/ads.html")
 	r.AddFromFiles("create_ad", templatesDir+"/create_ad.html")
 	r.AddFromFiles("advertiser_ads", templatesDir+"/advertiser_ads.html")
 	return r

@@ -55,7 +55,28 @@ func ListAdsByAdvertiserHandler(c *gin.Context) {
 }
 func CreateAdForm(c *gin.Context) {
 	advertiserID := c.Query("advertiser_id")
-	c.HTML(http.StatusOK, "create_ad", gin.H{"AdvertiserID": advertiserID})
+	id, err := strconv.Atoi(advertiserID)
+	if err != nil {
+		c.HTML(http.StatusBadRequest, "index", gin.H{"error": "Invalid advertiser ID"})
+		return
+	}
+
+	advertiser, err := FindAdvertiserByID(uint(id))
+	if err != nil {
+		c.HTML(http.StatusInternalServerError, "index", gin.H{"error": err.Error()})
+		return
+	}
+
+	c.HTML(http.StatusOK, "create_ad", gin.H{"Advertiser": advertiser})
+}
+
+func FindAdvertiserByID(id uint) (Entity, error) {
+	var entity Entity
+	result := DB.First(&entity, id)
+	if result.Error != nil {
+		return Entity{}, result.Error
+	}
+	return entity, nil
 }
 
 func CTR(entity Ad) float64 {
