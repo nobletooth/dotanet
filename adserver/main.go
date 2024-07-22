@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var allAds []common.Ad
+var allAds []common.AdInfo
 
 func main() {
 	router := gin.Default()
@@ -21,4 +21,3 @@ func main() {
 func GetAdsHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, allAds)
 }
-
