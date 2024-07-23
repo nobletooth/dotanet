@@ -34,12 +34,7 @@ func GetAdHandler(c *gin.Context) {
 	pubID := c.Param("pubID")
 
 	if len(allAds) == 0 {
-		c.JSON(http.StatusOK, gin.H{
-			"Title":          "Default Ad",
-			"ImagePath":      "path/to/default/image.jpg",
-			"ClicksURL":      fmt.Sprintf("/click/%d/%d", 0, pubID),
-			"ImpressionsURL": fmt.Sprintf("/impression/%d/%d", 0, pubID),
-		})
+		c.JSON(http.StatusNotFound, gin.H{"error": "No ads available"})
 		return
 	}
 

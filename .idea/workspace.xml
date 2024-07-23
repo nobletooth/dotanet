@@ -4,10 +4,7 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a950d744-e0de-442f-a1f9-7b47d9f265f2" name="Changes" comment="gitignore correction.">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adserver/auction.go" beforeDir="false" afterPath="$PROJECT_DIR$/adserver/auction.go" afterDir="false" />
-    </list>
+    <list default="true" id="a950d744-e0de-442f-a1f9-7b47d9f265f2" name="Changes" comment="gitignore correction." />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
