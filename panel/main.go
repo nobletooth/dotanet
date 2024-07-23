@@ -37,19 +37,8 @@ func main() {
 	router.POST("/ads", advertiser.CreateAdHandler)
 	router.GET("/ads/edit/:id", advertiser.EditAdForm)
 	router.POST("/ads/update/:id", advertiser.UpdateAdHandler)
-	router.GET("/ads/list/", ListAllAds)
 
 	if err := router.Run(":8080"); err != nil {
 		log.Fatalf("failed to run server: %v", err)
 	}
-}
-
-func ListAllAds(c *gin.Context) {
-	var ads []common.AdInfo
-	result := advertiser.DB.Find(&ads)
-	if result.Error != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Loading ads failed"})
-		return
-	}
-	c.JSON(http.StatusOK, gin.H{"ads": result})
 }
