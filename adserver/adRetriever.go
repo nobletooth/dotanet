@@ -46,6 +46,10 @@ func GetAdsListPeriodically() []common.AdInfo {
 }
 
 func ReturnAllAds(ads []common.AdInfo) []common.AdInfo {
+	if ads == nil {
+		log.Println("No ads found")
+		return []common.AdInfo{}
+	}
 	for _, ad := range ads {
 		log.Printf("Ad ID: %d, Title: %s", ad.Id, ad.Title)
 	}
