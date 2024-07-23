@@ -11,11 +11,6 @@ func main() {
 	router := gin.Default()
 	router.LoadHTMLGlob("./html/*")
 
-	router.GET("/torob", torobHandler())
-	router.GET("/samsung", samsungHandler())
-	router.GET("/digiland", digilandHandler())
-	router.GET("/varzesh3", varzesh3Handler())
-	router.GET("/digikala.js", digikalaHandler())
 
 	router.Run(":6060")
 }
