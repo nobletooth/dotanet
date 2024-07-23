@@ -4,6 +4,7 @@ import (
 	"example.com/dotanet/panel/advertiser"
 	"example.com/dotanet/panel/common"
 	"example.com/dotanet/panel/publisher"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/multitemplate"
 	"github.com/gin-gonic/gin"
 	"log"
@@ -36,6 +37,8 @@ func main() {
 	}
 
 	router := gin.Default()
+	router.Use(cors.Default())
+
 	router.HTMLRender = LoadTemplates("./templates")
 	// Home route
 	router.GET("/", homeHandler)
@@ -48,12 +51,15 @@ func main() {
 	router.GET("/advertisers/:id/ads", advertiser.ListAdsByAdvertiserHandler)
 	router.GET("/ads/new", advertiser.CreateAdForm)
 	router.POST("/ads", advertiser.CreateAdHandler)
+	router.POST("/ads/update", advertiser.UpdateAdHandler)
+	router.GET("/ads/:id/picture", advertiser.LoadAdPictureHandler)
 
 	// Publisher routes
 	router.GET("/publishers", publisher.ListPublishers)
 	router.GET("/publishers/new", publisher.NewPublisherForm)
 	router.POST("/publishers", publisher.CreatePublisherHandler)
 	router.GET("/publishers/:id", publisher.ViewPublisherHandler)
+	router.GET("/publishers/:id/script", publisher.GetPublisherScript)
 
 	if err := router.Run(":8080"); err != nil {
 		log.Fatalf("failed to run server: %v", err)

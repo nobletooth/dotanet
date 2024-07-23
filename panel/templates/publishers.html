@@ -7,7 +7,7 @@
 <h1>Publishers</h1>
 <ul>
     {{range .Publishers}}
-    <li>{{.Name}} - Credit: {{.Credit}} - <a href="/publishers/{{.ID}}">View Details</a></li>
+    <li>{{.URL}} - Credit: {{.Credit}} - <a href="/publishers/{{.ID}}">View Details</a></li>
     {{end}}
 </ul>
 <a href="/publishers/new">Create New Publisher</a>
