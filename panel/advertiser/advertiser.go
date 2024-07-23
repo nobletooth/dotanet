@@ -1,10 +1,12 @@
 package advertiser
 
 import (
-	"example.com/dotanet/panel/common"
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
+
+	"github.com/nobletooth/dotanet/tree/main/panel/common"
+
+	"github.com/gin-gonic/gin"
 )
 
 type Entity struct {

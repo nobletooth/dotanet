@@ -4,14 +4,14 @@ import (
 	"log"
 	"net/http"
 	"time"
-
-	"example.com/dotanet/panel/advertiser"
-	"example.com/dotanet/panel/common"
-	"example.com/dotanet/panel/publisher"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/multitemplate"
 	"github.com/gin-gonic/gin"
+	"github.com/nobletooth/dotanet/tree/main/panel/advertiser"
+	"github.com/nobletooth/dotanet/tree/main/panel/common"
+	"github.com/nobletooth/dotanet/tree/main/panel/publisher"
 )
+
 
 type EventService struct {
 	Pid     string    `json:"pubId"`
@@ -125,6 +125,9 @@ func main() {
 	router.GET("/publishers/:id", publisher.ViewPublisherHandler)
 	router.GET("/publishers/:id/script", publisher.GetPublisherScript)
 	router.POST("/eventservice", eventServerHandler)
+
+	// Ad Server
+	router.GET("/ads/list/", advertiser.ListAllAds)
 
 	if err := router.Run(":8080"); err != nil {
 		log.Fatalf("failed to run server: %v", err)
