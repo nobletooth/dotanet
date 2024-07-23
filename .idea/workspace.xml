@@ -4,22 +4,7 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a950d744-e0de-442f-a1f9-7b47d9f265f2" name="Changes" comment="done the structure and imp of pael , publisher ui">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/panel/advertiser/ad.go" beforeDir="false" afterPath="$PROJECT_DIR$/panel/advertiser/ad.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/panel/advertiser/advertiser.go" beforeDir="false" afterPath="$PROJECT_DIR$/panel/advertiser/advertiser.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/panel/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/panel/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/panel/publisher/publisher.go" beforeDir="false" afterPath="$PROJECT_DIR$/panel/publisher/publisher.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/panel/publisher/script/digikala" beforeDir="false" afterPath="$PROJECT_DIR$/panel/publisher/script/digikala.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/panel/templates/advertiser_ads.html" beforeDir="false" afterPath="$PROJECT_DIR$/panel/templates/advertiser_ads.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/panel/templates/create_publisher.html" beforeDir="false" afterPath="$PROJECT_DIR$/panel/templates/create_publisher.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/panel/templates/publishers.html" beforeDir="false" afterPath="$PROJECT_DIR$/panel/templates/publishers.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/panel/templates/view.html" beforeDir="false" afterPath="$PROJECT_DIR$/panel/templates/view.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/publisherwebsite/html/digikala.html" beforeDir="false" afterPath="$PROJECT_DIR$/publisherwebsite/html/digikala.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/publisherwebsite/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/publisherwebsite/main.go" afterDir="false" />
-    </list>
+    <list default="true" id="a950d744-e0de-442f-a1f9-7b47d9f265f2" name="Changes" comment="adding feture such as script passing  and script writing &#10;adding html to the code that be able to get script&#10;---------------------&#10;&#10;&#10;writing an api that can pass the image to the  publisher" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -105,7 +90,8 @@
     <MESSAGE value="." />
     <MESSAGE value="add basic function of publishers and change the code  architecture" />
     <MESSAGE value="done the structure and imp of pael , publisher ui" />
-    <option name="LAST_COMMIT_MESSAGE" value="done the structure and imp of pael , publisher ui" />
+    <MESSAGE value="adding feture such as script passing  and script writing &#10;adding html to the code that be able to get script&#10;---------------------&#10;&#10;&#10;writing an api that can pass the image to the  publisher" />
+    <option name="LAST_COMMIT_MESSAGE" value="adding feture such as script passing  and script writing &#10;adding html to the code that be able to get script&#10;---------------------&#10;&#10;&#10;writing an api that can pass the image to the  publisher" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
