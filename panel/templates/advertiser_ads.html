@@ -5,12 +5,36 @@
 </head>
 <body>
 <h1>Ads for Advertiser {{.Advertiser.Name}}</h1>
+
 <ul>
     {{range .Ads}}
-    <li>{{.Title}} - Price: {{.Price}} - <a href="{{.Url}}">View Ad</a></li>
+    <li>
+        <strong>{{.Title}}</strong> - Price: {{.Price}}
+        <button onclick="document.getElementById('update-form-{{.Id}}').style.display='block'">Update</button>
+
+        <div id="update-form-{{.Id}}" style="display:none;">
+            <form action="/ads/update" method="POST">
+                <input type="hidden" name="id" value="{{.Id}}">
+                <label for="title-{{.Id}}">Title:</label>
+                <input type="text" id="title-{{.Id}}" name="title" value="{{.Title}}" required>
+                <br>
+                <label for="price-{{.Id}}">Price:</label>
+                <input type="number" id="price-{{.Id}}" name="price" step="0.01" value="{{.Price}}" required>
+                <br>
+                <label for="url-{{.Id}}">Ad URL:</label>
+                <input type="text" id="url-{{.Id}}" name="url" value="{{.Url}}" required>
+                <br>
+                <label for="status-{{.Id}}">Status:</label>
+                <input type="checkbox" id="status-{{.Id}}" name="status" {{if .Status}}checked{{end}}>
+                <br>
+                <button type="submit">Update Ad</button>
+            </form>
+        </div>
+    </li>
     {{end}}
 </ul>
-<a href="/ads/new?advertiser_id={{.Advertiser.ID}}">Create New Ad</a>
+
+<a href="/ads/new?advertiser_id={{.Advertiser.Id}}">Create New Ad</a>
 <a href="/">Back to Advertisers</a>
 </body>
 </html>
