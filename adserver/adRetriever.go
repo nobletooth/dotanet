@@ -13,7 +13,7 @@ import (
 var url string
 
 func init() {
-	flag.StringVar(&url, "getAllAdsUrl", "http://localhost:8080/ads/list/", "get all ads url")
+	flag.StringVar(&url, "getAllAdsUrl", "http://localhost:8081/ads/list/", "get all ads url")
 }
 
 func GetAdsListPeriodically() []common.AdInfo {
@@ -46,6 +46,10 @@ func GetAdsListPeriodically() []common.AdInfo {
 }
 
 func ReturnAllAds(ads []common.AdInfo) []common.AdInfo {
+	if ads == nil {
+		log.Println("No ads found")
+		return []common.AdInfo{}
+	}
 	for _, ad := range ads {
 		log.Printf("Ad ID: %d, Title: %s", ad.Id, ad.Title)
 	}
