@@ -6,7 +6,6 @@ import (
 	"sort"
 	"strconv"
 
-	_ "example.com/dotanet/common"
 	"github.com/gin-gonic/gin"
 )
 

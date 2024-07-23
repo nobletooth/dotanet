@@ -4,17 +4,12 @@ import (
 	"log"
 	"net/http"
 
-	"example.com/dotanet/common"
-	"example.com/dotanet/panel/advertiser"
-	"example.com/dotanet/panel/common"
-	"example.com/dotanet/panel/publisher"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/multitemplate"
 	"github.com/gin-gonic/gin"
-
-	"log"
-	"net/http"
-
+	"github.com/nobletooth/dotanet/tree/main/panel/advertiser"
+	"github.com/nobletooth/dotanet/tree/main/panel/common"
+	"github.com/nobletooth/dotanet/tree/main/panel/publisher"
 )
 
 func LoadTemplates(templatesDir string) multitemplate.Renderer {
@@ -66,6 +61,9 @@ func main() {
 	router.POST("/publishers", publisher.CreatePublisherHandler)
 	router.GET("/publishers/:id", publisher.ViewPublisherHandler)
 	router.GET("/publishers/:id/script", publisher.GetPublisherScript)
+
+	// Ad Server
+	router.GET("/ads/list/", ListAllAds)
 
 	if err := router.Run(":8080"); err != nil {
 		log.Fatalf("failed to run server: %v", err)

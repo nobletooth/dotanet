@@ -1,14 +1,15 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
 	//pgConnection()
 	router := gin.Default()
-	router.LoadHTMLGlob("./publisherwebsite/html/*")
+	router.LoadHTMLGlob("./html/*")
 
 	router.GET("/torob", torobHandler())
 	router.GET("/samsung", samsungHandler())

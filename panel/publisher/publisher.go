@@ -2,11 +2,12 @@ package publisher
 
 import (
 	"bytes"
-	"example.com/dotanet/panel/common"
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"os"
 	"strconv"
+
+	"github.com/gin-gonic/gin"
+	"github.com/nobletooth/dotanet/tree/main/panel/common"
 )
 
 type Publisher struct {
