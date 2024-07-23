@@ -4,7 +4,6 @@
         var adImage = document.getElementById('ad-image');
         var adSeen = false;
 
-        // Function to get ad information when the site is loaded
         function getAdInfo() {
             fetch('https://your-api-url.com/get-ad-info')
                 .then(response => response.json())
@@ -15,7 +14,6 @@
                 .catch(error => console.error('Error:', error));
         }
 
-        // Function to call API when the ad is seen
         function callAdSeenApi() {
             fetch('https://your-api-url.com/ad-seen', {
                 method: 'POST',
@@ -29,7 +27,6 @@
             .catch(error => console.error('Error:', error));
         }
 
-        // Function to call API when the ad is clicked
         adLink.addEventListener('click', function() {
             fetch('https://your-api-url.com/ad-click', {
                 method: 'POST',
@@ -43,7 +40,6 @@
             .catch(error => console.error('Error:', error));
         });
 
-        // Intersection Observer to detect when the ad is in view
         var observer = new IntersectionObserver(function(entries) {
             entries.forEach(entry => {
                 if (entry.isIntersecting && !adSeen) {
@@ -55,7 +51,6 @@
 
         observer.observe(adImage);
 
-        // Call the getAdInfo function to get ad details when the page loads
         getAdInfo();
     });
 </script>

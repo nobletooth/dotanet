@@ -14,7 +14,7 @@ func main() {
 	router.GET("/samsung", samsungHandler())
 	router.GET("/digiland", digilandHandler())
 	router.GET("/varzesh3", varzesh3Handler())
-	router.GET("/digikala", digikalaHandler())
+	router.GET("/digikala.js", digikalaHandler())
 
 	router.Run(":6060")
 }
@@ -45,6 +45,6 @@ func varzesh3Handler() gin.HandlerFunc {
 
 func digikalaHandler() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		c.HTML(http.StatusOK, "digikala.html", gin.H{})
+		c.HTML(http.StatusOK, "digikala.js.html", gin.H{})
 	}
 }
