@@ -60,8 +60,8 @@ func GetAdHandler(c *gin.Context) {
 	response := gin.H{
 		"Title":          bestAd.Title,
 		"ImagePath":      imagePath,
-		"ClicksURL":      fmt.Sprintf("/click/%d/%d", bestAd.AdvertiserId, publisherID),
-		"ImpressionsURL": fmt.Sprintf("/impression/%d/%d", bestAd.AdvertiserId, publisherID),
+		"ClicksURL":      fmt.Sprintf("/click/%d/%d", bestAd.Id, publisherID),
+		"ImpressionsURL": fmt.Sprintf("/impression/%d/%d", bestAd.Id, publisherID),
 	}
 
 	c.JSON(http.StatusOK, response)
