@@ -11,7 +11,7 @@ func impressionHandler() gin.HandlerFunc {
 		var impressionTime = time.Now()
 		adv := c.Param("adv") // should decrypt adv and pub.
 		pub := c.Param("pub") // should decrypt adv and pub.
-		var updateApi = updateApi{time: impressionTime, pubId: pub, advId: adv, isClick: false}
+		var updateApi = updateApi{time: impressionTime, pubId: pub, adId: adv, isClicked: false}
 		ch <- updateApi
 		c.String(http.StatusOK, "its ok!")
 	}
