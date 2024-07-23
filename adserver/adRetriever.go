@@ -13,7 +13,7 @@ import (
 var url string
 
 func init() {
-	flag.StringVar(&url, "getAllAdsUrl", "http://localhost:8080/ads/list/", "get all ads url")
+	flag.StringVar(&url, "getAllAdsUrl", "http://localhost:8081/ads/list/", "get all ads url")
 }
 
 func GetAdsListPeriodically() []common.AdInfo {
