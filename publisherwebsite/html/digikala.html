@@ -1,87 +1,53 @@
 <!DOCTYPE html>
-<html lang="fa">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>News Template</title>
+    <title>My HTML Page</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            direction: rtl;
-            text-align: right;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-        }
-        .container {
-            width: 90%;
-            max-width: 600px;
-            border: 1px solid #000;
-            margin: 20px auto;
-            padding: 10px;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
-        .header {
-            font-size: 14px;
-            font-weight: bold;
-            text-align: center;
-            margin-bottom: 10px;
-        }
-        .main-content, .picture-content {
+        .container {
+            max-width: 800px;
             width: 100%;
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
+            margin: 20px;
+            text-align: center;
         }
-        .main-content {
-            flex: 2;
+        .explanation {
+            margin: 20px 0;
+            font-size: 16px;
         }
-        .picture-content {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        .image-container {
+            margin-top: 20px;
         }
-        .picture-content img {
+        .image-container a {
+            display: inline-block;
+            border: 1px solid #000; /* Border for anchor tag */
+            padding: 10px;
+        }
+        .image-container img {
             max-width: 100%;
             height: auto;
-        }
-        .content {
-            font-size: 12px;
-        }
-        .content h2 {
-            font-size: 16px;
-            margin: 0;
-        }
-        .content p {
-            font-size: 14px;
-            margin: 10px 0 0 0;
-        }
-        .footer {
-            font-size: 12px;
-            text-align: center;
-            border-top: 1px solid #000;
-            margin-top: 10px;
-            padding-top: 10px;
-            width: 100%;
         }
     </style>
 </head>
 <body>
 <div class="container">
-    <div class="header">digikala.com</div>
-    <div class="main-content">
-        <div class="content">
-            <h2>فوری:حراج بزرگ قرن در دیجیکالا!</h2>
-            <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است.</p>
-        </div>
-        <div class="picture-content">
-            <img src="your-image-url.jpg" alt="خبر">
-        </div>
+    <h1>digikala</h1>
+    <div class="explanation">
+        مغازه دیجی کالا
     </div>
-    <div class="footer">جایگاه نمایش تبلیغ</div>
+    <div class="image-container">
+        <a href="https://www.example.com">
+            <img src="https://via.placeholder.com/800x400" alt="Sample Image">
+        </a>
+    </div>
 </div>
 </body>
 </html>

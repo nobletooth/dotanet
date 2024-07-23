@@ -5,14 +5,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a950d744-e0de-442f-a1f9-7b47d9f265f2" name="Changes" comment="gitignore correction.">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/publisherwebsite/html/digikala.html" beforeDir="false" afterPath="$PROJECT_DIR$/publisherwebsite/html/digikala.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/publisherwebsite/html/digiland.html" beforeDir="false" afterPath="$PROJECT_DIR$/publisherwebsite/html/digiland.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/publisherwebsite/html/samsung.html" beforeDir="false" afterPath="$PROJECT_DIR$/publisherwebsite/html/samsung.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/publisherwebsite/html/torob.html" beforeDir="false" afterPath="$PROJECT_DIR$/publisherwebsite/html/torob.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/publisherwebsite/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/publisherwebsite/main.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="GOROOT" url="file:///usr/local/go" />
+  <component name="GOROOT" url="file:///snap/go/10660" />
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
@@ -29,20 +34,46 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Go Build.go build main.go.executor": "Run",
+    "JavaScript Debug.digikala.html.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.go.formatter.settings.were.checked": "true",
     "RunOnceActivity.go.migrated.go.modules.settings": "true",
     "RunOnceActivity.go.modules.automatic.dependencies.download": "true",
     "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "publisherWebsite-template",
     "go.import.settings.migrated": "true",
     "go.sdk.automatically.set": "true",
-    "last_opened_file_path": "/Users/dena/dotanet/dotanet",
+    "last_opened_file_path": "/home/amin",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "nodejs_package_manager_path": "npm"
   }
 }]]></component>
+  <component name="RunManager" selected="Go Build.go build main.go">
+    <configuration name="go build main.go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="dotanet" />
+      <working_directory value="$PROJECT_DIR$/" />
+      <kind value="FILE" />
+      <package value="example.com/dotanet" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$/publisherwebsite/main.go" />
+      <method v="2" />
+    </configuration>
+    <configuration name="digikala.html" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/dotanet/publisherwebsite/html/digikala.html" useBuiltInWebServerPort="true">
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Go Build.go build main.go" />
+      <item itemvalue="JavaScript Debug.digikala.html" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Go Build.go build main.go" />
+        <item itemvalue="JavaScript Debug.digikala.html" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
