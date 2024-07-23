@@ -2,12 +2,14 @@ package advertiser
 
 import (
 	"errors"
-	"example.com/dotanet/panel/common"
 	"fmt"
-	"gorm.io/gorm"
 	"net/http"
 	"os"
 	"strconv"
+
+	"github.com/nobletooth/dotanet/tree/main/panel/common"
+	// "github.com/nobletooth/dotanet/tree/main/common"
+	"gorm.io/gorm"
 
 	"github.com/gin-gonic/gin"
 )
@@ -146,4 +148,14 @@ func LoadAdPictureHandler(c *gin.Context) {
 	contentType := http.DetectContentType(filebytes)
 	c.Header("Content-Type", contentType)
 	c.File(imageFilePath)
+}
+
+func ListAllAds(c *gin.Context) {
+	var ads []common.AdInfo
+	result := common.DB.Find(&ads)
+	if result.Error != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Loading ads failed"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"ads": result})
 }
