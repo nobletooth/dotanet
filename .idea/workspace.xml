@@ -5,22 +5,39 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a950d744-e0de-442f-a1f9-7b47d9f265f2" name="Changes" comment="gitignore correction.">
+      <change afterPath="$PROJECT_DIR$/adserver/auction.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dotanet.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dotanet.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/publisherwebsite/html/digikala.html" beforeDir="false" afterPath="$PROJECT_DIR$/publisherwebsite/html/digikala.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/publisherwebsite/html/digiland.html" beforeDir="false" afterPath="$PROJECT_DIR$/publisherwebsite/html/digiland.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/publisherwebsite/html/samsung.html" beforeDir="false" afterPath="$PROJECT_DIR$/publisherwebsite/html/samsung.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/publisherwebsite/html/torob.html" beforeDir="false" afterPath="$PROJECT_DIR$/publisherwebsite/html/torob.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/publisherwebsite/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/publisherwebsite/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adserver/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/adserver/main.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="GOROOT" url="file:///snap/go/10660" />
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Go File" />
+      </list>
+    </option>
+  </component>
+  <component name="GOROOT" url="file://$USER_HOME$/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.22.5.linux-amd64" />
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "amirata051"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "git@github.com:nobletooth/dotanet.git",
+    "accountId": "65f488ab-0219-46c2-b42f-b32e468a9226"
+  }
+}]]></component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 7
 }</component>
@@ -34,6 +51,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "DefaultGoTemplateProperty": "Go File",
     "Go Build.go build main.go.executor": "Run",
     "JavaScript Debug.digikala.html.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
@@ -41,7 +59,7 @@
     "RunOnceActivity.go.migrated.go.modules.settings": "true",
     "RunOnceActivity.go.modules.automatic.dependencies.download": "true",
     "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
-    "git-widget-placeholder": "publisherWebsite-template",
+    "git-widget-placeholder": "Adserver",
     "go.import.settings.migrated": "true",
     "go.sdk.automatically.set": "true",
     "last_opened_file_path": "/home/amin",
