@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Publishers</title>
+</head>
+<body>
+<h1>Publishers</h1>
+<ul>
+    {{range .Publishers}}
+    <li>{{.URL}} - Credit: {{.Credit}} - <a href="/publishers/{{.ID}}">View Details</a></li>
+    {{end}}
+</ul>
+<a href="/publishers/new">Create New Publisher</a>
+<a href="/">Back to Home</a>
+</body>
+</html>

@@ -4,6 +4,8 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/nobletooth/dotanet/tree/main/panel/common"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -24,7 +26,8 @@ type Service interface {
 
 func GetCreditOfAdvertiser(adId int) (Entity, error) {
 	var entity Entity
-	result := DB.First(&entity, adId)
+
+	result := common.DB.First(&entity, adId)
 	if result.Error != nil {
 		return entity, result.Error
 	}
@@ -36,18 +39,39 @@ func CreateAdvertiserEntity(name string, credit int) {
 		Name:   name,
 		Credit: credit,
 	}
-	DB.Create(&entity)
+	common.DB.Create(&entity)
 }
 
 func ListAllAdvertiserEntities() []Entity {
 	var advertisers []Entity
-	DB.Find(&advertisers)
+	common.DB.Find(&advertisers)
 	return advertisers
 }
 
+func ListAdsByAdvertiserHandler(c *gin.Context) {
+	idStr := c.Param("id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		c.HTML(http.StatusBadRequest, "index", gin.H{"error": "Invalid advertiser ID"})
+		return
+	}
+	ads, err := ListAdsByAdvertiser(uint(id))
+	if err != nil {
+		c.HTML(http.StatusInternalServerError, "index", gin.H{"error": err.Error()})
+		return
+	}
+
+	advertiser, err := FindAdvertiserByID(uint(id))
+	if err != nil {
+		c.HTML(http.StatusInternalServerError, "index", gin.H{"error": err.Error()})
+		return
+	}
+
+	c.HTML(http.StatusOK, "advertiser_ads", gin.H{"Ads": ads, "Advertiser": advertiser})
+}
 func FindAdvertiserByName(name string) (Entity, error) {
 	var entity Entity
-	result := DB.Where("name = ?", name).First(&entity)
+	result := common.DB.Where("name = ?", name).First(&entity)
 	if result.Error != nil {
 		return Entity{}, result.Error
 	}
@@ -56,15 +80,14 @@ func FindAdvertiserByName(name string) (Entity, error) {
 
 func ListAdsByAdvertiser(advertiserId uint) ([]Ad, error) {
 	var ads []Ad
-	result := DB.Where("advertiser_id = ?", advertiserId).Find(&ads)
+	result := common.DB.Where("advertiser_id = ?", advertiserId).Find(&ads)
 	return ads, result.Error
 }
 
 func ListAdvertisers(c *gin.Context) {
 	advertisers := ListAllAdvertiserEntities()
-	c.HTML(http.StatusOK, "index", gin.H{"Advertisers": advertisers})
+	c.HTML(http.StatusOK, "advertisers", gin.H{"Advertisers": advertisers})
 }
-
 func NewAdvertiserForm(c *gin.Context) {
 	c.HTML(http.StatusOK, "create_advertiser", nil)
 }
@@ -106,39 +129,11 @@ func EditAdForm(c *gin.Context) {
 	}
 
 	var ad Ad
-	result := DB.First(&ad, adID)
+	result := common.DB.First(&ad, adID)
 	if result.Error != nil {
 		c.HTML(http.StatusInternalServerError, "index", gin.H{"error": result.Error.Error()})
 		return
 	}
 
 	c.HTML(http.StatusOK, "edit_ad", gin.H{"Ad": ad})
-}
-
-func UpdateAdHandler(c *gin.Context) {
-	adIDStr := c.Param("id")
-	adID, err := strconv.Atoi(adIDStr)
-	if err != nil {
-		c.HTML(http.StatusBadRequest, "index", gin.H{"error": "Invalid ad ID"})
-		return
-	}
-
-	var ad Ad
-	result := DB.First(&ad, adID)
-	if result.Error != nil {
-		c.HTML(http.StatusInternalServerError, "index", gin.H{"error": result.Error.Error()})
-		return
-	}
-
-	ad.Title = c.PostForm("title")
-	ad.Image = c.PostForm("image")
-	ad.Price, _ = strconv.ParseFloat(c.PostForm("price"), 64)
-	ad.Url = c.PostForm("url")
-
-	if err := DB.Save(&ad).Error; err != nil {
-		c.HTML(http.StatusInternalServerError, "edit_ad", gin.H{"error": "Updating ad failed", "Ad": ad})
-		return
-	}
-
-	c.Redirect(http.StatusSeeOther, "/advertisers/"+strconv.Itoa(int(ad.AdvertiserId))+"/ads")
 }
