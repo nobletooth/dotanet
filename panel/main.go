@@ -3,19 +3,76 @@ package main
 import (
 	"log"
 	"net/http"
+	"time"
 
-	"example.com/dotanet/common"
 	"example.com/dotanet/panel/advertiser"
 	"example.com/dotanet/panel/common"
 	"example.com/dotanet/panel/publisher"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/multitemplate"
 	"github.com/gin-gonic/gin"
-
-	"log"
-	"net/http"
-
 )
+
+type EventService struct {
+	Pid     string    `json:"pubId"`
+	AdID    string    `json:"adId"`
+	Clicked bool      `json:"isClicked"`
+	TimeID  time.Time `json:"time"`
+}
+
+type ClickedEvent struct {
+	ID   uint      `gorm:"primaryKey"`
+	Pid  string    `gorm:"index"`
+	AdId string    `gorm:"index"`
+	Time time.Time `gorm:"index"`
+}
+
+type ViewedEvent struct {
+	ID   uint      `gorm:"primaryKey"`
+	Pid  string    `gorm:"index"`
+	AdId string    `gorm:"index"`
+	Time time.Time `gorm:"index"`
+}
+
+func eventservice(event EventService) error {
+	if event.Clicked {
+		clickedEvent := ClickedEvent{
+			Pid:  event.Pid,
+			AdId: event.AdID,
+			Time: event.TimeID,
+		}
+		result := common.DB.Create(&clickedEvent)
+		if result.Error != nil {
+			return result.Error
+		}
+	} else {
+		viewedEvent := ViewedEvent{
+			Pid:  event.Pid,
+			AdId: event.AdID,
+			Time: event.TimeID,
+		}
+		result := common.DB.Create(&viewedEvent)
+		if result.Error != nil {
+			return result.Error
+		}
+	}
+	return nil
+}
+
+func eventServerHandler(c *gin.Context) {
+	var event EventService
+	if err := c.BindJSON(&event); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request payload"})
+		return
+	}
+
+	if err := eventservice(event); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to process event"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Event processed successfully", "event": event})
+}
 
 func LoadTemplates(templatesDir string) multitemplate.Renderer {
 	r := multitemplate.NewRenderer()
@@ -37,6 +94,7 @@ func main() {
 	}
 	err := common.DB.AutoMigrate(&publisher.Publisher{})
 	err = common.DB.AutoMigrate(&advertiser.Ad{}, &advertiser.Ad{})
+	err = common.DB.AutoMigrate(&ClickedEvent{}, &ViewedEvent{})
 	if err != nil {
 		log.Fatalf("failed to migrate database: %v", err)
 
@@ -66,6 +124,7 @@ func main() {
 	router.POST("/publishers", publisher.CreatePublisherHandler)
 	router.GET("/publishers/:id", publisher.ViewPublisherHandler)
 	router.GET("/publishers/:id/script", publisher.GetPublisherScript)
+	router.POST("/eventservice", eventServerHandler)
 
 	if err := router.Run(":8080"); err != nil {
 		log.Fatalf("failed to run server: %v", err)
