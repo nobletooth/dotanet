@@ -6,8 +6,9 @@ import (
 	"net/http"
 )
 
+var sitenames = []string{"digikala", "digiland", "samsung", "torob", "varzesh3"}
+
 func main() {
-	//pgConnection()
 	router := gin.Default()
 	router.LoadHTMLGlob("./publisherwebsite/html/*")
 
