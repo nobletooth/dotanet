@@ -13,6 +13,7 @@ var allAds []common.AdInfo
 func main() {
 	router := gin.Default()
 	router.GET("/ads/", GetAdsHandler)
+
 	go GetAdsListPeriodically(allAds)
 	fmt.Println("Server running on port 8080")
 	router.Run(":8080")
