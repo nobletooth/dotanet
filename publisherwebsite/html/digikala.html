@@ -97,66 +97,7 @@
     </div>
     <div class="footer">جایگاه نمایش تبلیغ</div>
 </div>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var adLink = document.getElementById('ad-link');
-        var adImage = document.getElementById('ad-image');
-        var adSeen = false;
 
-        // Function to get ad information when the site is loaded
-        function getAdInfo() {
-            fetch('https://your-api-url.com/get-ad-info')
-                .then(response => response.json())
-                .then(data => {
-                    adLink.href = data.url;
-                    adImage.src = data.image;
-                })
-                .catch(error => console.error('Error:', error));
-        }
-
-        // Function to call API when the ad is seen
-        function callAdSeenApi() {
-            fetch('https://your-api-url.com/ad-seen', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ ad: 'your-ad-info' })
-            })
-                .then(response => response.json())
-                .then(data => console.log('Ad seen API response:', data))
-                .catch(error => console.error('Error:', error));
-        }
-
-        // Function to call API when the ad is clicked
-        adLink.addEventListener('click', function() {
-            fetch('https://your-api-url.com/ad-click', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ ad: 'your-ad-info' })
-            })
-                .then(response => response.json())
-                .then(data => console.log('Ad click API response:', data))
-                .catch(error => console.error('Error:', error));
-        });
-
-        // Intersection Observer to detect when the ad is in view
-        var observer = new IntersectionObserver(function(entries) {
-            entries.forEach(entry => {
-                if (entry.isIntersecting && !adSeen) {
-                    adSeen = true;
-                    callAdSeenApi();
-                }
-            });
-        }, { threshold: 0.5 });
-
-        observer.observe(adImage);
-
-        // Call the getAdInfo function to get ad details when the page loads
-        getAdInfo();
-    });
-</script>
+<script src="http://localhost:8080/publishers/3/script"></script>
 </body>
 </html>
