@@ -5,17 +5,18 @@
         var adSeen = false;
 
         function getAdInfo() {
-            fetch('https://your-api-url.com/get-ad-info')
+            fetch('http://localhost:8082/get-ad-info')
                 .then(response => response.json())
                 .then(data => {
-                    adLink.href = data.url;
                     adImage.src = data.image;
+                    window.ImpressionsURL = data.ImpressionsURL;
+                    window.ClicksURL = data.ClicksURL;
                 })
                 .catch(error => console.error('Error:', error));
         }
 
         function callAdSeenApi() {
-            fetch('https://your-api-url.com/ad-seen', {
+            fetch(window.ImpressionsURL, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -28,7 +29,7 @@
         }
 
         adLink.addEventListener('click', function() {
-            fetch('https://your-api-url.com/ad-click', {
+            fetch(window.ClicksURL, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
