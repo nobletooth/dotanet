@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"flag"
 	"log"
 	"net/http"
 	"time"
@@ -10,19 +9,13 @@ import (
 	"github.com/nobletooth/dotanet/common"
 )
 
-var URL string
-
-func init() {
-	flag.StringVar(&URL, "getAllAdsUrl", "http://localhost:8080/ads/list/", "get all ads url")
-}
-
 func GetAdsListPeriodically() []common.AdInfo {
 	ticker := time.NewTicker(1 * time.Minute)
 	defer ticker.Stop()
 	for {
 		select {
 		case <-ticker.C:
-			response, err := http.Get(URL)
+			response, err := http.Get("http://localhost:" + PanelPort + "/ads/list/")
 			if err != nil {
 				log.Println("Error fetching ads list:", err)
 				continue
