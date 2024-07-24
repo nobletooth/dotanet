@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"io/ioutil"
 	"math/rand"
@@ -11,12 +10,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/nobletooth/dotanet/common"
-)
-
-var (
-	NewAdImpressionThreshold          = flag.Int64("newAdTreshold", 5, "Impression threshold for considering an ad as new")
-	NewAdSelectionProbability         = flag.Float64("newAdProb", 0.25, "Probability of selecting a new ad")
-	ExperiencedAdSelectionProbability = flag.Float64("expAdProb", 0.75, "Probability of selecting a exprienced ad")
 )
 
 func GetImagePath(adID uint) (string, error) {

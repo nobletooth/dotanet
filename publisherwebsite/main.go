@@ -10,20 +10,17 @@ import (
 
 var (
 	sitenames        = []string{"digikala", "digiland", "samsung", "torob", "varzesh3"}
-	PublisherService string
+	PublisherService = flag.String("publisherservice", ":8083", "publisher service")
 )
 
-func init() {
-	flag.StringVar(&PublisherService, "publisherservice", "8083", "publisher service")
-}
-
 func main() {
+	flag.Parse()
 	router := gin.Default()
 	router.LoadHTMLGlob("./html/*")
 
 	router.GET("/:sitename", siteHandler())
 
-	router.Run(":" + PublisherService)
+	router.Run(*PublisherService)
 }
 
 func siteHandler() gin.HandlerFunc {
