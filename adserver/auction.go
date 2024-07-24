@@ -13,7 +13,7 @@ import (
 )
 
 func GetImagePath(adID uint) (string, error) {
-	url := fmt.Sprintf("http://localhost:8080/ads/%d/pictures", adID)
+	url := fmt.Sprintf(*AdserverUrl+"/ads/%d/pictures", adID)
 	resp, err := http.Get(url)
 	if err != nil {
 		return "", err
