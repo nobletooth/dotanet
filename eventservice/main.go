@@ -21,7 +21,7 @@ func main() {
 	router.GET("/click/:adv/:pub", clickHandler())
 	router.GET("/impression/:adv/:pub", impressionHandler())
 
-	router.Run(":6060")
+	router.Run(*EventservicePort)
 
 	go panelApiCall(ch)
 }
