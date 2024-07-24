@@ -94,7 +94,7 @@ func main() {
 		log.Fatalf("failed to initialize database: %v", err)
 	}
 	err := database.DB.AutoMigrate(&publisher.Publisher{})
-	err = database.DB.AutoMigrate(&advertiser.Ad{}, &advertiser.Ad{})
+	err = database.DB.AutoMigrate(&advertiser.Entity{}, &advertiser.Ad{})
 	err = database.DB.AutoMigrate(&common.ClickedEvent{}, &common.ViewedEvent{})
 	if err != nil {
 		log.Fatalf("failed to migrate database: %v", err)
