@@ -5,35 +5,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
+	"github.com/nobletooth/dotanet/common"
 	"net/http"
 	"strconv"
 	"time"
 )
-
-type click struct {
-	gorm.Model
-	clickTime time.Time
-	AdInfoId  uint `gorm:"foreignkey:AdId"`
-}
-
-type AdInfo struct {
-	Id           uint    `json:"id"`
-	Title        string  `json:"title"`
-	Image        string  `json:"image"`
-	Price        float64 `json:"price"`
-	Status       bool    `json:"status"`
-	Impressions  int     `json:"impressions"`
-	Url          string  `json:"url"`
-	AdvertiserId uint64  `json:"advertiserId"`
-}
-
-type updateApi struct {
-	time      time.Time
-	pubId     string
-	adId      string
-	isClicked bool
-}
 
 func clickHandler() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -48,9 +24,9 @@ func clickHandler() gin.HandlerFunc {
 		}
 		advNum32 := uint(advNum)
 		pub := c.Param("pub") // should decrypt adv and pub.
-		var updateApi = updateApi{time: clickTime, pubId: pub, adId: adv, isClicked: true}
+		var updateApi = common.EventServiceApiModel{Time: clickTime, PubId: pub, AdId: adv, IsClicked: true}
 		ch <- updateApi
-		var ad AdInfo
+		var ad common.AdInfo
 		result := Db.First(&ad, advNum32)
 		if result.RowsAffected == 0 {
 			c.JSON(http.StatusNotFound, gin.H{"error": "advNum not found"})
@@ -61,14 +37,12 @@ func clickHandler() gin.HandlerFunc {
 	}
 }
 
-func panelApiCall(ch chan updateApi) {
-	var data = <-ch
-	jsonData, err := json.Marshal(data)
+func panelApiCall(ch chan common.EventServiceApiModel) {
+	jsonData, err := json.Marshal(<-ch)
 	if err != nil {
 		fmt.Errorf("error : " + err.Error())
 	}
 	resp, err := http.Post("http://localhost:8080/eventservice", "application/json", bytes.NewBuffer(jsonData))
-	if resp.Status != "200 OK" {
-		ch <- data
-	}
+	_ = resp
+
 }

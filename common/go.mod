@@ -1,3 +1,3 @@
-module github.com/nobletooth/dotanet/tree/main/common
+module github.com/nobletooth/dotanet/common
 
 go 1.22.5

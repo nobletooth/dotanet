@@ -3,14 +3,14 @@ package main
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/nobletooth/dotanet/common"
 	"gorm.io/gorm"
 )
 
 var Db *gorm.DB
-var ch = make(chan updateApi, 10)
+var ch = make(chan common.EventServiceApiModel, 10)
 
 func main() {
-	Db.AutoMigrate(&click{})
 	if db, err := OpenDbConnection(); err != nil {
 		fmt.Errorf("error opening db connection: %v", err)
 	} else {

@@ -1,4 +1,4 @@
-module github.com/nobletooth/dotanet/tree/main/eventservice
+module github.com/nobletooth/dotanet/eventservice
 
 go 1.22.5
 

@@ -1,10 +1,9 @@
 package advertiser
 
 import (
+	"github.com/nobletooth/dotanet/panel/database"
 	"net/http"
 	"strconv"
-
-	"github.com/nobletooth/dotanet/tree/main/panel/common"
 
 	"github.com/gin-gonic/gin"
 )
@@ -27,7 +26,7 @@ type Service interface {
 func GetCreditOfAdvertiser(adId int) (Entity, error) {
 	var entity Entity
 
-	result := common.DB.First(&entity, adId)
+	result := database.DB.First(&entity, adId)
 	if result.Error != nil {
 		return entity, result.Error
 	}
@@ -39,12 +38,12 @@ func CreateAdvertiserEntity(name string, credit int) {
 		Name:   name,
 		Credit: credit,
 	}
-	common.DB.Create(&entity)
+	database.DB.Create(&entity)
 }
 
 func ListAllAdvertiserEntities() []Entity {
 	var advertisers []Entity
-	common.DB.Find(&advertisers)
+	database.DB.Find(&advertisers)
 	return advertisers
 }
 
@@ -71,7 +70,7 @@ func ListAdsByAdvertiserHandler(c *gin.Context) {
 }
 func FindAdvertiserByName(name string) (Entity, error) {
 	var entity Entity
-	result := common.DB.Where("name = ?", name).First(&entity)
+	result := database.DB.Where("name = ?", name).First(&entity)
 	if result.Error != nil {
 		return Entity{}, result.Error
 	}
@@ -80,7 +79,7 @@ func FindAdvertiserByName(name string) (Entity, error) {
 
 func ListAdsByAdvertiser(advertiserId uint) ([]Ad, error) {
 	var ads []Ad
-	result := common.DB.Where("advertiser_id = ?", advertiserId).Find(&ads)
+	result := database.DB.Where("advertiser_id = ?", advertiserId).Find(&ads)
 	return ads, result.Error
 }
 
@@ -129,7 +128,7 @@ func EditAdForm(c *gin.Context) {
 	}
 
 	var ad Ad
-	result := common.DB.First(&ad, adID)
+	result := database.DB.First(&ad, adID)
 	if result.Error != nil {
 		c.HTML(http.StatusInternalServerError, "index", gin.H{"error": result.Error.Error()})
 		return

@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/nobletooth/dotanet/tree/main/common"
+	"github.com/nobletooth/dotanet/common"
 )
 
 var url string

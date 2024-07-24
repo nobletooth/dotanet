@@ -1,4 +1,4 @@
-module github.com/nobletooth/dotanet/tree/main/publisherwebsite
+module github.com/nobletooth/dotanet/publisherwebsite
 
 go 1.22.5
 

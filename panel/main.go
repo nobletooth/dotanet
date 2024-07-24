@@ -1,17 +1,16 @@
 package main
 
 import (
-	"log"
-	"net/http"
-	"time"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/multitemplate"
 	"github.com/gin-gonic/gin"
-	"github.com/nobletooth/dotanet/tree/main/panel/advertiser"
-	"github.com/nobletooth/dotanet/tree/main/panel/common"
-	"github.com/nobletooth/dotanet/tree/main/panel/publisher"
+	"github.com/nobletooth/dotanet/panel/advertiser"
+	"github.com/nobletooth/dotanet/panel/database"
+	"github.com/nobletooth/dotanet/panel/publisher"
+	"log"
+	"net/http"
+	"time"
 )
-
 
 type EventService struct {
 	Pid     string    `json:"pubId"`
@@ -41,7 +40,7 @@ func eventservice(event EventService) error {
 			AdId: event.AdID,
 			Time: event.TimeID,
 		}
-		result := common.DB.Create(&clickedEvent)
+		result := database.DB.Create(&clickedEvent)
 		if result.Error != nil {
 			return result.Error
 		}
@@ -51,7 +50,7 @@ func eventservice(event EventService) error {
 			AdId: event.AdID,
 			Time: event.TimeID,
 		}
-		result := common.DB.Create(&viewedEvent)
+		result := database.DB.Create(&viewedEvent)
 		if result.Error != nil {
 			return result.Error
 		}
@@ -89,12 +88,12 @@ func LoadTemplates(templatesDir string) multitemplate.Renderer {
 }
 
 func main() {
-	if err := common.NewDatabase(); err != nil {
+	if err := database.NewDatabase(); err != nil {
 		log.Fatalf("failed to initialize database: %v", err)
 	}
-	err := common.DB.AutoMigrate(&publisher.Publisher{})
-	err = common.DB.AutoMigrate(&advertiser.Ad{}, &advertiser.Ad{})
-	err = common.DB.AutoMigrate(&ClickedEvent{}, &ViewedEvent{})
+	err := database.DB.AutoMigrate(&publisher.Publisher{})
+	err = database.DB.AutoMigrate(&advertiser.Ad{}, &advertiser.Ad{})
+	err = database.DB.AutoMigrate(&ClickedEvent{}, &ViewedEvent{})
 	if err != nil {
 		log.Fatalf("failed to migrate database: %v", err)
 

@@ -10,7 +10,7 @@ var sitenames = []string{"digikala", "digiland", "samsung", "torob", "varzesh3"}
 
 func main() {
 	router := gin.Default()
-	router.LoadHTMLGlob("./publisherwebsite/html/*")
+	router.LoadHTMLGlob("./html/*")
 
 	router.GET("/:sitename", siteHandler())
 

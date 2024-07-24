@@ -3,12 +3,12 @@ package advertiser
 import (
 	"errors"
 	"fmt"
+	"github.com/nobletooth/dotanet/panel/database"
 	"net/http"
 	"os"
 	"strconv"
 
-	"github.com/nobletooth/dotanet/tree/main/panel/common"
-	// "github.com/nobletooth/dotanet/tree/main/common"
+	"github.com/nobletooth/dotanet/common"
 	"gorm.io/gorm"
 
 	"github.com/gin-gonic/gin"
@@ -48,7 +48,7 @@ func CreateAdHandler(c *gin.Context) {
 
 	ad.Image = imagePath
 
-	if err := common.DB.Create(&ad).Error; err != nil {
+	if err := database.DB.Create(&ad).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Creating ad failed"})
 		return
 	}
@@ -74,7 +74,7 @@ func CreateAdForm(c *gin.Context) {
 
 func FindAdvertiserByID(id uint) (Entity, error) {
 	var entity Entity
-	result := common.DB.First(&entity, id)
+	result := database.DB.First(&entity, id)
 	if result.Error != nil {
 		return Entity{}, result.Error
 	}
@@ -90,7 +90,7 @@ func UpdateAdHandler(c *gin.Context) {
 	}
 
 	var ad Ad
-	if err := common.DB.First(&ad, id).Error; err != nil {
+	if err := database.DB.First(&ad, id).Error; err != nil {
 		c.HTML(http.StatusNotFound, "advertiser_ads", gin.H{"error": "Ad not found"})
 		return
 	}
@@ -100,7 +100,7 @@ func UpdateAdHandler(c *gin.Context) {
 	ad.Url = c.PostForm("url")
 	ad.Status = c.PostForm("status") == "on"
 
-	if err := common.DB.Save(&ad).Error; err != nil {
+	if err := database.DB.Save(&ad).Error; err != nil {
 		c.HTML(http.StatusInternalServerError, "advertiser_ads", gin.H{"error": "Failed to update ad"})
 		return
 	}
@@ -110,7 +110,7 @@ func UpdateAdHandler(c *gin.Context) {
 
 func findAdById(id int) (Ad, error) {
 	var ad Ad
-	err := common.DB.First(&ad, id).Error
+	err := database.DB.First(&ad, id).Error
 	return ad, err
 
 }
@@ -152,7 +152,7 @@ func LoadAdPictureHandler(c *gin.Context) {
 
 func ListAllAds(c *gin.Context) {
 	var ads []common.AdInfo
-	result := common.DB.Find(&ads)
+	result := database.DB.Find(&ads)
 	if result.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Loading ads failed"})
 		return

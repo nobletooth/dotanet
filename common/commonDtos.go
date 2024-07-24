@@ -18,3 +18,10 @@ type click struct {
 	time     time.Time
 	AdInfoId uint
 }
+
+type EventServiceApiModel struct {
+	Time      time.Time
+	PubId     string
+	AdId      string
+	IsClicked bool
+}

@@ -1,4 +1,4 @@
-module github.com/nobletooth/dotanet/tree/main/adserver
+module github.com/nobletooth/dotanet/adserver
 
 go 1.22.5
 

@@ -2,12 +2,12 @@ package publisher
 
 import (
 	"bytes"
+	"github.com/nobletooth/dotanet/panel/database"
 	"net/http"
 	"os"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/nobletooth/dotanet/tree/main/panel/common"
 )
 
 type Publisher struct {
@@ -20,7 +20,7 @@ type Publisher struct {
 
 func ListPublishers(c *gin.Context) {
 	var publishers []Publisher
-	if err := common.DB.Find(&publishers).Error; err != nil {
+	if err := database.DB.Find(&publishers).Error; err != nil {
 		c.HTML(http.StatusInternalServerError, "publishers", gin.H{"error": "Failed to load publishers"})
 		return
 	}
@@ -36,7 +36,7 @@ func NewPublisherForm(c *gin.Context) {
 func CreatePublisherHandler(c *gin.Context) {
 	url := c.PostForm("url")
 	publisher := Publisher{URL: url, Credit: 0}
-	if err := common.DB.Create(&publisher).Error; err != nil {
+	if err := database.DB.Create(&publisher).Error; err != nil {
 		c.HTML(http.StatusInternalServerError, "index", gin.H{"error": "Failed to create publisher"})
 		return
 	}
@@ -53,7 +53,7 @@ func ViewPublisherHandler(c *gin.Context) {
 	}
 
 	var publisher Publisher
-	if err := common.DB.First(&publisher, id).Error; err != nil {
+	if err := database.DB.First(&publisher, id).Error; err != nil {
 		c.HTML(http.StatusNotFound, "index", gin.H{"error": "Publisher not found"})
 		return
 	}
@@ -76,7 +76,7 @@ func GetPublisherScript(c *gin.Context) {
 	}
 
 	var publisher Publisher
-	if err := common.DB.First(&publisher, id).Error; err != nil {
+	if err := database.DB.First(&publisher, id).Error; err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Publisher not found"})
 		return
 	}

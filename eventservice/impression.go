@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/nobletooth/dotanet/common"
 	"net/http"
 	"time"
 )
@@ -11,7 +12,7 @@ func impressionHandler() gin.HandlerFunc {
 		var impressionTime = time.Now()
 		adv := c.Param("adv") // should decrypt adv and pub.
 		pub := c.Param("pub") // should decrypt adv and pub.
-		var updateApi = updateApi{time: impressionTime, pubId: pub, adId: adv, isClicked: false}
+		var updateApi = common.EventServiceApiModel{Time: impressionTime, PubId: pub, AdId: adv, IsClicked: false}
 		ch <- updateApi
 		c.String(http.StatusOK, "its ok!")
 	}
