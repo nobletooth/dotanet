@@ -2,18 +2,39 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"math/rand"
 	"net/http"
 	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/nobletooth/dotanet/common"
 )
 
-func GetImage(adID uint) (string, error) {
-	url := fmt.Sprintf("http://localhost:8080/ads/%d/picture", adID)
-	return url, nil
+var (
+	NewAdImpressionThreshold = flag.Int("newAdTreshold", 5, "Impression threshold for considering an ad as new")
+	NewAdSelectionProbability = flag.Float64("newAdProb", 0.25, "Probability of selecting a new ad")
+	ExperiencedAdSelectionProbability = flag.Float64("expAdProb", 0.75, "Probability of selecting a exprienced ad")
+)
+
+func GetImagePath(adID uint) (string, error) {
+	url := fmt.Sprintf("http://localhost:8080/ads/%d/pictures", adID)
+	resp, err := http.Get(url)
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return "", fmt.Errorf("failed to get image path, status code: %d", resp.StatusCode)
+	}
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return "", err
+	}
+
+	return string(body), nil
 }
 
 func GetAdHandler(c *gin.Context) {
@@ -29,7 +50,7 @@ func GetAdHandler(c *gin.Context) {
 	var ctrPrices []float64
 
 	for _, ad := range allAds {
-		if ad.ImpressionCount < *NewAdImpressionThreshold {
+		if ad.ImpressionCount < NewAdImpressionThreshold {
 			newAds = append(newAds, ad)
 		} else {
 			ctrPrice := float64(ad.ClickCount) / float64(ad.ImpressionCount) * ad.Price
@@ -62,7 +83,7 @@ func GetAdHandler(c *gin.Context) {
 	}
 
 	var finalAd common.AdWithMetrics
-	if (rand.Float64() < *NewAdSelectionProbability && selectedNewAd.Id != 0) || selectedExperiencedAd.Id == 0 {
+	if rand.Float64() < NewAdSelectionProbability && selectedNewAd.Id != 0 {
 		finalAd = selectedNewAd
 	} else {
 		finalAd = selectedExperiencedAd
@@ -72,12 +93,12 @@ func GetAdHandler(c *gin.Context) {
 }
 
 func sendAdResponse(c *gin.Context, ad common.AdWithMetrics, pubID string) {
-	fmt.Printf("adID: %d,ad title:%s,ad price:%f", ad.Id, ad.Title, ad.Price)
-	imageDataurl, err := GetImage(ad.AdInfo.Id)
+	imagePath, err := GetImagePath(ad.Id)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get image"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get image path"})
 		return
 	}
+
 	publisherID, err := strconv.ParseUint(pubID, 10, 64)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid publisher ID"})
@@ -86,9 +107,9 @@ func sendAdResponse(c *gin.Context, ad common.AdWithMetrics, pubID string) {
 
 	response := gin.H{
 		"Title":          ad.Title,
-		"ImageData":      imageDataurl,
-		"ClicksURL":      fmt.Sprintf("http://localhost:8082/click/%d/%d", ad.Id, publisherID),
-		"ImpressionsURL": fmt.Sprintf("http://localhost:8082/impression/%d/%d", ad.Id, publisherID),
+		"ImagePath":      imagePath,
+		"ClicksURL":      fmt.Sprintf("/click/%d/%d", ad.Id, publisherID),
+		"ImpressionsURL": fmt.Sprintf("/impression/%d/%d", ad.Id, publisherID),
 	}
 
 	c.JSON(http.StatusOK, response)
