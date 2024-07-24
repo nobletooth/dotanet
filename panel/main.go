@@ -130,7 +130,7 @@ func main() {
 	// Ad server routes
 	router.GET("/ads/list/", advertiser.ListAllAds)
 
-	if err := router.Run(":" + *(database.PanelPort)); err != nil {
+	if err := router.Run(*(database.PanelPort)); err != nil {
 		log.Fatalf("failed to run server: %v", err)
 	}
 }

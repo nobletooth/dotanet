@@ -43,7 +43,7 @@ func panelApiCall(ch chan common.EventServiceApiModel) {
 	if err != nil {
 		fmt.Errorf("error : " + err.Error())
 	}
-	resp, err := http.Post("http://localhost:"+EventservicePort+"/eventservice", "application/json", bytes.NewBuffer(jsonData))
+	resp, err := http.Post(*EventservicePort+"/eventservice", "application/json", bytes.NewBuffer(jsonData))
 	_ = resp
 
 }
