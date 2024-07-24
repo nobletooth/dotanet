@@ -9,11 +9,16 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/nobletooth/dotanet/common"
+)
+
+var (
+	NewAdImpressionThreshold = flag.Int("newAdTreshold", 5, "Impression threshold for considering an ad as new")
+	NewAdSelectionProbability = flag.Float64("newAdProb", 0.25, "Probability of selecting a new ad")
+	ExperiencedAdSelectionProbability = flag.Float64("expAdProb", 0.75, "Probability of selecting a exprienced ad")
 )
 
 func GetImagePath(adID uint) (string, error) {
-	url := fmt.Sprintf(*AdserverUrl+"/ads/%d/pictures", adID)
+	url := fmt.Sprintf("http://localhost:8080/ads/%d/pictures", adID)
 	resp, err := http.Get(url)
 	if err != nil {
 		return "", err
@@ -45,7 +50,7 @@ func GetAdHandler(c *gin.Context) {
 	var ctrPrices []float64
 
 	for _, ad := range allAds {
-		if ad.ImpressionCount < *NewAdImpressionThreshold {
+		if ad.ImpressionCount < NewAdImpressionThreshold {
 			newAds = append(newAds, ad)
 		} else {
 			ctrPrice := float64(ad.ClickCount) / float64(ad.ImpressionCount) * ad.Price
@@ -78,7 +83,7 @@ func GetAdHandler(c *gin.Context) {
 	}
 
 	var finalAd common.AdWithMetrics
-	if rand.Float64() < *NewAdSelectionProbability && selectedNewAd.Id != 0 {
+	if rand.Float64() < NewAdSelectionProbability && selectedNewAd.Id != 0 {
 		finalAd = selectedNewAd
 	} else {
 		finalAd = selectedExperiencedAd
