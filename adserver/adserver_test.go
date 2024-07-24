@@ -12,7 +12,7 @@ import (
 )
 
 func TestGetAdsHandlerUnit(t *testing.T) {
-	testAds := []common.AdInfo{
+	testAds := []common.AdWithMetrics{
 		{Id: 1, Title: "Test Ad 1"},
 		{Id: 2, Title: "Test Ad 2"},
 	}
@@ -26,7 +26,7 @@ func TestGetAdsHandlerUnit(t *testing.T) {
 
 	assert.Equal(t, http.StatusOK, w.Code)
 
-	var response []common.AdInfo
+	var response []common.AdWithMetrics
 	err := json.Unmarshal(w.Body.Bytes(), &response)
 	assert.NoError(t, err)
 	assert.Equal(t, testAds, response)
