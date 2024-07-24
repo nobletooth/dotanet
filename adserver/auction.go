@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"math/rand"
@@ -9,11 +10,12 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/nobletooth/dotanet/common"
 )
 
 var (
-	NewAdImpressionThreshold = flag.Int64("newAdTreshold", 5, "Impression threshold for considering an ad as new")
-	NewAdSelectionProbability = flag.Float64("newAdProb", 0.25, "Probability of selecting a new ad")
+	NewAdImpressionThreshold          = flag.Int64("newAdTreshold", 5, "Impression threshold for considering an ad as new")
+	NewAdSelectionProbability         = flag.Float64("newAdProb", 0.25, "Probability of selecting a new ad")
 	ExperiencedAdSelectionProbability = flag.Float64("expAdProb", 0.75, "Probability of selecting a exprienced ad")
 )
 
@@ -50,7 +52,7 @@ func GetAdHandler(c *gin.Context) {
 	var ctrPrices []float64
 
 	for _, ad := range allAds {
-		if ad.ImpressionCount < NewAdImpressionThreshold {
+		if ad.ImpressionCount < *NewAdImpressionThreshold {
 			newAds = append(newAds, ad)
 		} else {
 			ctrPrice := float64(ad.ClickCount) / float64(ad.ImpressionCount) * ad.Price
@@ -83,7 +85,7 @@ func GetAdHandler(c *gin.Context) {
 	}
 
 	var finalAd common.AdWithMetrics
-	if rand.Float64() < NewAdSelectionProbability && selectedNewAd.Id != 0 {
+	if rand.Float64() < *NewAdSelectionProbability && selectedNewAd.Id != 0 {
 		finalAd = selectedNewAd
 	} else {
 		finalAd = selectedExperiencedAd
