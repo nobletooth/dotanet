@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"log"
 	"net/http"
 	"strconv"
@@ -21,15 +20,6 @@ type EventService struct {
 	AdID    string    `json:"adId"`
 	Clicked bool      `json:"isClicked"`
 	TimeID  time.Time `json:"time"`
-}
-
-var config = cors.Config{
-	AllowAllOrigins:  true,
-	AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"},
-	AllowHeaders:     []string{"*"},
-	ExposeHeaders:    []string{"*"},
-	AllowCredentials: true,
-	MaxAge:           12 * time.Hour,
 }
 
 func eventservice(event EventService) error {
@@ -93,17 +83,15 @@ func LoadTemplates(templatesDir string) multitemplate.Renderer {
 	r.AddFromFiles("create_publisher", templatesDir+"/create_publisher.html")
 	r.AddFromFiles("view_publisher", templatesDir+"/view.html")
 	r.AddFromFiles("reports", templatesDir+"/reports.html")
-	r.AddFromFiles("ad_reports", templatesDir+"/ad_reports.html")
 	return r
 }
 
 func main() {
-	flag.Parse()
 	if err := database.NewDatabase(); err != nil {
 		log.Fatalf("failed to initialize database: %v", err)
 	}
 	err := database.DB.AutoMigrate(&publisher.Publisher{})
-	err = database.DB.AutoMigrate(&advertiser.Entity{}, &advertiser.Ad{})
+	err = database.DB.AutoMigrate(&advertiser.Ad{}, &advertiser.Ad{})
 	err = database.DB.AutoMigrate(&common.ClickedEvent{}, &common.ViewedEvent{})
 	if err != nil {
 		log.Fatalf("failed to migrate database: %v", err)
@@ -111,7 +99,8 @@ func main() {
 	}
 
 	router := gin.Default()
-	router.Use(cors.New(config))
+	router.Use(cors.Default())
+
 	router.HTMLRender = LoadTemplates("./templates")
 	// Home route
 	router.GET("/", homeHandler)
@@ -125,7 +114,7 @@ func main() {
 	router.GET("/ads/new", advertiser.CreateAdForm)
 	router.POST("/ads", advertiser.CreateAdHandler)
 	router.POST("/ads/update", advertiser.UpdateAdHandler)
-	router.GET("/ads/:id/picture", advertiser.LoadAdPictureHandler) //endpoint
+	router.GET("/ads/:id/picture", advertiser.LoadAdPictureHandler)
 
 	// Publisher routes
 	router.GET("/publishers", publisher.ListPublishers)
@@ -133,13 +122,13 @@ func main() {
 	router.POST("/publishers", publisher.CreatePublisherHandler)
 	router.GET("/publishers/:id", publisher.ViewPublisherHandler)
 	router.GET("/publishers/:id/script", publisher.GetPublisherScript)
-	router.POST("/eventservice", eventServerHandler) //end point
+	router.POST("/eventservice", eventServerHandler)
 	router.GET("/publishers/:id/reports", publisher.GetPublisherReports)
 
 	// Ad server routes
-	router.GET("/ads/list/", advertiser.ListAllAds) //endpoint
+	router.GET("/ads/list/", advertiser.ListAllAds)
 
-	if err := router.Run(*(database.PanelPort)); err != nil {
+	if err := router.Run(database.PanelPort); err != nil {
 		log.Fatalf("failed to run server: %v", err)
 	}
 }
