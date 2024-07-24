@@ -9,7 +9,7 @@ import (
 	"github.com/nobletooth/dotanet/common"
 )
 
-var allAds []common.AdInfo
+var allAds []common.AdWithMetrics
 var PanelPort string
 var AdserverPort string
 
