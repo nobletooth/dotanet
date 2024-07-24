@@ -15,7 +15,7 @@ import (
 
 type Publisher struct {
 	ID          uint   `gorm:"primaryKey;autoIncrement"`
-	URL         string `gorm:"column:url;unique;not null"` // Removed space after "url"
+	Name        string `gorm:"column:name;unique;not null"`
 	Credit      int    `gorm:"column:credit"`
 	Clicks      int    `gorm:"column:clicks"`
 	Impressions int    `gorm:"column:impressions"`
@@ -52,8 +52,8 @@ func NewPublisherForm(c *gin.Context) {
 }
 
 func CreatePublisherHandler(c *gin.Context) {
-	url := c.PostForm("url")
-	publisher := Publisher{URL: url, Credit: 0}
+	name := c.PostForm("name")
+	publisher := Publisher{Name: name, Credit: 0}
 	if err := database.DB.Create(&publisher).Error; err != nil {
 		c.HTML(http.StatusInternalServerError, "index", gin.H{"error": "Failed to create publisher"})
 		return
@@ -76,7 +76,7 @@ func ViewPublisherHandler(c *gin.Context) {
 		return
 	}
 
-	script := "<script src=\"" + publisher.URL + ".com/script.js\"></script>"
+	script := "<script src=\"" + publisher.Name + ".com/script.js\"></script>"
 
 	c.HTML(http.StatusOK, "view_publisher", gin.H{
 		"Publisher": publisher,
@@ -99,7 +99,7 @@ func GetPublisherScript(c *gin.Context) {
 		return
 	}
 
-	scriptFilePath := "./publisher/script/" + "digikala" + ".js"
+	scriptFilePath := "./publisher/script/" + publisher.Name + ".js"
 	scriptContent, err := os.ReadFile(scriptFilePath)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to read script file"})
