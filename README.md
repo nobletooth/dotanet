@@ -4,7 +4,7 @@ DotaNet Ad Server is a advertising platform that manages advertisers, publishers
 
 ## Components  
 - Ad Server  
-- Event Service  
+- Event Server  
 - Panel  
 - Publisher Website  
 
