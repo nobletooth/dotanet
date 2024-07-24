@@ -11,26 +11,17 @@ import (
 var DB *gorm.DB
 
 var (
-	user      string
-	password  string
-	dbname    string
-	port      string
-	host      string
-	PanelPort string
+	user      = flag.String("dbuser", "1", "Database user")
+	password  = flag.String("dbpassword", "2", "Database password")
+	dbname    = flag.String("dbname", "3", "Database name")
+	port      = flag.String("dbport", "4", "Database port")
+	host      = flag.String("dbhost", "5", "Database host")
+	PanelPort = flag.String("panelport", "8081", "Panel port")
 )
 
-func init() {
-	flag.StringVar(&user, "dbuser", "postgres", "Database user")
-	flag.StringVar(&password, "dbpassword", "Ala.13495782", "Database password")
-	flag.StringVar(&dbname, "dbname", "todo", "Database name")
-	flag.StringVar(&port, "dbport", "5432", "Database port")
-	flag.StringVar(&host, "dbhost", "localhost", "Database host")
-	flag.StringVar(&PanelPort, "panelport", ":8081", "panel port")
-}
-
 func NewDatabase() error {
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable",
-		host, user, password, dbname, port)
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s",
+		*host, *user, *password, *dbname, *port)
 
 	var err error
 	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
