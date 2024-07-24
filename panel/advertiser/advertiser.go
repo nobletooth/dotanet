@@ -5,7 +5,8 @@ import (
 	"gorm.io/gorm"
 	"net/http"
 	"strconv"
-
+	"time"
+	"github.com/nobletooth/dotanet/common"
 	"github.com/gin-gonic/gin"
 )
 
@@ -14,6 +15,14 @@ type Entity struct {
 	Name   string `gorm:"unique;not null"`
 	Credit int    `gorm:"column:credit"`
 	Ads    []Ad   `gorm:"foreignKey:AdvertiserId"`
+}
+
+type AdReport struct {
+	Date        time.Time `json:"date"`
+	Clicks      int64     `json:"clicks"`
+	Impressions int64     `json:"impressions"`
+	CTR         float64   `json:"ctr"`
+	Spent       float64   `json:"spent"`
 }
 
 type Service interface {
@@ -147,4 +156,56 @@ func EditAdForm(c *gin.Context) {
 	}
 
 	c.HTML(http.StatusOK, "edit_ad", gin.H{"Ad": ad})
+}
+
+func GetAdvertiserAdReports(c *gin.Context) {
+	adIDStr := c.Param("id")
+	adID, err := strconv.Atoi(adIDStr)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ad ID"})
+		return
+	}
+
+	now := time.Now().UTC()
+	endDate := now.Truncate(time.Minute)
+	startDate := endDate.Add(-1 * time.Hour)
+
+	var reports []AdReport
+	for date := startDate; !date.After(endDate); date = date.Add(time.Minute) {
+		var clickCount, impressionCount int64
+		var spent float64
+
+		database.DB.Model(&common.ClickedEvent{}).
+			Where("ad_id = ? AND time BETWEEN ? AND ?", adID, date, date.Add(time.Minute)).
+			Count(&clickCount)
+
+		database.DB.Model(&common.ViewedEvent{}).
+			Where("ad_id = ? AND time BETWEEN ? AND ?", adID, date, date.Add(time.Minute)).
+			Count(&impressionCount)
+
+		database.DB.Table("clicked_events").
+			Select("SUM(price)").
+			Where("ad_id = ? AND time BETWEEN ? AND ?", adID, date, date.Add(time.Minute)).
+			Scan(&spent)
+
+		ctr := 0.0
+		if impressionCount > 0 {
+			ctr = float64(clickCount) / float64(impressionCount)
+		}
+
+		reports = append(reports, AdReport{
+			Date:        date,
+			Clicks:      clickCount,
+			Impressions: impressionCount,
+			CTR:         ctr,
+			Spent:       spent,
+		})
+	}
+
+	c.HTML(http.StatusOK, "ad_reports", gin.H{
+		"Reports": reports,
+		"StartDate": startDate.Format("2006-01-02 15:04:05"),
+		"EndDate":   endDate.Format("2006-01-02 15:04:05"),
+		"AdID":      adID,
+	})
 }
