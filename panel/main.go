@@ -4,11 +4,13 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/multitemplate"
 	"github.com/gin-gonic/gin"
+	"github.com/nobletooth/dotanet/common"
 	"github.com/nobletooth/dotanet/panel/advertiser"
 	"github.com/nobletooth/dotanet/panel/database"
 	"github.com/nobletooth/dotanet/panel/publisher"
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 )
 
@@ -19,33 +21,28 @@ type EventService struct {
 	TimeID  time.Time `json:"time"`
 }
 
-type ClickedEvent struct {
-	ID   uint      `gorm:"primaryKey"`
-	Pid  string    `gorm:"index"`
-	AdId string    `gorm:"index"`
-	Time time.Time `gorm:"index"`
-}
-
-type ViewedEvent struct {
-	ID   uint      `gorm:"primaryKey"`
-	Pid  string    `gorm:"index"`
-	AdId string    `gorm:"index"`
-	Time time.Time `gorm:"index"`
-}
-
 func eventservice(event EventService) error {
 	if event.Clicked {
-		clickedEvent := ClickedEvent{
+		clickedEvent := common.ClickedEvent{
 			Pid:  event.Pid,
 			AdId: event.AdID,
 			Time: event.TimeID,
 		}
 		result := database.DB.Create(&clickedEvent)
+		realID, _ := strconv.Atoi(clickedEvent.AdId)
+		realPid, _ := strconv.Atoi(clickedEvent.Pid)
+		ad, _ := advertiser.FindAdById(realID)
+		err := advertiser.HandleAdvertiserCredit(ad)
+		err = publisher.HandlePublisherCredit(ad, realPid)
+		if err != nil {
+			return err
+		}
+		result = database.DB.Create(&clickedEvent)
 		if result.Error != nil {
 			return result.Error
 		}
 	} else {
-		viewedEvent := ViewedEvent{
+		viewedEvent := common.ViewedEvent{
 			Pid:  event.Pid,
 			AdId: event.AdID,
 			Time: event.TimeID,
@@ -93,7 +90,7 @@ func main() {
 	}
 	err := database.DB.AutoMigrate(&publisher.Publisher{})
 	err = database.DB.AutoMigrate(&advertiser.Ad{}, &advertiser.Ad{})
-	err = database.DB.AutoMigrate(&ClickedEvent{}, &ViewedEvent{})
+	err = database.DB.AutoMigrate(&common.ClickedEvent{}, &common.ViewedEvent{})
 	if err != nil {
 		log.Fatalf("failed to migrate database: %v", err)
 
@@ -125,7 +122,6 @@ func main() {
 	router.GET("/publishers/:id/script", publisher.GetPublisherScript)
 	router.POST("/eventservice", eventServerHandler)
 
-	// Ad Server
 	router.GET("/ads/list/", advertiser.ListAllAds)
 
 	if err := router.Run(":8080"); err != nil {

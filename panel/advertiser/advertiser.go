@@ -2,6 +2,7 @@ package advertiser
 
 import (
 	"github.com/nobletooth/dotanet/panel/database"
+	"gorm.io/gorm"
 	"net/http"
 	"strconv"
 
@@ -21,6 +22,17 @@ type Service interface {
 	ListAllAdvertiserEntities() []Entity
 	FindAdvertiserByName(name string) (Entity, error)
 	ListAdsByAdvertiser(advertiserId uint) ([]Ad, error)
+}
+
+func HandleAdvertiserCredit(ad Ad) error {
+	creditDeduction := int(ad.Price * 0.8)
+
+	result := database.DB.Model(&Entity{}).Where("ID = ?", ad.AdvertiserId).Update("Credit", gorm.Expr("Credit - ?", creditDeduction))
+	if result.Error != nil {
+		return result.Error
+	}
+
+	return nil
 }
 
 func GetCreditOfAdvertiser(adId int) (Entity, error) {

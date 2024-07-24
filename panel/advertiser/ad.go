@@ -2,13 +2,13 @@ package advertiser
 
 import (
 	"errors"
-	"fmt"
+	"github.com/nobletooth/dotanet/common"
 	"github.com/nobletooth/dotanet/panel/database"
 	"net/http"
 	"os"
 	"strconv"
+	"time"
 
-	"github.com/nobletooth/dotanet/common"
 	"gorm.io/gorm"
 
 	"github.com/gin-gonic/gin"
@@ -108,7 +108,7 @@ func UpdateAdHandler(c *gin.Context) {
 	c.Redirect(http.StatusFound, "/advertisers/"+strconv.Itoa(int(ad.AdvertiserId))+"/ads")
 }
 
-func findAdById(id int) (Ad, error) {
+func FindAdById(id int) (Ad, error) {
 	var ad Ad
 	err := database.DB.First(&ad, id).Error
 	return ad, err
@@ -124,7 +124,7 @@ func LoadAdPictureHandler(c *gin.Context) {
 	}
 	id64 := uint(id)
 
-	ad, err := findAdById(int(id64))
+	ad, err := FindAdById(int(id64))
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			c.HTML(http.StatusNotFound, "advertiser_ads", gin.H{"error": "Ad not found"})
@@ -135,14 +135,12 @@ func LoadAdPictureHandler(c *gin.Context) {
 	}
 
 	imageFilePath := ad.Image
-	fmt.Println("file--->", imageFilePath)
 
 	file, err := os.Open(imageFilePath)
 	if err != nil {
 		c.HTML(http.StatusInternalServerError, "advertiser_ads", gin.H{"error": "Failed to open image file"})
 		return
 	}
-	fmt.Println("file--->", file)
 	defer file.Close()
 	filebytes, _ := os.ReadFile(imageFilePath)
 	contentType := http.DetectContentType(filebytes)
@@ -157,5 +155,29 @@ func ListAllAds(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Loading ads failed"})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"ads": result})
+	startTime := time.Now().Add(time.Duration(-1) * time.Hour)
+	endTime := time.Now()
+
+	var adMetrics []common.AdWithMetrics
+
+	for _, ad := range ads {
+		var clickCount int64
+		var impressionCount int64
+
+		database.DB.Model(&common.ClickedEvent{}).
+			Where("ad_id = ? AND time BETWEEN ? AND ?", ad.Id, startTime, endTime).
+			Count(&clickCount)
+
+		database.DB.Model(&common.ViewedEvent{}).
+			Where("ad_id = ? AND time BETWEEN ? AND ?", ad.Id, startTime, endTime).
+			Count(&impressionCount)
+
+		adMetrics = append(adMetrics, common.AdWithMetrics{
+			AdInfo:          ad,
+			ClickCount:      clickCount,
+			ImpressionCount: impressionCount,
+		})
+	}
+
+	c.JSON(http.StatusOK, gin.H{"ads": adMetrics})
 }

@@ -2,12 +2,13 @@ package publisher
 
 import (
 	"bytes"
+	"github.com/gin-gonic/gin"
+	"github.com/nobletooth/dotanet/panel/advertiser"
 	"github.com/nobletooth/dotanet/panel/database"
+	"gorm.io/gorm"
 	"net/http"
 	"os"
 	"strconv"
-
-	"github.com/gin-gonic/gin"
 )
 
 type Publisher struct {
@@ -18,6 +19,14 @@ type Publisher struct {
 	Impressions int    `gorm:"column:impressions"`
 }
 
+func HandlePublisherCredit(ad advertiser.Ad, pid int) error {
+	creditAddition := int(ad.Price * 0.2)
+	result := database.DB.Model(&Publisher{}).Where("ID = ?", pid).Update("Credit", gorm.Expr("Credit + ?", creditAddition))
+	if result.Error != nil {
+		return result.Error
+	}
+	return nil
+}
 func ListPublishers(c *gin.Context) {
 	var publishers []Publisher
 	if err := database.DB.Find(&publishers).Error; err != nil {

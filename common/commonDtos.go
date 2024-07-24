@@ -13,10 +13,18 @@ type AdInfo struct {
 	AdvertiserId uint64  `json:"advertiserId"`
 }
 
-type click struct {
-	Id       uint
-	time     time.Time
-	AdInfoId uint
+type ClickedEvent struct {
+	ID   uint      `gorm:"primaryKey"`
+	Pid  string    `gorm:"index"`
+	AdId string    `gorm:"index"`
+	Time time.Time `gorm:"index"`
+}
+
+type ViewedEvent struct {
+	ID   uint      `gorm:"primaryKey"`
+	Pid  string    `gorm:"index"`
+	AdId string    `gorm:"index"`
+	Time time.Time `gorm:"index"`
 }
 
 type EventServiceApiModel struct {
@@ -24,4 +32,10 @@ type EventServiceApiModel struct {
 	PubId     string
 	AdId      string
 	IsClicked bool
+}
+
+type AdWithMetrics struct {
+	AdInfo
+	ClickCount      int64 `json:"clickCount"`
+	ImpressionCount int64 `json:"impressionCount"`
 }
