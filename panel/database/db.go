@@ -3,6 +3,7 @@ package database
 import (
 	"flag"
 	"fmt"
+
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -10,11 +11,12 @@ import (
 var DB *gorm.DB
 
 var (
-	user     string
-	password string
-	dbname   string
-	port     string
-	host     string
+	user      string
+	password  string
+	dbname    string
+	port      string
+	host      string
+	PanelPort string
 )
 
 func init() {
@@ -23,6 +25,7 @@ func init() {
 	flag.StringVar(&dbname, "dbname", "todo", "Database name")
 	flag.StringVar(&port, "dbport", "5432", "Database port")
 	flag.StringVar(&host, "dbhost", "localhost", "Database host")
+	flag.StringVar(&PanelPort, "panelport", "8081", "panel port")
 }
 
 func NewDatabase() error {

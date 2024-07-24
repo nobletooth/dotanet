@@ -1,6 +1,11 @@
 package main
 
 import (
+	"log"
+	"net/http"
+	"strconv"
+	"time"
+
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/multitemplate"
 	"github.com/gin-gonic/gin"
@@ -8,10 +13,6 @@ import (
 	"github.com/nobletooth/dotanet/panel/advertiser"
 	"github.com/nobletooth/dotanet/panel/database"
 	"github.com/nobletooth/dotanet/panel/publisher"
-	"log"
-	"net/http"
-	"strconv"
-	"time"
 )
 
 type EventService struct {
@@ -124,7 +125,7 @@ func main() {
 
 	router.GET("/ads/list/", advertiser.ListAllAds)
 
-	if err := router.Run(":8080"); err != nil {
+	if err := router.Run(":" + database.PanelPort); err != nil {
 		log.Fatalf("failed to run server: %v", err)
 	}
 }
