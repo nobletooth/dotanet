@@ -39,8 +39,7 @@ func GetAdHandler(c *gin.Context) {
 	}
 
 	sort.Slice(allAds, func(i, j int) bool {
-		return allAds[i].Price*float64(allAds[i].Clicks)/float64(allAds[i].Impressions) >
-			allAds[j].Price*float64(allAds[j].Clicks)/float64(allAds[j].Impressions)
+		return allAds[i].Price > allAds[j].Price
 	})
 
 	bestAd := allAds[0]
