@@ -84,6 +84,7 @@ func LoadTemplates(templatesDir string) multitemplate.Renderer {
 	r.AddFromFiles("create_publisher", templatesDir+"/create_publisher.html")
 	r.AddFromFiles("view_publisher", templatesDir+"/view.html")
 	r.AddFromFiles("reports", templatesDir+"/reports.html")
+	r.AddFromFiles("ad_reports", templatesDir+"/ad_reports.html")
 	return r
 }
 
