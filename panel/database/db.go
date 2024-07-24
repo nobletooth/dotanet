@@ -25,7 +25,7 @@ func init() {
 	flag.StringVar(&dbname, "dbname", "todo", "Database name")
 	flag.StringVar(&port, "dbport", "5432", "Database port")
 	flag.StringVar(&host, "dbhost", "localhost", "Database host")
-	flag.StringVar(&PanelPort, "panelport", "8081", "panel port")
+	flag.StringVar(&PanelPort, "panelport", ":8081", "panel port")
 }
 
 func NewDatabase() error {
