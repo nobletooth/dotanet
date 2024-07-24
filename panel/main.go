@@ -82,6 +82,7 @@ func LoadTemplates(templatesDir string) multitemplate.Renderer {
 	r.AddFromFiles("publishers", templatesDir+"/publishers.html")
 	r.AddFromFiles("create_publisher", templatesDir+"/create_publisher.html")
 	r.AddFromFiles("view_publisher", templatesDir+"/view.html")
+	r.AddFromFiles("reports", templatesDir+"/reports.html")
 	return r
 }
 
@@ -122,6 +123,7 @@ func main() {
 	router.GET("/publishers/:id", publisher.ViewPublisherHandler)
 	router.GET("/publishers/:id/script", publisher.GetPublisherScript)
 	router.POST("/eventservice", eventServerHandler)
+	router.GET("/publishers/:id/reports", publisher.GetPublisherReports)
 
 	// Ad server routes
 	router.GET("/ads/list/", advertiser.ListAllAds)

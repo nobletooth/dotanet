@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Publisher Reports</title>
+</head>
+<body>
+<h1>Publisher Reports for ID {{ .PublisherID }} from {{ .StartDate }} to {{ .EndDate }}</h1>
+{{ if .Reports }}
+<table>
+    <tr>
+        <th>Date</th>
+        <th>Income</th>
+        <th>Clicks</th>
+        <th>Impressions</th>
+    </tr>
+    {{ range .Reports }}
+    <tr>
+        <td>{{ .Date.Format "2006-01-02" }}</td>
+        <td>{{ .Income }}</td>
+        <td>{{ .Clicks }}</td>
+        <td>{{ .Impressions }}</td>
+    </tr>
+    {{ end }}
+</table>
+{{ else }}
+<p>No data available for the selected date range.</p>
+{{ end }}
+</body>
+</html>

@@ -15,13 +15,13 @@
 </head>
 <body>
 <h1>Publisher: {{.Publisher.URL}}</h1>
-<p>Credit: {{.Publisher.Credit}}</p>
-<p>Clicks: {{.Publisher.Clicks}}</p>
-<p>Impressions: {{.Publisher.Impressions}}</p>
 
 <button onclick="fetchScript({{.Publisher.ID}})">Get Script</button>
 
 <pre id="script-content"></pre>
+
+<a href="/publishers/{{.Publisher.ID}}/reports">View Publisher Reports</a>
+
 
 <a href="/publishers">Back to Publishers</a>
 </body>
