@@ -75,7 +75,7 @@ func TestEventServiceHandler(t *testing.T) {
 	result = database.DB.Where("pid = ? AND ad_id = ?", "1", "101").First(&clickedEvent)
 	assert.NoError(t, result.Error)
 	assert.Equal(t, "1", clickedEvent2.Pid)
-	assert.Equal(t, "1", clickedEvent2.AdId)
+	assert.Equal(t, "101", clickedEvent2.AdId)
 	assert.NotZero(t, clickedEvent2.Time)
 }
 
