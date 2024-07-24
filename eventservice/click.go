@@ -4,11 +4,12 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/gin-gonic/gin"
-	"github.com/nobletooth/dotanet/common"
 	"net/http"
 	"strconv"
 	"time"
+
+	"github.com/gin-gonic/gin"
+	"github.com/nobletooth/dotanet/common"
 )
 
 func clickHandler() gin.HandlerFunc {
@@ -42,7 +43,7 @@ func panelApiCall(ch chan common.EventServiceApiModel) {
 	if err != nil {
 		fmt.Errorf("error : " + err.Error())
 	}
-	resp, err := http.Post("http://localhost:8080/eventservice", "application/json", bytes.NewBuffer(jsonData))
+	resp, err := http.Post("http://localhost:"+EventservicePort+"/eventservice", "application/json", bytes.NewBuffer(jsonData))
 	_ = resp
 
 }

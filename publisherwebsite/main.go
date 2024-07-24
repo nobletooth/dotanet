@@ -1,12 +1,21 @@
 package main
 
 import (
+	"flag"
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
-var sitenames = []string{"digikala", "digiland", "samsung", "torob", "varzesh3"}
+var (
+	sitenames        = []string{"digikala", "digiland", "samsung", "torob", "varzesh3"}
+	PublisherService string
+)
+
+func init() {
+	flag.StringVar(&PublisherService, "publisherservice", "8083", "publisher service")
+}
 
 func main() {
 	router := gin.Default()
@@ -14,7 +23,7 @@ func main() {
 
 	router.GET("/:sitename", siteHandler())
 
-	router.Run(":6060")
+	router.Run(":" + PublisherService)
 }
 
 func siteHandler() gin.HandlerFunc {
