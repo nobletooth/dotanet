@@ -11,17 +11,16 @@ import (
 var DB *gorm.DB
 
 var (
-	user      = flag.String("dbuser", "postgres", "Database user")
-	password  = flag.String("dbpassword", "Ala.13495782", "Database password")
-	dbname    = flag.String("dbname", "todo", "Database name")
-	port      = flag.String("dbport", "5432", "Database port")
-	host      = flag.String("dbhost", "localhost", "Database host")
+	user      = flag.String("dbuser", "1", "Database user")
+	password  = flag.String("dbpassword", "2", "Database password")
+	dbname    = flag.String("dbname", "3", "Database name")
+	port      = flag.String("dbport", "4", "Database port")
+	host      = flag.String("dbhost", "5", "Database host")
 	PanelPort = flag.String("panelport", "8081", "Panel port")
 )
 
-// var species = flag.String("species", "gopher", "the species we are studying")
 func NewDatabase() error {
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable",
+	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s",
 		*host, *user, *password, *dbname, *port)
 
 	var err error
