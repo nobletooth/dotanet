@@ -16,7 +16,7 @@ var (
 	dbname    = flag.String("dbname", "3", "Database name")
 	port      = flag.String("dbport", "4", "Database port")
 	host      = flag.String("dbhost", "5", "Database host")
-	PanelPort = flag.String("panelport", ":8081", "Panel port")
+	PanelUrl = flag.String("panelurl", "localhost:8081", "Panel url")
 )
 
 func NewDatabase() error {
