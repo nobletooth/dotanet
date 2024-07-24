@@ -10,10 +10,10 @@ import (
 	"github.com/nobletooth/dotanet/common"
 )
 
-var url string
+var URL string
 
 func init() {
-	flag.StringVar(&url, "getAllAdsUrl", "http://localhost:8080/ads/list/", "get all ads url")
+	flag.StringVar(&URL, "getAllAdsUrl", "http://localhost:8080/ads/list/", "get all ads url")
 }
 
 func GetAdsListPeriodically() []common.AdInfo {
@@ -22,7 +22,7 @@ func GetAdsListPeriodically() []common.AdInfo {
 	for {
 		select {
 		case <-ticker.C:
-			response, err := http.Get(url)
+			response, err := http.Get(URL)
 			if err != nil {
 				log.Println("Error fetching ads list:", err)
 				continue
