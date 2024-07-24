@@ -123,6 +123,7 @@ func main() {
 	router.GET("/publishers/:id/script", publisher.GetPublisherScript)
 	router.POST("/eventservice", eventServerHandler)
 
+	// Ad server routes
 	router.GET("/ads/list/", advertiser.ListAllAds)
 
 	if err := router.Run(":" + database.PanelPort); err != nil {
