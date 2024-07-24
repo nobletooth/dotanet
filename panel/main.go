@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"log"
 	"net/http"
 	"strconv"
@@ -87,6 +88,7 @@ func LoadTemplates(templatesDir string) multitemplate.Renderer {
 }
 
 func main() {
+	flag.Parse()
 	if err := database.NewDatabase(); err != nil {
 		log.Fatalf("failed to initialize database: %v", err)
 	}
