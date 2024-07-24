@@ -7,7 +7,7 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
-	"github.com/nobletooth/dotanet/tree/main/common"
+	"github.com/nobletooth/dotanet/common"
 	"github.com/stretchr/testify/assert"
 )
 
