@@ -23,13 +23,16 @@ func GetAdsListPeriodically() []common.AdWithMetrics {
 			defer response.Body.Close()
 
 			if response.StatusCode == http.StatusOK {
-				var ads []common.AdWithMetrics
-				err = json.NewDecoder(response.Body).Decode(&ads)
+				var result struct {
+					Ads []common.AdWithMetrics `json:"ads"`
+				}
+
+				err = json.NewDecoder(response.Body).Decode(&result)
 				if err != nil {
 					log.Println("Error decoding response body:", err)
 				} else {
 					log.Println("Ads list fetched successfully")
-					allAds = ReturnAllAds(ads)
+					allAds = ReturnAllAds(result.Ads)
 				}
 			} else {
 				log.Println("Failed to fetch ads list, status code:", response.StatusCode)
@@ -44,7 +47,7 @@ func ReturnAllAds(ads []common.AdWithMetrics) []common.AdWithMetrics {
 		return []common.AdWithMetrics{}
 	}
 	for _, ad := range ads {
-		log.Printf("Ad ID: %d, Title: %s", ad.Id, ad.Title)
+		log.Printf("Ad ID: %d, Title: %s", ad.AdInfo.Id, ad.AdInfo.Title)
 	}
 	return ads
 }
