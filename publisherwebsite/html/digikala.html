@@ -87,17 +87,99 @@
             <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است.</p>
             <div class="ad">
                 <a href="#" id="ad-link">
-                    <img src="#" alt="تبلیغ" >
+                    <img src="" alt="تبلیغ" >
                 </a>
             </div>
         </div>
         <div class="picture-content">
-            <img src="#" alt="خبر" id="ad-image">
+            <img src="" alt="خبر" id="ad-image">
         </div>
     </div>
     <div class="footer">جایگاه نمایش تبلیغ</div>
 </div>
 
-<script src="http://localhost:8080/publishers/1/script"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var adLink = document.getElementById('ad-link');
+        var adImage = document.getElementById('ad-image');
+        var adSeen = false;
+
+        function getAdInfo() {
+            fetch('http://localhost:8081/getadinfo/1')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.text(); // Read response as text
+                })
+                .then(text => {
+                    try {
+                        var data = JSON.parse(text); // Try to parse as JSON
+                        adImage.src = "http://localhost:8080/ads/1/picture";
+                        adLink.href = data.ClicksURL;
+                        window.ImpressionsURL = data.ImpressionsURL;
+                        window.ClicksURL = data.ClicksURL;
+                    } catch (error) {
+                        console.error('Error parsing JSON:', text, error);
+                    }
+                })
+                .catch(error => console.error('Error fetching ad info:', error));
+        }
+
+        function callAdSeenApi() {
+            fetch(window.ImpressionsURL, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => response.text())
+                .then(text => {
+                    try {
+                        var data = JSON.parse(text);
+                        console.log('Ad seen API response:', data);
+                    } catch (error) {
+                        console.error('Error parsing JSON:', text, error);
+                    }
+                })
+                .catch(error => console.error('Error calling ad seen API:', error));
+        }
+
+        adLink.addEventListener('click', function(event) {
+            event.preventDefault();
+            fetch(window.ClicksURL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ ad: 'your-ad-info' })
+            })
+                .then(response => response.text())
+                .then(text => {
+                    try {
+                        var data = JSON.parse(text);
+                        console.log('Ad click API response:', data);
+                        window.location.href = window.ClicksURL;
+                    } catch (error) {
+                        console.error('Error parsing JSON:', text, error);
+                    }
+                })
+                .catch(error => console.error('Error calling ad click API:', error));
+        });
+
+        var observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !adSeen) {
+                    adSeen = true;
+                    callAdSeenApi();
+                }
+            });
+        }, { threshold: 0.5 });
+
+        observer.observe(adImage);
+
+        getAdInfo();
+    });
+</script>
 </body>
 </html>
