@@ -39,11 +39,31 @@ func clickHandler() gin.HandlerFunc {
 }
 
 func panelApiCall(ch chan common.EventServiceApiModel) {
-	jsonData, err := json.Marshal(<-ch)
-	if err != nil {
-		fmt.Errorf("error : " + err.Error())
-	}
-	resp, err := http.Post(*EventservicePort+"/eventservice", "application/json", bytes.NewBuffer(jsonData))
-	_ = resp
+	for {
+		select {
+		case event := <-ch:
+			fmt.Printf("channel size : %v", len(ch))
 
+			jsonData, err := json.Marshal(event)
+			if err != nil {
+				fmt.Errorf("error : " + err.Error())
+			}
+			resp, err := http.Post("http://localhost:8082/eventservice", "application/json", bytes.NewBuffer(jsonData))
+			if err != nil {
+				fmt.Errorf("Error making POST request: %s\n", err)
+			}
+			//defer resp.Body.Close()
+
+			if resp.StatusCode != http.StatusOK {
+				fmt.Printf("Received non-OK response status: %s\n", resp.Status)
+			}
+		default:
+		}
+	}
+	//jsonData, err := json.Marshal(<-ch)
+	//if err != nil {
+	//	fmt.Errorf("error : " + err.Error())
+	//}
+	//resp, err := http.Post(*EventservicePort+"/eventservice", "application/json", bytes.NewBuffer(jsonData))
+	//_ = resp
 }

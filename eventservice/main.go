@@ -24,6 +24,7 @@ var config = cors.Config{
 }
 
 func main() {
+	go panelApiCall(ch)
 	flag.Parse()
 	if db, err := OpenDbConnection(); err != nil {
 		fmt.Errorf("error opening db connection: %v", err)
@@ -38,5 +39,4 @@ func main() {
 
 	router.Run(*EventservicePort)
 
-	go panelApiCall(ch)
 }
