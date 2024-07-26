@@ -18,7 +18,6 @@ GOOS=$GOOS GOARCH=$GOARCH go build -o $OUTPUT_BINARY .
 if [ $? -eq 0 ]; then
   echo "Build successful! Binary created: $OUTPUT_BINARY"
 
-  # Make the binary executable
   chmod +x $OUTPUT_BINARY
   echo "Made $OUTPUT_BINARY executable"
 
