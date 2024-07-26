@@ -23,6 +23,15 @@ type EventService struct {
 	TimeID  time.Time `json:"time"`
 }
 
+var config = cors.Config{
+	AllowAllOrigins:  true,
+	AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"},
+	AllowHeaders:     []string{"*"},
+	ExposeHeaders:    []string{"*"},
+	AllowCredentials: true,
+	MaxAge:           12 * time.Hour,
+}
+
 func eventservice(event EventService) error {
 	if event.Clicked {
 		clickedEvent := common.ClickedEvent{
@@ -102,8 +111,7 @@ func main() {
 	}
 
 	router := gin.Default()
-	router.Use(cors.Default())
-
+	router.Use(cors.New(config))
 	router.HTMLRender = LoadTemplates("./templates")
 	// Home route
 	router.GET("/", homeHandler)
