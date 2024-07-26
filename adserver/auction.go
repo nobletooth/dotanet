@@ -62,7 +62,7 @@ func GetAdHandler(c *gin.Context) {
 	}
 
 	var finalAd common.AdWithMetrics
-	if rand.Float64() < *NewAdSelectionProbability && selectedNewAd.Id != 0 {
+	if (rand.Float64() < *NewAdSelectionProbability && selectedNewAd.Id != 0) || selectedExperiencedAd.Id == 0 {
 		finalAd = selectedNewAd
 	} else {
 		finalAd = selectedExperiencedAd
