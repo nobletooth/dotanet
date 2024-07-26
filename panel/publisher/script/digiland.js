@@ -5,7 +5,7 @@
     var adSeen = false;
 
     function getAdInfo() {
-    fetch('http://localhost:8080/getAd/2')
+    fetch('http://localhost:8080/getadinfo/2')
     .then(response => response.json())
     .then(data => {
     adImage.src = data.image;

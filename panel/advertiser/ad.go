@@ -40,7 +40,7 @@ func CreateAdHandler(c *gin.Context) {
 		return
 	}
 
-	imagePath := "./image/" + file.Filename
+	imagePath := "./image/" + file.Filename + ad.Url
 	if err := c.SaveUploadedFile(file, imagePath); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save image"})
 		return
