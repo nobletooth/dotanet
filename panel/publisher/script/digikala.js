@@ -5,9 +5,10 @@
     var adSeen = false;
 
     function getAdInfo() {
-    fetch('http://localhost:8080/getAd)
+    fetch('http://localhost:8081/getadinfo/1')
     .then(response => response.json())
     .then(data => {
+
     adImage.src = data.image;
     window.ImpressionsURL = data.ImpressionsURL;
     window.ClicksURL = data.ClicksURL;
