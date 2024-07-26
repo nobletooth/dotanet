@@ -5,13 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ed4484fd-287b-47de-bfe3-ab9e86c9a98b" name="Changes" comment="change gitignore and ad go.work and go.work.sum">
-      <change afterPath="$PROJECT_DIR$/runOnServer.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adserver/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/adserver/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/eventservice/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/eventservice/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/panel/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/panel/main.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/panel/publisher/script/digikala.js" beforeDir="false" afterPath="$PROJECT_DIR$/panel/publisher/script/digikala.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/panel/publisher/script/digiland.js" beforeDir="false" afterPath="$PROJECT_DIR$/panel/publisher/script/digiland.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/panel/publisher/script/samsung.js" beforeDir="false" afterPath="$PROJECT_DIR$/panel/publisher/script/samsung.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/panel/publisher/script/torob.js" beforeDir="false" afterPath="$PROJECT_DIR$/panel/publisher/script/torob.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/panel/publisher/script/varzesh3.js" beforeDir="false" afterPath="$PROJECT_DIR$/panel/publisher/script/varzesh3.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/publisherwebsite/html/digikala.html" beforeDir="false" afterPath="$PROJECT_DIR$/publisherwebsite/html/digikala.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/publisherwebsite/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/publisherwebsite/main.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,24 +39,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.go.formatter.settings.were.checked": "true",
-    "RunOnceActivity.go.migrated.go.modules.settings": "true",
-    "RunOnceActivity.go.modules.automatic.dependencies.download": "true",
-    "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
-    "git-widget-placeholder": "script",
-    "go.import.settings.migrated": "true",
-    "go.sdk.automatically.set": "true",
-    "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/Users/Click",
-    "node.js.detected.package.eslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "terminal"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.modules.automatic.dependencies.download&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.modules.go.list.on.any.changes.was.set&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;script&quot;,
+    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
+    &quot;go.sdk.automatically.set&quot;: &quot;true&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Click&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;terminal&quot;
   }
-}]]></component>
+}</component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
