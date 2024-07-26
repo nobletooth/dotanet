@@ -15,7 +15,7 @@ var (
 	password  = flag.String("dbpassword", "Ala.13495782", "Database password")
 	dbname    = flag.String("dbname", "todo", "Database name")
 	port      = flag.String("dbport", "5432", "Database port")
-	host      = flag.String("dbhost", "localhost", "Database host")
+	host      = flag.String("dbhost", "localhost", "Database host") //95.217.125.139
 	PanelPort = flag.String("panelport", ":8080", "Panel port")
 )
 

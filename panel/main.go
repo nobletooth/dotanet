@@ -16,13 +16,6 @@ import (
 	"github.com/nobletooth/dotanet/panel/publisher"
 )
 
-type EventService struct {
-	Pid     string    `json:"pubId"`
-	AdID    string    `json:"adId"`
-	Clicked bool      `json:"isClicked"`
-	TimeID  time.Time `json:"time"`
-}
-
 var config = cors.Config{
 	AllowAllOrigins:  true,
 	AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"},
@@ -32,12 +25,12 @@ var config = cors.Config{
 	MaxAge:           12 * time.Hour,
 }
 
-func eventservice(event EventService) error {
-	if event.Clicked {
+func eventservice(event common.EventServiceApiModel) error {
+	if event.IsClicked {
 		clickedEvent := common.ClickedEvent{
-			Pid:  event.Pid,
-			AdId: event.AdID,
-			Time: event.TimeID,
+			Pid:  event.PubId,
+			AdId: event.AdId,
+			Time: event.Time,
 		}
 		result := database.DB.Create(&clickedEvent)
 		realID, _ := strconv.Atoi(clickedEvent.AdId)
@@ -54,9 +47,9 @@ func eventservice(event EventService) error {
 		}
 	} else {
 		viewedEvent := common.ViewedEvent{
-			Pid:  event.Pid,
-			AdId: event.AdID,
-			Time: event.TimeID,
+			Pid:  event.PubId,
+			AdId: event.AdId,
+			Time: event.Time,
 		}
 		result := database.DB.Create(&viewedEvent)
 		if result.Error != nil {
@@ -67,7 +60,7 @@ func eventservice(event EventService) error {
 }
 
 func eventServerHandler(c *gin.Context) {
-	var event EventService
+	var event common.EventServiceApiModel
 	if err := c.BindJSON(&event); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request payload"})
 		return
