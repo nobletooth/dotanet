@@ -114,11 +114,13 @@
                 })
                 .then(text => {
                     try {
-                        var data = JSON.parse(text); // Try to parse as JSON
+                        var data = JSON.parse(text);
                         adImage.src = "http://localhost:8080/ads/1/picture";
                         adLink.href = data.ClicksURL;
                         window.ImpressionsURL = data.ImpressionsURL;
                         window.ClicksURL = data.ClicksURL;
+                        console.log(window.ImpressionsURL,window.ClicksURL)
+                        callAdSeenApi();
                     } catch (error) {
                         console.error('Error parsing JSON:', text, error);
                     }
@@ -171,7 +173,7 @@
             entries.forEach(entry => {
                 if (entry.isIntersecting && !adSeen) {
                     adSeen = true;
-                    callAdSeenApi();
+                    // callAdSeenApi();
                 }
             });
         }, { threshold: 0.5 });
