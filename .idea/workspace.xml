@@ -4,18 +4,13 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ed4484fd-287b-47de-bfe3-ab9e86c9a98b" name="Changes" comment="doing test doinng debugging">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adserver/adRetriever.go" beforeDir="false" afterPath="$PROJECT_DIR$/adserver/adRetriever.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adserver/build.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adserver/build.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adserver/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/adserver/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eventservice/database.go" beforeDir="false" afterPath="$PROJECT_DIR$/eventservice/database.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/panel/advertiser/ad.go" beforeDir="false" afterPath="$PROJECT_DIR$/panel/advertiser/ad.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/panel/build.sh" beforeDir="false" afterPath="$PROJECT_DIR$/panel/build.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/panel/database/db.go" beforeDir="false" afterPath="$PROJECT_DIR$/panel/database/db.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/panel/main_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/panel/main_test.go" afterDir="false" />
+    <list default="true" id="ed4484fd-287b-47de-bfe3-ab9e86c9a98b" name="Changes" comment="change gitignore and ad go.work and go.work.sum">
+      <change afterPath="$PROJECT_DIR$/runOnServer.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/panel/publisher/script/digikala.js" beforeDir="false" afterPath="$PROJECT_DIR$/panel/publisher/script/digikala.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/panel/templates/view.html" beforeDir="false" afterPath="$PROJECT_DIR$/panel/templates/view.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/panel/publisher/script/digiland.js" beforeDir="false" afterPath="$PROJECT_DIR$/panel/publisher/script/digiland.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/panel/publisher/script/samsung.js" beforeDir="false" afterPath="$PROJECT_DIR$/panel/publisher/script/samsung.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/panel/publisher/script/torob.js" beforeDir="false" afterPath="$PROJECT_DIR$/panel/publisher/script/torob.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/panel/publisher/script/varzesh3.js" beforeDir="false" afterPath="$PROJECT_DIR$/panel/publisher/script/varzesh3.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/publisherwebsite/html/digikala.html" beforeDir="false" afterPath="$PROJECT_DIR$/publisherwebsite/html/digikala.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -32,11 +27,14 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": 1
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 1
+}</component>
   <component name="ProjectId" id="2jhEe4QwShw6u42J4MUAp4ikwDv" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -48,7 +46,7 @@
     "RunOnceActivity.go.migrated.go.modules.settings": "true",
     "RunOnceActivity.go.modules.automatic.dependencies.download": "true",
     "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
-    "git-widget-placeholder": "script-writing",
+    "git-widget-placeholder": "script",
     "go.import.settings.migrated": "true",
     "go.sdk.automatically.set": "true",
     "ignore.virus.scanning.warn.message": "true",
@@ -63,9 +61,48 @@
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="RECENT_FILTERS">
+      <map>
+        <entry key="Branch">
+          <value>
+            <list>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="script" />
+                </option>
+              </RecentGroup>
+            </list>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="script" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="doing test doinng debugging" />
-    <option name="LAST_COMMIT_MESSAGE" value="doing test doinng debugging" />
+    <MESSAGE value="change gitignore and ad go.work and go.work.sum" />
+    <option name="LAST_COMMIT_MESSAGE" value="change gitignore and ad go.work and go.work.sum" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
