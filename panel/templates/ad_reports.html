@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Advertiser Reports</title>
+</head>
+<body>
+<h1>Advertiser Reports for Ad ID {{ .AdID }} from {{ .StartDate }} to {{ .EndDate }}</h1>
+{{ if .Reports }}
+<table>
+    <tr>
+        <th>Date</th>
+        <th>Clicks</th>
+        <th>Impressions</th>
+        <th>CTR</th>
+        <th>Spent</th>
+    </tr>
+    {{ range .Reports }}
+    <tr>
+        <td>{{ .Date.Format "2006-01-02 15:04:05" }}</td>
+        <td>{{ .Clicks }}</td>
+        <td>{{ .Impressions }}</td>
+        <td>{{ printf "%.2f" .CTR }}</td>
+        <td>{{ printf "%.2f" .Spent }}</td>
+    </tr>
+    {{ end }}
+</table>
+{{ else }}
+<p>No data available for the selected date range.</p>
+{{ end }}
+</body>
+</html>

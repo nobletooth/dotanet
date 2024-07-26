@@ -15,7 +15,7 @@ import (
 
 type Publisher struct {
 	ID          uint   `gorm:"primaryKey;autoIncrement"`
-	URL         string `gorm:"column:url;unique;not null"` // Removed space after "url"
+	Name        string `gorm:"column:name;unique;not null"`
 	Credit      int    `gorm:"column:credit"`
 	Clicks      int    `gorm:"column:clicks"`
 	Impressions int    `gorm:"column:impressions"`
@@ -52,8 +52,8 @@ func NewPublisherForm(c *gin.Context) {
 }
 
 func CreatePublisherHandler(c *gin.Context) {
-	url := c.PostForm("url")
-	publisher := Publisher{URL: url, Credit: 0}
+	name := c.PostForm("name")
+	publisher := Publisher{Name: name, Credit: 0}
 	if err := database.DB.Create(&publisher).Error; err != nil {
 		c.HTML(http.StatusInternalServerError, "index", gin.H{"error": "Failed to create publisher"})
 		return
@@ -76,7 +76,7 @@ func ViewPublisherHandler(c *gin.Context) {
 		return
 	}
 
-	script := "<script src=\"" + publisher.URL + ".com/script.js\"></script>"
+	script := "<script src=\"" + publisher.Name + ".com/script.js\"></script>"
 
 	c.HTML(http.StatusOK, "view_publisher", gin.H{
 		"Publisher": publisher,
@@ -99,7 +99,7 @@ func GetPublisherScript(c *gin.Context) {
 		return
 	}
 
-	scriptFilePath := "./publisher/script/" + "digikala" + ".js"
+	scriptFilePath := "./publisher/script/" + publisher.Name + ".js"
 	scriptContent, err := os.ReadFile(scriptFilePath)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to read script file"})
@@ -121,43 +121,27 @@ func GetPublisherReports(c *gin.Context) {
 		return
 	}
 
-	startDateStr := c.Query("start_date")
-	endDateStr := c.Query("end_date")
+	now := time.Now().UTC()
+	endDate := now.Truncate(time.Minute)
+	startDate := endDate.Add(-1 * time.Hour)
 
-	startDate, err := time.Parse("2006-01-02", startDateStr)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid start_date format"})
-		return
-	}
-
-	endDate, err := time.Parse("2006-01-02", endDateStr)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid end_date format"})
-		return
-	}
 	var reports []Report
-	for date := startDate; !date.After(endDate); date = date.AddDate(0, 0, 1) {
+	for date := startDate; !date.After(endDate); date = date.Add(time.Minute) {
 		var clickCount, impressionCount int64
 		var income float64
 
 		database.DB.Model(&common.ClickedEvent{}).
-			Where("pid = ? AND time BETWEEN ? AND ?", publisherID, date, date.AddDate(0, 0, 1)).
+			Where("pid = ? AND time BETWEEN ? AND ?", publisherID, date, date.Add(time.Minute)).
 			Count(&clickCount)
 
 		database.DB.Model(&common.ViewedEvent{}).
-			Where("pid = ? AND time BETWEEN ? AND ?", publisherID, date, date.AddDate(0, 0, 1)).
+			Where("pid = ? AND time BETWEEN ? AND ?", publisherID, date, date.Add(time.Minute)).
 			Count(&impressionCount)
-
-		database.DB.Model(&advertiser.Ad{}).
-			Select("SUM(price * 0.2)").
-			Joins("JOIN publishers ON publishers.id = ads.publisher_id").
-			Where("publisher_id = ? AND ads.created_at BETWEEN ? AND ?", publisherID, date, date.AddDate(0, 0, 1)).
-			Scan(&income)
 
 		database.DB.Table("clicked_events").
 			Select("SUM(price * 0.2)").
 			Joins("JOIN ads ON clicked_events.ad_id = ads.id").
-			Where("clicked_events.pid = ? AND clicked_events.time BETWEEN ? AND ?", publisherID, date, date.AddDate(0, 0, 1)).
+			Where("clicked_events.pid = ? AND clicked_events.time BETWEEN ? AND ?", publisherID, date, date.Add(time.Minute)).
 			Scan(&income)
 
 		reports = append(reports, Report{
@@ -170,8 +154,8 @@ func GetPublisherReports(c *gin.Context) {
 
 	c.HTML(http.StatusOK, "reports", gin.H{
 		"Reports":     reports,
-		"StartDate":   startDateStr,
-		"EndDate":     endDateStr,
+		"StartDate":   startDate.Format("2006-01-02 15:04:05"),
+		"EndDate":     endDate.Format("2006-01-02 15:04:05"),
 		"PublisherID": publisherID,
 	})
 }

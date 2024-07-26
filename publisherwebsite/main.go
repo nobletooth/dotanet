@@ -3,27 +3,37 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/gin-contrib/cors"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
 
 var (
 	sitenames        = []string{"digikala", "digiland", "samsung", "torob", "varzesh3"}
-	PublisherService string
+	PublisherService = flag.String("publisherservice", ":8083", "publisher service")
 )
 
-func init() {
-	flag.StringVar(&PublisherService, "publisherservice", "8083", "publisher service")
-}
-
 func main() {
+	flag.Parse()
 	router := gin.Default()
+	config := cors.Config{
+		AllowAllOrigins:  true,
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"},
+		AllowHeaders:     []string{"*"},
+		ExposeHeaders:    []string{"*"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}
+
+	router.Use(cors.New(config))
+
 	router.LoadHTMLGlob("./html/*")
 
 	router.GET("/:sitename", siteHandler())
 
-	router.Run(":" + PublisherService)
+	router.Run(*PublisherService)
 }
 
 func siteHandler() gin.HandlerFunc {

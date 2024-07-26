@@ -9,13 +9,13 @@ import (
 	"github.com/nobletooth/dotanet/common"
 )
 
-func GetAdsListPeriodically() []common.AdInfo {
+func GetAdsListPeriodically() []common.AdWithMetrics {
 	ticker := time.NewTicker(1 * time.Minute)
 	defer ticker.Stop()
 	for {
 		select {
 		case <-ticker.C:
-			response, err := http.Get("http://localhost:" + PanelPort + "/ads/list/")
+			response, err := http.Get(*PanelUrl + "/ads/list/")
 			if err != nil {
 				log.Println("Error fetching ads list:", err)
 				continue
@@ -23,13 +23,16 @@ func GetAdsListPeriodically() []common.AdInfo {
 			defer response.Body.Close()
 
 			if response.StatusCode == http.StatusOK {
-				var ads []common.AdInfo
-				err = json.NewDecoder(response.Body).Decode(&ads)
+				var result struct {
+					Ads []common.AdWithMetrics `json:"ads"`
+				}
+
+				err = json.NewDecoder(response.Body).Decode(&result)
 				if err != nil {
 					log.Println("Error decoding response body:", err)
 				} else {
 					log.Println("Ads list fetched successfully")
-					allAds = ReturnAllAds(ads)
+					allAds = ReturnAllAds(result.Ads)
 				}
 			} else {
 				log.Println("Failed to fetch ads list, status code:", response.StatusCode)
@@ -38,13 +41,13 @@ func GetAdsListPeriodically() []common.AdInfo {
 	}
 }
 
-func ReturnAllAds(ads []common.AdInfo) []common.AdInfo {
+func ReturnAllAds(ads []common.AdWithMetrics) []common.AdWithMetrics {
 	if ads == nil {
 		log.Println("No ads found")
-		return []common.AdInfo{}
+		return []common.AdWithMetrics{}
 	}
 	for _, ad := range ads {
-		log.Printf("Ad ID: %d, Title: %s", ad.Id, ad.Title)
+		log.Printf("Ad ID: %d, Title: %s", ad.AdInfo.Id, ad.AdInfo.Title)
 	}
 	return ads
 }

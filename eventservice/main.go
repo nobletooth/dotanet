@@ -1,7 +1,9 @@
 package main
 
 import (
+	"flag"
 	"fmt"
+
 	"github.com/gin-gonic/gin"
 	"github.com/nobletooth/dotanet/common"
 	"gorm.io/gorm"
@@ -11,6 +13,7 @@ var Db *gorm.DB
 var ch = make(chan common.EventServiceApiModel, 10)
 
 func main() {
+	flag.Parse()
 	if db, err := OpenDbConnection(); err != nil {
 		fmt.Errorf("error opening db connection: %v", err)
 	} else {
@@ -21,7 +24,7 @@ func main() {
 	router.GET("/click/:adv/:pub", clickHandler())
 	router.GET("/impression/:adv/:pub", impressionHandler())
 
-	router.Run(":6060")
+	router.Run(*EventservicePort)
 
 	go panelApiCall(ch)
 }

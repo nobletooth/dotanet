@@ -1,6 +1,8 @@
 package common
 
-import "time"
+import (
+	"time"
+)
 
 type AdInfo struct {
 	Id           uint    `json:"id"`
@@ -38,4 +40,16 @@ type AdWithMetrics struct {
 	AdInfo
 	ClickCount      int64 `json:"clickCount"`
 	ImpressionCount int64 `json:"impressionCount"`
+}
+
+type Ad struct {
+	Id           uint    `gorm:"column:id;primary_key"`
+	Title        string  `gorm:"column:title"`
+	Image        string  `gorm:"column:image"`
+	Price        float64 `gorm:"column:price"`
+	Status       bool    `gorm:"column:status"`
+	Clicks       int     `gorm:"column:clicks"`
+	Impressions  int     `gorm:"column:impressions"`
+	Url          string  `gorm:"column:url"`
+	AdvertiserId uint64  `gorm:"foreignKey:AdvertiserId"`
 }

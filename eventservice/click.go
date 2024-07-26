@@ -27,7 +27,7 @@ func clickHandler() gin.HandlerFunc {
 		pub := c.Param("pub") // should decrypt adv and pub.
 		var updateApi = common.EventServiceApiModel{Time: clickTime, PubId: pub, AdId: adv, IsClicked: true}
 		ch <- updateApi
-		var ad common.AdInfo
+		var ad common.Ad
 		result := Db.First(&ad, advNum32)
 		if result.RowsAffected == 0 {
 			c.JSON(http.StatusNotFound, gin.H{"error": "advNum not found"})
@@ -43,7 +43,7 @@ func panelApiCall(ch chan common.EventServiceApiModel) {
 	if err != nil {
 		fmt.Errorf("error : " + err.Error())
 	}
-	resp, err := http.Post("http://localhost:"+EventservicePort+"/eventservice", "application/json", bytes.NewBuffer(jsonData))
+	resp, err := http.Post(*EventservicePort+"/eventservice", "application/json", bytes.NewBuffer(jsonData))
 	_ = resp
 
 }
