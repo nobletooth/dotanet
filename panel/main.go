@@ -28,7 +28,7 @@ var config = cors.Config{
 	AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"},
 	AllowHeaders:     []string{"*"},
 	ExposeHeaders:    []string{"*"},
-	AllowCredentials: true,
+	AllowCredentials: false,
 	MaxAge:           12 * time.Hour,
 }
 

@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var adImage = document.createElement('img');
     adImage.id = 'ad-image';
     adImage.alt = 'Ad Image';
+    adImage.src=""
 
     // Append the image to the image div
     imageDiv.appendChild(adImage);
@@ -17,10 +18,10 @@ document.addEventListener('DOMContentLoaded', function() {
     document.body.appendChild(imageDiv);
 
     function getAdInfo() {
-        fetch('http://localhost:8081/getAd/3')
+        fetch('http://localhost:8081/getadinfo/1')
             .then(response => response.json())
             .then(data => {
-                adImage.src = data.image;
+                adImage.src = data.ImageData;
                 window.ImpressionsURL = data.ImpressionsURL;
                 window.ClicksURL = data.ClicksURL;
             })
@@ -59,8 +60,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }, { threshold: 0.5 });
-
+    getAdInfo();
     observer.observe(adImage);
 
-    getAdInfo();
 });
