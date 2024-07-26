@@ -1,43 +1,187 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fa">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple HTML Structure</title>
+    <title>News Template</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
+            direction: rtl;
+            text-align: right;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        .title {
-            font-size: 24px;
+        .container {
+            width: 90%;
+            max-width: 600px;
+            border: 1px solid #000;
+            margin: 20px auto;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .header {
+            font-size: 14px;
             font-weight: bold;
+            text-align: center;
             margin-bottom: 10px;
         }
-        .explanation {
+        .main-content, .picture-content {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .main-content {
+            flex: 2;
+        }
+        .picture-content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .picture-content img {
+            max-width: 100%;
+            height: auto;
+        }
+        .content {
+            font-size: 12px;
+        }
+        .content h2 {
             font-size: 16px;
-            margin-bottom: 20px;
+            margin: 0;
         }
-        .image {
+        .content p {
+            font-size: 14px;
+            margin: 10px 0 0 0;
+        }
+        .footer {
+            font-size: 12px;
             text-align: center;
+            border-top: 1px solid #000;
+            margin-top: 10px;
+            padding-top: 10px;
+            width: 100%;
         }
-        .image img {
+        .ad {
+            width: 100%;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .ad img {
             max-width: 100%;
             height: auto;
         }
     </style>
-    <script src="http://localhost:8080/publishers/3/script"></script>
 </head>
 <body>
-
-<div class="title">
-    فوری: حراج بزرگ قرن در دیجیکالا!
+<div class="container">
+    <div class="header">digikala.com</div>
+    <div class="main-content">
+        <div class="content">
+            <h2>فوری: حراج بزرگ قرن در دیجیکالا!</h2>
+            <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است.</p>
+            <div class="ad">
+                <a href="#" id="ad-link">
+                    <img src="" alt="تبلیغ" >
+                </a>
+            </div>
+        </div>
+        <div class="picture-content">
+            <img src="" alt="خبر" id="ad-image">
+        </div>
+    </div>
+    <div class="footer">جایگاه نمایش تبلیغ</div>
 </div>
 
-<div class="explanation">
-    This is the explanation section where you can provide more details about the topic. It can contain multiple lines of text to explain the content clearly.
-</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var adLink = document.getElementById('ad-link');
+        var adImage = document.getElementById('ad-image');
+        var adSeen = false;
 
+        function getAdInfo() {
+            fetch('http://localhost:8081/getadinfo/1')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.text(); // Read response as text
+                })
+                .then(text => {
+                    try {
+                        var data = JSON.parse(text);
+                        adImage.src = "http://localhost:8080/ads/1/picture";
+                        adLink.href = data.ClicksURL;
+                        window.ImpressionsURL = data.ImpressionsURL;
+                        window.ClicksURL = data.ClicksURL;
+                        console.log(window.ImpressionsURL,window.ClicksURL)
+                        callAdSeenApi();
+                    } catch (error) {
+                        console.error('Error parsing JSON:', text, error);
+                    }
+                })
+                .catch(error => console.error('Error fetching ad info:', error));
+        }
+
+        function callAdSeenApi() {
+            fetch(window.ImpressionsURL, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => response.text())
+                .then(text => {
+                    try {
+                        var data = JSON.parse(text);
+                        console.log('Ad seen API response:', data);
+                    } catch (error) {
+                        console.error('Error parsing JSON:', text, error);
+                    }
+                })
+                .catch(error => console.error('Error calling ad seen API:', error));
+        }
+
+        adLink.addEventListener('click', function(event) {
+            event.preventDefault();
+            fetch(window.ClicksURL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ ad: 'your-ad-info' })
+            })
+                .then(response => response.text())
+                .then(text => {
+                    try {
+                        var data = JSON.parse(text);
+                        console.log('Ad click API response:', data);
+                        window.location.href = window.ClicksURL;
+                    } catch (error) {
+                        console.error('Error parsing JSON:', text, error);
+                    }
+                })
+                .catch(error => console.error('Error calling ad click API:', error));
+        });
+
+        var observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !adSeen) {
+                    adSeen = true;
+                    // callAdSeenApi();
+                }
+            });
+        }, { threshold: 0.5 });
+
+        observer.observe(adImage);
+
+        getAdInfo();
+    });
+</script>
 </body>
 </html>
-
