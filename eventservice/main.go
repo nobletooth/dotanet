@@ -17,6 +17,7 @@ var ch = make(chan common.EventServiceApiModel, 10)
 func main() {
 	go panelApiCall(ch)
 	flag.Parse()
+	gin.SetMode(gin.ReleaseMode)
 	if db, err := OpenDbConnection(); err != nil {
 		fmt.Errorf("error opening db connection: %v", err)
 	} else {
@@ -35,6 +36,6 @@ func main() {
 	router.GET("/click/:adv/:pub", clickHandler())
 	router.GET("/impression/:adv/:pub", impressionHandler())
 
-	router.Run(*EventservicePort)
+	router.Run(*EventserviceUrl)
 
 }
