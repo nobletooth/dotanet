@@ -10,30 +10,39 @@ import (
 )
 
 func GetAdsListPeriodically() []common.AdWithMetrics {
+	fetchads := func() {
+		response, err := http.Get(*PanelUrl + "/ads/list/")
+		if err != nil {
+			log.Println("Error fetching ads list:", err)
+			return
+		}
+		defer response.Body.Close()
+
+		if response.StatusCode == http.StatusOK {
+			var result struct {
+				Ads []common.AdWithMetrics `json:"ads"`
+			}
+
+			err = json.NewDecoder(response.Body).Decode(&result)
+			if err != nil {
+				log.Println("Error decoding response body:", err)
+			} else {
+				log.Println("Ads list fetched successfully")
+				allAds = ReturnAllAds(result.Ads)
+			}
+		} else {
+			log.Println("Failed to fetch ads list, status code:", response.StatusCode)
+		}
+	}
+
+	fetchads()
 	ticker := time.NewTicker(1 * time.Minute)
 	defer ticker.Stop()
 	for {
 		select {
 		case <-ticker.C:
-			response, err := http.Get(*PanelUrl + "/ads/list/")
-			if err != nil {
-				log.Println("Error fetching ads list:", err)
-				continue
-			}
-			defer response.Body.Close()
+			fetchads()
 
-			if response.StatusCode == http.StatusOK {
-				var ads []common.AdWithMetrics
-				err = json.NewDecoder(response.Body).Decode(&ads)
-				if err != nil {
-					log.Println("Error decoding response body:", err)
-				} else {
-					log.Println("Ads list fetched successfully")
-					allAds = ReturnAllAds(ads)
-				}
-			} else {
-				log.Println("Failed to fetch ads list, status code:", response.StatusCode)
-			}
 		}
 	}
 }
@@ -44,7 +53,7 @@ func ReturnAllAds(ads []common.AdWithMetrics) []common.AdWithMetrics {
 		return []common.AdWithMetrics{}
 	}
 	for _, ad := range ads {
-		log.Printf("Ad ID: %d, Title: %s", ad.Id, ad.Title)
+		log.Printf("Ad ID: %d, Title: %s", ad.AdInfo.Id, ad.AdInfo.Title)
 	}
 	return ads
 }

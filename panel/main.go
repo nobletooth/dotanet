@@ -16,19 +16,21 @@ import (
 	"github.com/nobletooth/dotanet/panel/publisher"
 )
 
-type EventService struct {
-	Pid     string    `json:"pubId"`
-	AdID    string    `json:"adId"`
-	Clicked bool      `json:"isClicked"`
-	TimeID  time.Time `json:"time"`
+var config = cors.Config{
+	AllowAllOrigins:  true,
+	AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"},
+	AllowHeaders:     []string{"*"},
+	ExposeHeaders:    []string{"*"},
+	AllowCredentials: false,
+	MaxAge:           12 * time.Hour,
 }
 
-func eventservice(event EventService) error {
-	if event.Clicked {
+func eventservice(event common.EventServiceApiModel) error {
+	if event.IsClicked {
 		clickedEvent := common.ClickedEvent{
-			Pid:  event.Pid,
-			AdId: event.AdID,
-			Time: event.TimeID,
+			Pid:  event.PubId,
+			AdId: event.AdId,
+			Time: event.Time,
 		}
 		result := database.DB.Create(&clickedEvent)
 		realID, _ := strconv.Atoi(clickedEvent.AdId)
@@ -39,15 +41,14 @@ func eventservice(event EventService) error {
 		if err != nil {
 			return err
 		}
-		result = database.DB.Create(&clickedEvent)
 		if result.Error != nil {
 			return result.Error
 		}
 	} else {
 		viewedEvent := common.ViewedEvent{
-			Pid:  event.Pid,
-			AdId: event.AdID,
-			Time: event.TimeID,
+			Pid:  event.PubId,
+			AdId: event.AdId,
+			Time: event.Time,
 		}
 		result := database.DB.Create(&viewedEvent)
 		if result.Error != nil {
@@ -58,7 +59,7 @@ func eventservice(event EventService) error {
 }
 
 func eventServerHandler(c *gin.Context) {
-	var event EventService
+	var event common.EventServiceApiModel
 	if err := c.BindJSON(&event); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request payload"})
 		return
@@ -102,8 +103,7 @@ func main() {
 	}
 
 	router := gin.Default()
-	router.Use(cors.Default())
-
+	router.Use(cors.New(config))
 	router.HTMLRender = LoadTemplates("./templates")
 	// Home route
 	router.GET("/", homeHandler)
@@ -131,7 +131,7 @@ func main() {
 	// Ad server routes
 	router.GET("/ads/list/", advertiser.ListAllAds) //endpoint
 
-	if err := router.Run(*(database.PanelUrl)); err != nil {
+	if err := router.Run(*(database.PanelPort)); err != nil {
 		log.Fatalf("failed to run server: %v", err)
 	}
 }

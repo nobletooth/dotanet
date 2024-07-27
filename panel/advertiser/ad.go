@@ -2,10 +2,12 @@ package advertiser
 
 import (
 	"errors"
+	"fmt"
 	"github.com/nobletooth/dotanet/common"
 	"github.com/nobletooth/dotanet/panel/database"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strconv"
 	"time"
 
@@ -39,8 +41,12 @@ func CreateAdHandler(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Image file is required"})
 		return
 	}
+	extension := filepath.Ext(file.Filename)
 
-	imagePath := "./image/" + file.Filename
+	newFilename := fmt.Sprintf("%s_%s%s", file.Filename[:len(file.Filename)-len(extension)], ad.Url, extension)
+
+	imagePath := filepath.Join("./image", newFilename)
+
 	if err := c.SaveUploadedFile(file, imagePath); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save image"})
 		return
@@ -149,7 +155,7 @@ func LoadAdPictureHandler(c *gin.Context) {
 }
 
 func ListAllAds(c *gin.Context) {
-	var ads []common.AdInfo
+	var ads []Ad
 	result := database.DB.Find(&ads)
 	if result.Error != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Loading ads failed"})
@@ -172,8 +178,17 @@ func ListAllAds(c *gin.Context) {
 			Where("ad_id = ? AND time BETWEEN ? AND ?", ad.Id, startTime, endTime).
 			Count(&impressionCount)
 
+		adinfo := common.AdInfo{
+			AdvertiserId: ad.AdvertiserId,
+			Id:           ad.Id,
+			Price:        ad.Price,
+			Url:          ad.Url,
+			Status:       ad.Status,
+			Title:        ad.Title,
+		}
+
 		adMetrics = append(adMetrics, common.AdWithMetrics{
-			AdInfo:          ad,
+			AdInfo:          adinfo,
 			ClickCount:      clickCount,
 			ImpressionCount: impressionCount,
 		})

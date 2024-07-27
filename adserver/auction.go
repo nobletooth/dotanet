@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"math/rand"
 	"net/http"
 	"strconv"
@@ -12,24 +11,9 @@ import (
 	"github.com/nobletooth/dotanet/common"
 )
 
-func GetImagePath(adID uint) (string, error) {
-	url := fmt.Sprintf(*AdserverUrl+"/ads/%d/pictures", adID)
-	resp, err := http.Get(url)
-	if err != nil {
-		return "", err
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		return "", fmt.Errorf("failed to get image path, status code: %d", resp.StatusCode)
-	}
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return "", err
-	}
-
-	return string(body), nil
+func GetImage(adID uint) (string, error) {
+	url := fmt.Sprintf("http://localhost:8085/ads/%d/picture", adID)
+	return url, nil
 }
 
 func GetAdHandler(c *gin.Context) {
@@ -78,7 +62,7 @@ func GetAdHandler(c *gin.Context) {
 	}
 
 	var finalAd common.AdWithMetrics
-	if rand.Float64() < *NewAdSelectionProbability && selectedNewAd.Id != 0 {
+	if (rand.Float64() < *NewAdSelectionProbability && selectedNewAd.Id != 0) || selectedExperiencedAd.Id == 0 {
 		finalAd = selectedNewAd
 	} else {
 		finalAd = selectedExperiencedAd
@@ -88,12 +72,12 @@ func GetAdHandler(c *gin.Context) {
 }
 
 func sendAdResponse(c *gin.Context, ad common.AdWithMetrics, pubID string) {
-	imagePath, err := GetImagePath(ad.Id)
+	fmt.Printf("adID: %d,ad title:%s,ad price:%f", ad.Id, ad.Title, ad.Price)
+	imageDataurl, err := GetImage(ad.AdInfo.Id)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get image path"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get image"})
 		return
 	}
-
 	publisherID, err := strconv.ParseUint(pubID, 10, 64)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid publisher ID"})
@@ -102,9 +86,9 @@ func sendAdResponse(c *gin.Context, ad common.AdWithMetrics, pubID string) {
 
 	response := gin.H{
 		"Title":          ad.Title,
-		"ImagePath":      imagePath,
-		"ClicksURL":      fmt.Sprintf("/click/%d/%d", ad.Id, publisherID),
-		"ImpressionsURL": fmt.Sprintf("/impression/%d/%d", ad.Id, publisherID),
+		"ImageData":      imageDataurl,
+		"ClicksURL":      fmt.Sprintf("http://localhost:8082/click/%d/%d", ad.Id, publisherID),
+		"ImpressionsURL": fmt.Sprintf("http://localhost:8082/impression/%d/%d", ad.Id, publisherID),
 	}
 
 	c.JSON(http.StatusOK, response)

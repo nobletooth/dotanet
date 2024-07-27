@@ -3,9 +3,10 @@ package main
 import (
 	"flag"
 	"fmt"
-	"net/http"
-
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"net/http"
+	"time"
 )
 
 var (
@@ -16,6 +17,15 @@ var (
 func main() {
 	flag.Parse()
 	router := gin.Default()
+	router.Use(cors.New(cors.Config{
+		AllowAllOrigins:  true, // Change to your frontend domain
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Accept"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}))
+
 	router.LoadHTMLGlob("./html/*")
 
 	router.GET("/:sitename", siteHandler())

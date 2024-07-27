@@ -27,23 +27,42 @@ func clickHandler() gin.HandlerFunc {
 		pub := c.Param("pub") // should decrypt adv and pub.
 		var updateApi = common.EventServiceApiModel{Time: clickTime, PubId: pub, AdId: adv, IsClicked: true}
 		ch <- updateApi
-		var ad common.AdInfo
+		var ad common.Ad
 		result := Db.First(&ad, advNum32)
 		if result.RowsAffected == 0 {
-			c.JSON(http.StatusNotFound, gin.H{"error": "advNum not found"})
+			c.JSON(http.StatusNotFound, gin.H{"error": "adNum not found"})
 		}
-
-		c.Redirect(http.StatusMovedPermanently, ad.Url)
-
+		//c.Redirect(http.StatusOK, "ad.Url")
+		c.JSON(http.StatusOK, gin.H{"AdURL": ad.Url})
 	}
 }
 
 func panelApiCall(ch chan common.EventServiceApiModel) {
-	jsonData, err := json.Marshal(<-ch)
-	if err != nil {
-		fmt.Errorf("error : " + err.Error())
-	}
-	resp, err := http.Post(*EventservicePort+"/eventservice", "application/json", bytes.NewBuffer(jsonData))
-	_ = resp
+	for {
+		select {
+		case event := <-ch:
+			fmt.Printf("channel size : %v", len(ch))
 
+			jsonData, err := json.Marshal(event)
+			if err != nil {
+				fmt.Errorf("error : " + err.Error())
+			}
+			resp, err := http.Post("http://localhost:8085/eventservice", "application/json", bytes.NewBuffer(jsonData))
+			if err != nil {
+				fmt.Errorf("Error making POST request: %s\n", err)
+			}
+			//defer resp.Body.Close()
+
+			if resp.StatusCode != http.StatusOK {
+				fmt.Printf("Received non-OK response status: %s\n", resp.Status)
+			}
+		default:
+		}
+	}
+	//jsonData, err := json.Marshal(<-ch)
+	//if err != nil {
+	//	fmt.Errorf("error : " + err.Error())
+	//}
+	//resp, err := http.Post(*EventservicePort+"/eventservice", "application/json", bytes.NewBuffer(jsonData))
+	//_ = resp
 }
