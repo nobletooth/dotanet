@@ -4,13 +4,9 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ed4484fd-287b-47de-bfe3-ab9e86c9a98b" name="Changes" comment="change gitignore and ad go.work and go.work.sum">
+    <list default="true" id="ed4484fd-287b-47de-bfe3-ab9e86c9a98b" name="Changes" comment="doing debugging with amin">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adserver/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/adserver/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eventservice/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/eventservice/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/panel/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/panel/main.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/panel/publisher/script/digikala.js" beforeDir="false" afterPath="$PROJECT_DIR$/panel/publisher/script/digikala.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/publisherwebsite/html/digikala.html" beforeDir="false" afterPath="$PROJECT_DIR$/publisherwebsite/html/digikala.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/publisherwebsite/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/publisherwebsite/main.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -102,7 +98,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="doing test doinng debugging" />
     <MESSAGE value="change gitignore and ad go.work and go.work.sum" />
-    <option name="LAST_COMMIT_MESSAGE" value="change gitignore and ad go.work and go.work.sum" />
+    <MESSAGE value="doing debugging with amin" />
+    <option name="LAST_COMMIT_MESSAGE" value="doing debugging with amin" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>

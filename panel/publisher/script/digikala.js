@@ -43,13 +43,11 @@ document.addEventListener('DOMContentLoaded', function() {
     adImage.addEventListener('click', function() {
         fetch(window.ClicksURL, {
             method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
+            mode:'no-cors',
+                headers: {
+                'Content-Type': 'nosniff'
             }
         })
-            .then(response => response.json())
-            .then(data => console.log('Ad click API response:', data))
-            .catch(error => console.error('Error:', error));
     });
 
     var observer = new IntersectionObserver(function(entries) {

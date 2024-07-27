@@ -19,7 +19,7 @@ func main() {
 	flag.Parse()
 	router := gin.Default()
 	config := cors.Config{
-		AllowOrigins:     []string{"http://localhost:8083", "http://localhost:8082", "http://localhost:8080", "http://localhost:8081"},
+		AllowOrigins:     []string{"*"},
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"},
 		AllowHeaders:     []string{"*"},
 		ExposeHeaders:    []string{"*"},
