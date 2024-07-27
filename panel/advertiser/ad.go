@@ -41,7 +41,7 @@ func CreateAdHandler(c *gin.Context) {
 		return
 	}
 
-	imagePath := "./image/" + file.Filename[:strings.LastIndex(file.Filename, ".")] + "_" + ad.Url
+	imagePath := "./image/" + file.Filename[:strings.LastIndex(file.Filename, ".")] + "_" + ad.Url + "." + strings.TrimSuffix(file.Filename, strings.TrimPrefix(file.Filename, strings.Split(file.Filename, ".")[0]))
 	if err := c.SaveUploadedFile(file, imagePath); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save image"})
 		return
