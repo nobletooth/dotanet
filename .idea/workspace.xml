@@ -4,17 +4,20 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ed4484fd-287b-47de-bfe3-ab9e86c9a98b" name="Changes" comment="doing debugging with amin">
+    <list default="true" id="43c6eb8c-6db5-4240-a1c0-4ea8813a9e66" name="Changes" comment="fixing all js and fix event serevr">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/panel/publisher/script/digikala.js" beforeDir="false" afterPath="$PROJECT_DIR$/panel/publisher/script/digikala.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/publisherwebsite/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/publisherwebsite/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/eventservice/click.go" beforeDir="false" afterPath="$PROJECT_DIR$/eventservice/click.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/panel/publisher/script/digiland.js" beforeDir="false" afterPath="$PROJECT_DIR$/panel/publisher/script/digiland.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/panel/publisher/script/samsung.js" beforeDir="false" afterPath="$PROJECT_DIR$/panel/publisher/script/samsung.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/panel/publisher/script/torob.js" beforeDir="false" afterPath="$PROJECT_DIR$/panel/publisher/script/torob.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/panel/publisher/script/varzesh3.js" beforeDir="false" afterPath="$PROJECT_DIR$/panel/publisher/script/varzesh3.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="GOROOT" url="file://$PROJECT_DIR$/../../../../Program Files/Go" />
+  <component name="GOROOT" url="file:///snap/go/10660" />
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
@@ -22,12 +25,12 @@
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RESET_MODE" value="HARD" />
   </component>
   <component name="ProjectColorInfo">{
-  &quot;customColor&quot;: &quot;&quot;,
-  &quot;associatedIndex&quot;: 1
+  &quot;associatedIndex&quot;: 3
 }</component>
-  <component name="ProjectId" id="2jhEe4QwShw6u42J4MUAp4ikwDv" />
+  <component name="ProjectId" id="2jgOJ6uke9oxwjzkMOqqktol2XJ" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
   </component>
@@ -35,24 +38,80 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.modules.automatic.dependencies.download&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.modules.go.list.on.any.changes.was.set&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;script&quot;,
-    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
-    &quot;go.sdk.automatically.set&quot;: &quot;true&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Click&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;terminal&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Go Build.go build github.com/nobletooth/dotanet/eventservice.executor": "Run",
+    "Go Build.go build github.com/nobletooth/dotanet/publisherwebsite.executor": "Run",
+    "Go Build.go build main.go (1).executor": "Run",
+    "Go Build.go build main.go.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.go.formatter.settings.were.checked": "true",
+    "RunOnceActivity.go.migrated.go.modules.settings": "true",
+    "RunOnceActivity.go.modules.automatic.dependencies.download": "true",
+    "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
+    "git-widget-placeholder": "js-handling",
+    "go.import.settings.migrated": "true",
+    "go.sdk.automatically.set": "true",
+    "last_opened_file_path": "/home/amin/Desktop/yellowbloom/dotanet/panel/publisher/script",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm"
   }
-}</component>
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/panel/publisher/script" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/panel/database" />
+      <recent name="$PROJECT_DIR$/panel" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Go Build.go build main.go">
+    <configuration name="go build github.com/nobletooth/dotanet/eventservice" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="dotanet" />
+      <working_directory value="$PROJECT_DIR$/eventservice" />
+      <kind value="PACKAGE" />
+      <package value="github.com/nobletooth/dotanet/eventservice" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$/eventservice/main.go" />
+      <method v="2" />
+    </configuration>
+    <configuration name="go build github.com/nobletooth/dotanet/publisherwebsite" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="dotanet" />
+      <working_directory value="$PROJECT_DIR$/publisherwebsite" />
+      <kind value="PACKAGE" />
+      <package value="github.com/nobletooth/dotanet/publisherwebsite" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$/publisherwebsite/main.go" />
+      <method v="2" />
+    </configuration>
+    <configuration name="go build main.go (1)" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="dotanet" />
+      <working_directory value="$PROJECT_DIR$/panel" />
+      <kind value="FILE" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$/panel/main.go" />
+      <method v="2" />
+    </configuration>
+    <configuration name="go build main.go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="dotanet" />
+      <working_directory value="$PROJECT_DIR$/adserver" />
+      <kind value="FILE" />
+      <package value="github.com/nobletooth/dotanet/adserver" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$/adserver/main.go" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Go Build.go build main.go" />
+        <item itemvalue="Go Build.go build github.com/nobletooth/dotanet/eventservice" />
+        <item itemvalue="Go Build.go build github.com/nobletooth/dotanet/publisherwebsite" />
+        <item itemvalue="Go Build.go build main.go (1)" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
@@ -65,7 +124,12 @@
             <list>
               <RecentGroup>
                 <option name="FILTER_VALUES">
-                  <option value="script" />
+                  <option value="main" />
+                </option>
+              </RecentGroup>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="origin/main" />
                 </option>
               </RecentGroup>
             </list>
@@ -73,46 +137,15 @@
         </entry>
       </map>
     </option>
-    <option name="TAB_STATES">
-      <map>
-        <entry key="MAIN">
-          <value>
-            <State>
-              <option name="FILTERS">
-                <map>
-                  <entry key="branch">
-                    <value>
-                      <list>
-                        <option value="script" />
-                      </list>
-                    </value>
-                  </entry>
-                </map>
-              </option>
-            </State>
-          </value>
-        </entry>
-      </map>
-    </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="doing test doinng debugging" />
+    <MESSAGE value="correct html addresses." />
+    <MESSAGE value="add scripts." />
     <MESSAGE value="change gitignore and ad go.work and go.work.sum" />
-    <MESSAGE value="doing debugging with amin" />
-    <option name="LAST_COMMIT_MESSAGE" value="doing debugging with amin" />
+    <MESSAGE value="fixing all js and fix event serevr" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixing all js and fix event serevr" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/panel/publisher/publisher.go</url>
-          <line>54</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>
