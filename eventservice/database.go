@@ -16,7 +16,7 @@ var (
 	dbname           = flag.String("dbname", "dotanet", "Database name")
 	port             = flag.String("dbport", "5432", "Database port")
 	host             = flag.String("dbhost", "95.217.125.139", "Database host")
-	EventservicePort = flag.String("panelport", ":8082", "Panel port")
+	EventservicePort = flag.String("eventserviceurl", ":8082", "Panel port")
 )
 
 func OpenDbConnection() (*gorm.DB, error) {

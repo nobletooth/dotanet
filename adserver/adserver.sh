@@ -1,9 +1,9 @@
-OUTPUT_BINARY="Publisherwebsite"
+OUTPUT_BINARY="Adserver"
 SERVER="gambron@95.217.125.139"
 SERVER_PORT="2233"
-PROJECT_URL="0.0.0.0:8084"
+PROJECT_URL="0.0.0.0:8081"
+PANEL_URL="http://0.0.0.0:8085"
 PROJECT_DIR="./"
-TEMPLATES_DIR="./html"
 LOG_FILE="./file.log"
 SERVER_PASSWORD="Oops123"
 SERVER_DIR="/home/gambron"
@@ -42,29 +42,23 @@ log "Made panel executable"
 
 log "Copying binary to server..."
 sshpass -p $SERVER_PASSWORD scp -P $SERVER_PORT $PROJECT_DIR$OUTPUT_BINARY $SERVER:$SERVER_DIR
+
 if [ $? -eq 0 ]; then
   log "Binary successfully copied to server"
-  log "Copying additional files..."
-  sshpass -p $SERVER_PASSWORD scp -P $SERVER_PORT -r $TEMPLATES_DIR $SERVER:$SERVER_DIR
-  if [ $? -eq 0 ]; then
-    log "templates files successfully copied to server"
-  else
-    log "Failed to copy templates to server"
-      exit 1
-  fi
 else
   log "Failed to copy binary to server"
   exit 1
 fi
 
-log "Starting publisher website..."
+log "Starting adserver..."
 
 
-sshpass -p $SERVER_PASSWORD ssh -t -p $SERVER_PORT $SERVER "cd $SERVER_DIR && ./$OUTPUT_BINARY -publisherservice $PROJECT_URL"
+sshpass -p $SERVER_PASSWORD ssh -t -p $SERVER_PORT $SERVER "cd $SERVER_DIR && ./$OUTPUT_BINARY -adserverurl $PROJECT_URL -panelurl $PANEL_URL -newAdTreshold 5 -newAdProb 0.25 -expAdProb 0.75"
 if [ $? -eq 0 ]; then
-  log "Publisher website started on port $PROJECT_URL"
+  log "adserver started on $PROJECT_URL"
   log "Deployment completed."
 else
-  log "Failed to start publisher website."
+  log "Failed to start."
   exit 1
 fi
+

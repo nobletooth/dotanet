@@ -1,5 +1,8 @@
 document.addEventListener('DOMContentLoaded', function() {
     var adSeen = false;
+    const publisherId = "__PUBLISHER_ID__";
+    const adserverurl = "__ADSERVER_URL__";
+
 
     // Create the image div
     var imageDiv = document.createElement('div');
@@ -19,7 +22,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function getAdInfo() {
         try {
-            const response = await fetch('http://localhost:8081/getadinfo/1');
+            const response = await fetch('http://localhost:8081/getadinfo/2');
+            const data = await response.json();
+            adImage.src = data.ImageData;
+            window.ImpressionsURL = data.ImpressionsURL;
+            window.ClicksURL = data.ClicksURL;
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    async function getAdInfo() {
+        try {
+            const response = await fetch(`http://${adserverurl}/getadinfo/${publisherId}`);
             const data = await response.json();
             adImage.src = data.ImageData;
             window.ImpressionsURL = data.ImpressionsURL;
