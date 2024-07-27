@@ -1,56 +1,70 @@
-#!/bin/bash
-
-# Variables
-PROJECT_DIR="/home/amin/Desktop/yellowbloom/dotanet/publisherwebsite/"
-EXECUTABLE_NAME="publisherWebSite"
-STATIC_FILES_DIR="/home/amin/Desktop/yellowbloom/dotanet/publisherwebsite/html/"
-SERVER_USER="gambron"
-SERVER_IP="95.217.125.139"
-SERVER_port="2233"
-SERVER_DIR="/home/gambron"
-LOG_FILE="/home/amin/Desktop/yellowbloom/dotanet/file.log"
+OUTPUT_BINARY="Publisherwebsite"
+SERVER="gambron@95.217.125.139"
+SERVER_PORT="2233"
+PROJECT_URL="0.0.0.0:8083"
+PROJECT_DIR="./"
+TEMPLATES_DIR="./html"
+LOG_FILE="./file.log"
 SERVER_PASSWORD="Oops123"
-PROJECT_URL="0.0.0.0:8084"
+SERVER_DIR="/home/gambron"
 
-# Timestamp function for logging
+export GOOS=linux
+export GOARCH=amd64
+export GIN_MODE=release
+
+GO_VERSION="1.22.5"
+go version | grep -q "go$GO_VERSION" || {
+    echo "Go version problem!"
+    exit 1
+}
+
 timestamp() {
     date +"%Y-%m-%d %T"
 }
 
-# Log function
 log() {
     echo "$(timestamp): $*" | tee -a $LOG_FILE
 }
 
-# Step 1: Navigate to the project directory
-log "Navigating to project directory: $PROJECT_DIR"
-cd $PROJECT_DIR || { log "Failed to navigate to project directory"; exit 1; }
+log "Building Linux binary"
+go build -o $OUTPUT_BINARY
 
-# Step 2: Build the project
-log "Building the project"
-if go build -o $EXECUTABLE_NAME; then
-    log "Build successful"
-else
-    log "Build failed"
+if [ $? -ne 0 ]; then
+    log "Build failed."
     exit 1
 fi
 
-# Step 3: Copy executable and static files to the server
-log "Copying executable and static files to the server"
-if sshpass -p $SERVER_PASSWORD scp -P $SERVER_port $PROJECT_DIR$EXECUTABLE_NAME $SERVER_USER@$SERVER_IP:$SERVER_DIR && sshpass -p $SERVER_PASSWORD scp -r -P $SERVER_port $STATIC_FILES_DIR $SERVER_USER@$SERVER_IP:$SERVER_DIR; then
-    log "Files copied successfully"
+log "Build successful! Binary created: $OUTPUT_BINARY"
+
+# Make the binary executable
+chmod +x $OUTPUT_BINARY
+log "Made panel executable"
+
+log "Copying binary to server..."
+sshpass -p $SERVER_PASSWORD scp -P $SERVER_PORT $PROJECT_DIR$OUTPUT_BINARY $SERVER:$SERVER_DIR
+if [ $? -eq 0 ]; then
+  log "Binary successfully copied to server"
+  log "Copying additional files..."
+  sshpass -p $SERVER_PASSWORD scp -P $SERVER_PORT -r $TEMPLATES_DIR $SERVER:$SERVER_DIR
+  if [ $? -eq 0 ]; then
+    log "templates files successfully copied to server"
+  else
+    log "Failed to copy templates to server"
+      exit 1
+  fi
 else
-    log "Failed to copy files"
-    exit 1
+  log "Failed to copy binary to server"
+  exit 1
 fi
 
-# Step 4: Run the executable on the server
-log "Running the executable on the server"
-if sshpass -p $SERVER_PASSWORD ssh -t -p $SERVER_port $SERVER_USER@$SERVER_IP "cd $SERVER_DIR && ./$EXECUTABLE_NAME -publisherservice $PROJECT_URL "; then
-    log "Executable ran successfully"
-else
-    log "Failed to run the executable"
-    exit 1
-fi
+log "Starting publisher website..."
 
-log "Script execution completed"
+
+sshpass -p $SERVER_PASSWORD ssh -t -p $SERVER_PORT $SERVER "cd $SERVER_DIR && ./$OUTPUT_BINARY -publisherservice $PROJECT_URL"
+if [ $? -eq 0 ]; then
+  log "Publisher website started on port $PANEL_PORT"
+  log "Deployment completed."
+else
+  log "Failed to start publisher website."
+  exit 1
+fi

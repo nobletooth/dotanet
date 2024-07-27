@@ -15,6 +15,7 @@ var (
 
 func main() {
 	flag.Parse()
+	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
 	router.LoadHTMLGlob("./html/*")
 
