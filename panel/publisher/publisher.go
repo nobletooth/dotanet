@@ -100,7 +100,7 @@ func GetPublisherScript(c *gin.Context) {
 		return
 	}
 
-	scriptFilePath := "./publisher/script/" + publisher.Name + ".js"
+	scriptFilePath := "./publisher/script/template.js"
 	scriptContent, err := os.ReadFile(scriptFilePath)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to read script file"})
