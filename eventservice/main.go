@@ -14,15 +14,6 @@ import (
 var Db *gorm.DB
 var ch = make(chan common.EventServiceApiModel, 10)
 
-var config = cors.Config{
-	AllowAllOrigins:  true,
-	AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"},
-	AllowHeaders:     []string{"*"},
-	ExposeHeaders:    []string{"*"},
-	AllowCredentials: true,
-	MaxAge:           12 * time.Hour,
-}
-
 func main() {
 	go panelApiCall(ch)
 	flag.Parse()
@@ -32,7 +23,14 @@ func main() {
 		Db = db
 	}
 	router := gin.Default()
-	router.Use(cors.New(config))
+	router.Use(cors.New(cors.Config{
+		AllowAllOrigins:  true, // Change to your frontend domain
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Accept"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}))
 
 	router.GET("/click/:adv/:pub", clickHandler())
 	router.GET("/impression/:adv/:pub", impressionHandler())
