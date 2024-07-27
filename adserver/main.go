@@ -4,7 +4,6 @@ import (
 	"flag"
 	"fmt"
 	"github.com/gin-contrib/cors"
-	"net/http"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -14,6 +13,7 @@ import (
 var (
 	allAds                            []common.AdWithMetrics
 	AdserverPort                      = flag.String("adserverurl", ":8081", "ad server port")
+	EventServiceUrl                   = flag.String("eventserviceurl", "http://localhost:8081", "ad server port")
 	PanelUrl                          = flag.String("panelurl", "http://localhost:8080", "panel url")
 	NewAdImpressionThreshold          = flag.Int64("newAdTreshold", 5, "Impression threshold for considering an ad as new")
 	NewAdSelectionProbability         = flag.Float64("newAdProb", 0.25, "Probability of selecting a new ad")
@@ -33,7 +33,7 @@ func main() {
 	router := gin.Default()
 	router.Use(cors.New(config))
 
-	router.GET("/getad/:pubID", GetAdsHandler)
+	//router.GET("/getad/:pubID", GetAdsHandler)
 	router.GET("/getadinfo/:pubID", GetAdHandler)
 
 	go GetAdsListPeriodically()
@@ -41,6 +41,6 @@ func main() {
 	router.Run(*AdserverPort)
 }
 
-func GetAdsHandler(c *gin.Context) {
-	c.JSON(http.StatusOK, allAds)
-}
+//func GetAdsHandler(c *gin.Context) {
+//	c.JSON(http.StatusOK, allAds)
+//}

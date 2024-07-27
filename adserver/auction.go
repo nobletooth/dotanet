@@ -87,8 +87,8 @@ func sendAdResponse(c *gin.Context, ad common.AdWithMetrics, pubID string) {
 	response := gin.H{
 		"Title":          ad.Title,
 		"ImageData":      imageDataurl,
-		"ClicksURL":      fmt.Sprintf("http://localhost:8082/click/%d/%d", ad.Id, publisherID),
-		"ImpressionsURL": fmt.Sprintf("http://localhost:8082/impression/%d/%d", ad.Id, publisherID),
+		"ClicksURL":      fmt.Sprintf("%v/click/%d/%d", *EventServiceUrl, ad.Id, publisherID),
+		"ImpressionsURL": fmt.Sprintf("%v/impression/%d/%d", *EventServiceUrl, ad.Id, publisherID),
 	}
 
 	c.JSON(http.StatusOK, response)

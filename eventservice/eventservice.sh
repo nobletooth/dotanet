@@ -52,7 +52,7 @@ fi
 log "Starting event server..."
 
 
-sshpass -p $SERVER_PASSWORD ssh -t -p $SERVER_PORT $SERVER "cd $SERVER_DIR && ./$OUTPUT_BINARY -dbuser user -dbpassword password -dbname dotanet -dbport 5432 -dbhost 95.217.125.139 -eventserviceurl $PROJECT_URL"
+sshpass -p $SERVER_PASSWORD ssh -t -p $SERVER_PORT $SERVER "cd $SERVER_DIR && ./$OUTPUT_BINARY -dbuser user -dbpassword password -dbname dotanet -dbport 5432 -dbhost localhost -eventserviceurl $PROJECT_URL"
 if [ $? -eq 0 ]; then
   log "event server started on port $PROJECT_URL"
   log "Deployment completed."

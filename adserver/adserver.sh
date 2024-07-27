@@ -2,11 +2,12 @@ OUTPUT_BINARY="Adserver"
 SERVER="gambron@95.217.125.139"
 SERVER_PORT="2233"
 PROJECT_URL="0.0.0.0:8081"
-PANEL_URL="http://0.0.0.0:8085"
+PANEL_URL="http://localhost:8085"
 PROJECT_DIR="./"
 LOG_FILE="./file.log"
 SERVER_PASSWORD="Oops123"
 SERVER_DIR="/home/gambron"
+EVENTSERVICE_URL="http://95.217.125.139:8082"
 
 export GOOS=linux
 export GOARCH=amd64
@@ -53,7 +54,7 @@ fi
 log "Starting adserver..."
 
 
-sshpass -p $SERVER_PASSWORD ssh -t -p $SERVER_PORT $SERVER "cd $SERVER_DIR && ./$OUTPUT_BINARY -adserverurl $PROJECT_URL -panelurl $PANEL_URL -newAdTreshold 5 -newAdProb 0.25 -expAdProb 0.75"
+sshpass -p $SERVER_PASSWORD ssh -t -p $SERVER_PORT $SERVER "cd $SERVER_DIR && ./$OUTPUT_BINARY -adserverurl $PROJECT_URL -panelurl $PANEL_URL -eventserviceurl $EVENTSERVICE_URL -newAdTreshold 5 -newAdProb 0.25 -expAdProb 0.75"
 if [ $? -eq 0 ]; then
   log "adserver started on $PROJECT_URL"
   log "Deployment completed."
