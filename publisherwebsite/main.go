@@ -16,6 +16,7 @@ var (
 
 func main() {
 	flag.Parse()
+	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
 	router.Use(cors.New(cors.Config{
 		AllowAllOrigins:  true, // Change to your frontend domain
