@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var adImage = document.createElement('img');
     adImage.id = 'ad-image';
     adImage.alt = 'Ad Image';
-    adImage.src=""
+    adImage.src = "";
 
     // Append the image to the image div
     imageDiv.appendChild(adImage);
@@ -17,15 +17,16 @@ document.addEventListener('DOMContentLoaded', function() {
     // Append the image div to the body
     document.body.appendChild(imageDiv);
 
-    function getAdInfo() {
-        fetch('http://localhost:8081/getadinfo/1')
-            .then(response => response.json())
-            .then(data => {
-                adImage.src = data.ImageData;
-                window.ImpressionsURL = data.ImpressionsURL;
-                window.ClicksURL = data.ClicksURL;
-            })
-            .catch(error => console.error('Error:', error));
+    async function getAdInfo() {
+        try {
+            const response = await fetch('http://localhost:8081/getadinfo/1');
+            const data = await response.json();
+            adImage.src = data.ImageData;
+            window.ImpressionsURL = data.ImpressionsURL;
+            window.ClicksURL = data.ClicksURL;
+        } catch (error) {
+            console.error('Error:', error);
+        }
     }
 
     function callAdSeenApi() {
@@ -34,17 +35,17 @@ document.addEventListener('DOMContentLoaded', function() {
             headers: {
                 'Content-Type': 'application/json'
             }
-        })
+        }).catch(error => console.error('Error:', error));
     }
 
     adImage.addEventListener('click', function() {
         fetch(window.ClicksURL, {
             method: 'GET',
-            mode:'no-cors',
-                headers: {
+            mode: 'no-cors',
+            headers: {
                 'Content-Type': 'application/json'
             }
-        })
+        }).catch(error => console.error('Error:', error));
     });
 
     var observer = new IntersectionObserver(function(entries) {
@@ -55,7 +56,9 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }, { threshold: 0.5 });
-    getAdInfo();
-    observer.observe(adImage);
 
+    // Ensure getAdInfo completes before setting up the observer
+    getAdInfo().then(() => {
+        observer.observe(adImage);
+    });
 });
