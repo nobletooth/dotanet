@@ -4,7 +4,6 @@ import (
 	"flag"
 	"log"
 	"net/http"
-	"strconv"
 	"time"
 
 	"github.com/gin-contrib/cors"
@@ -42,18 +41,7 @@ func eventservice(event common.EventServiceApiModel) error {
 			return result.Error
 		}
 
-		realID, err := strconv.Atoi(clickedEvent.AdId)
-		if err != nil {
-			tx.Rollback()
-			return err
-		}
-		realPid, err := strconv.Atoi(clickedEvent.Pid)
-		if err != nil {
-			tx.Rollback()
-			return err
-		}
-
-		ad, err := advertiser.FindAdById(realID)
+		ad, err := advertiser.FindAdById(clickedEvent.AdId)
 		if err != nil {
 			tx.Rollback()
 			return err
@@ -62,7 +50,7 @@ func eventservice(event common.EventServiceApiModel) error {
 			tx.Rollback()
 			return err
 		}
-		if err := publisher.HandlePublisherCreditWithTx(tx, ad, realPid); err != nil {
+		if err := publisher.HandlePublisherCreditWithTx(tx, ad, clickedEvent.Pid); err != nil {
 			tx.Rollback()
 			return err
 		}

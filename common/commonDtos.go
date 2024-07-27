@@ -17,22 +17,22 @@ type AdInfo struct {
 
 type ClickedEvent struct {
 	ID   uint      `gorm:"primaryKey"`
-	Pid  string    `gorm:"index"`
-	AdId string    `gorm:"index"`
+	Pid  int       `gorm:"index"`
+	AdId int       `gorm:"index"`
 	Time time.Time `gorm:"index"`
 }
 
 type ViewedEvent struct {
 	ID   uint      `gorm:"primaryKey"`
-	Pid  string    `gorm:"index"`
-	AdId string    `gorm:"index"`
+	Pid  int       `gorm:"index"`
+	AdId int       `gorm:"index"`
 	Time time.Time `gorm:"index"`
 }
 
 type EventServiceApiModel struct {
 	Time      time.Time
-	PubId     string
-	AdId      string
+	PubId     int
+	AdId      int
 	IsClicked bool
 }
 

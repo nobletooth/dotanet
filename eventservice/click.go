@@ -30,13 +30,21 @@ func clickHandler() gin.HandlerFunc {
 		advNum32 := uint(advNum)
 		pub := c.Param("pub") // should decrypt adv and pub.
 
+		pubInt, err := strconv.Atoi(pub)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		}
+		adInt, err := strconv.Atoi(adv)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		}
 		//in this part I want to check  don't double-click
 		key := fmt.Sprintf("%d:%s", advNum32, pub)
 		mu.Lock()
 		if _, found := processedClicks[key]; !found {
 			processedClicks[key] = true
 			mu.Unlock()
-			var updateApi = common.EventServiceApiModel{Time: clickTime, PubId: pub, AdId: adv, IsClicked: true}
+			var updateApi = common.EventServiceApiModel{Time: clickTime, PubId: pubInt, AdId: adInt, IsClicked: true}
 			ch <- updateApi
 		} else {
 			mu.Unlock()
