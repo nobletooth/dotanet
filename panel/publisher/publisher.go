@@ -116,6 +116,7 @@ func GetPublisherScript(c *gin.Context) {
 	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 	c.Writer.Header().Set("Access-Control-Allow-Methods", "GET")
 	c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+	fmt.Printf("%v/getadinfo/%v", *database.AdServerURL, idStr)
 
 	c.DataFromReader(http.StatusOK, int64(len(modifiedScriptContent)), "application/javascript", bytes.NewReader(modifiedScriptContent), map[string]string{})
 }

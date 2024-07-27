@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function getAdInfo() {
         try {
-            const response = await fetch(`http://${adserverurl}/getadinfo/${publisherId}`);
+            const response = await fetch(`${adserverurl}/getadinfo/${publisherId}`);
             const data = await response.json();
             adImage.src = data.ImageData;
             window.ImpressionsURL = data.ImpressionsURL;

@@ -4,10 +4,11 @@ SERVER_PORT="2233"
 PROJECT_URL="0.0.0.0:8085"
 PROJECT_DIR="./"
 TEMPLATES_DIR="./templates"
-PUBLISHER_SCRIPT_DIR="./publisher/script"
+PUBLISHER_SCRIPT_DIR="./publisher"
 LOG_FILE="./file.log"
 SERVER_PASSWORD="Oops123"
 SERVER_DIR="/home/gambron"
+ADSERVERURL="http://95.217.125.139:8081"
 
 export GOOS=linux
 export GOARCH=amd64
@@ -73,7 +74,7 @@ fi
 log "Starting panel..."
 
 
-sshpass -p $SERVER_PASSWORD ssh -t -p $SERVER_PORT $SERVER "cd $SERVER_DIR && ./$OUTPUT_BINARY -dbuser user -dbpassword password -dbname dotanet -dbport 5432 -dbhost 95.217.125.139 -panelurl $PROJECT_URL"
+sshpass -p $SERVER_PASSWORD ssh -t -p $SERVER_PORT $SERVER "cd $SERVER_DIR && ./$OUTPUT_BINARY -dbuser user -dbpassword password -dbname dotanet -dbport 5432 -dbhost localhost -panelurl $PROJECT_URL -adserverurl $ADSERVERURL"
 if [ $? -eq 0 ]; then
   log "Panel started on port $PROJECT_URL"
   log "Deployment completed."

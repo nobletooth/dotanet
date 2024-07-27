@@ -7,6 +7,7 @@ TEMPLATES_DIR="./html"
 LOG_FILE="./file.log"
 SERVER_PASSWORD="Oops123"
 SERVER_DIR="/home/gambron"
+PANEL_URL="http://95.217.125.139:8085"
 
 export GOOS=linux
 export GOARCH=amd64
@@ -60,7 +61,7 @@ fi
 log "Starting publisher website..."
 
 
-sshpass -p $SERVER_PASSWORD ssh -t -p $SERVER_PORT $SERVER "cd $SERVER_DIR && ./$OUTPUT_BINARY -publisherservice $PROJECT_URL"
+sshpass -p $SERVER_PASSWORD ssh -t -p $SERVER_PORT $SERVER "cd $SERVER_DIR && ./$OUTPUT_BINARY -publisherservice $PROJECT_URL -panelurl $PANEL_URL"
 if [ $? -eq 0 ]; then
   log "Publisher website started on port $PROJECT_URL"
   log "Deployment completed."

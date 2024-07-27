@@ -12,7 +12,7 @@ import (
 var (
 	sitenames        = []string{"digikala", "digiland", "samsung", "torob", "varzesh3"}
 	PublisherService = flag.String("publisherservice", ":8083", "publisher service")
-	BaseURL          = flag.String("baseurl", "http://95.217.125.139:8085", "Base URL for HTML files")
+	PanelUrl         = flag.String("panelurl", "http://95.217.125.139:8085", "Base URL for HTML files")
 )
 
 func main() {
@@ -29,7 +29,7 @@ func main() {
 
 	router.LoadHTMLGlob("./html/*")
 
-	router.GET("/:sitename", siteHandler(*BaseURL))
+	router.GET("/:sitename", siteHandler(*PanelUrl))
 
 	router.Run(*PublisherService)
 }
