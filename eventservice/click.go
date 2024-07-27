@@ -29,7 +29,8 @@ func clickHandler() gin.HandlerFunc {
 		}
 		advNum32 := uint(advNum)
 		pub := c.Param("pub") // should decrypt adv and pub.
-		//in this part i want to check  don't double-click
+
+		//in this part I want to check  don't double-click
 		key := fmt.Sprintf("%d:%s", advNum32, pub)
 		mu.Lock()
 		if _, found := processedClicks[key]; !found {
@@ -75,10 +76,4 @@ func panelApiCall(ch chan common.EventServiceApiModel) {
 		default:
 		}
 	}
-	//jsonData, err := json.Marshal(<-ch)
-	//if err != nil {
-	//	fmt.Errorf("error : " + err.Error())
-	//}
-	//resp, err := http.Post(*EventservicePort+"/eventservice", "application/json", bytes.NewBuffer(jsonData))
-	//_ = resp
 }

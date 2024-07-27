@@ -7,6 +7,7 @@ import (
 	"github.com/nobletooth/dotanet/panel/advertiser"
 	"github.com/nobletooth/dotanet/panel/database"
 	"gorm.io/gorm"
+	"math"
 	"net/http"
 	"os"
 	"strconv"
@@ -28,9 +29,9 @@ type Report struct {
 	Impressions int64     `json:"impressions"`
 }
 
-func HandlePublisherCredit(ad advertiser.Ad, pid int) error {
-	creditAddition := int(ad.Price * 0.2)
-	result := database.DB.Model(&Publisher{}).Where("ID = ?", pid).Update("Credit", gorm.Expr("Credit + ?", creditAddition))
+func HandlePublisherCreditWithTx(tx *gorm.DB, ad advertiser.Ad, pid int) error {
+	creditAddition := int(math.Ceil(ad.Price * 0.2))
+	result := tx.Model(&Publisher{}).Where("ID = ?", pid).Update("Credit", gorm.Expr("Credit + ?", creditAddition))
 	if result.Error != nil {
 		return result.Error
 	}

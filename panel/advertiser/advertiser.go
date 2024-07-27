@@ -1,13 +1,15 @@
 package advertiser
 
 import (
+	"github.com/gin-gonic/gin"
+	"github.com/nobletooth/dotanet/common"
 	"github.com/nobletooth/dotanet/panel/database"
 	"gorm.io/gorm"
+	"math"
+	_ "math"
 	"net/http"
 	"strconv"
 	"time"
-	"github.com/nobletooth/dotanet/common"
-	"github.com/gin-gonic/gin"
 )
 
 type Entity struct {
@@ -33,10 +35,9 @@ type Service interface {
 	ListAdsByAdvertiser(advertiserId uint) ([]Ad, error)
 }
 
-func HandleAdvertiserCredit(ad Ad) error {
-	creditDeduction := int(ad.Price * 0.8)
-
-	result := database.DB.Model(&Entity{}).Where("ID = ?", ad.AdvertiserId).Update("Credit", gorm.Expr("Credit - ?", creditDeduction))
+func HandleAdvertiserCredit(tx *gorm.DB, ad Ad) error {
+	creditDeduction := int(math.Ceil(ad.Price * 0.8))
+	result := tx.Model(&Entity{}).Where("ID = ?", ad.AdvertiserId).Update("Credit", gorm.Expr("Credit - ?", creditDeduction))
 	if result.Error != nil {
 		return result.Error
 	}
@@ -203,7 +204,7 @@ func GetAdvertiserAdReports(c *gin.Context) {
 	}
 
 	c.HTML(http.StatusOK, "ad_reports", gin.H{
-		"Reports": reports,
+		"Reports":   reports,
 		"StartDate": startDate.Format("2006-01-02 15:04:05"),
 		"EndDate":   endDate.Format("2006-01-02 15:04:05"),
 		"AdID":      adID,
