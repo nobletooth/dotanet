@@ -33,14 +33,9 @@ func main() {
 	router := gin.Default()
 	router.Use(cors.New(config))
 
-	//router.GET("/getad/:pubID", GetAdsHandler)
 	router.GET("/getadinfo/:pubID", GetAdHandler)
 
 	go GetAdsListPeriodically()
 	fmt.Println("Server running on port" + *AdserverPort)
 	router.Run(*AdserverPort)
 }
-
-//func GetAdsHandler(c *gin.Context) {
-//	c.JSON(http.StatusOK, allAds)
-//}

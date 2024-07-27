@@ -4,16 +4,12 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0e6579ea-6863-46ef-8b93-3eaf6b194950" name="Changes" comment="gitignore correction.">
+    <list default="true" id="0e6579ea-6863-46ef-8b93-3eaf6b194950" name="Changes" comment="debugh .sh for deploy.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adserver/adserver.sh" beforeDir="false" afterPath="$PROJECT_DIR$/adserver/adserver.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/adserver/auction.go" beforeDir="false" afterPath="$PROJECT_DIR$/adserver/auction.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/adserver/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/adserver/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eventservice/eventservice.sh" beforeDir="false" afterPath="$PROJECT_DIR$/eventservice/eventservice.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/panel/database/db.go" beforeDir="false" afterPath="$PROJECT_DIR$/panel/database/db.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/panel/panel.sh" beforeDir="false" afterPath="$PROJECT_DIR$/panel/panel.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/publisherwebsite/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/publisherwebsite/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/publisherwebsite/publisherWebsite.sh" beforeDir="false" afterPath="$PROJECT_DIR$/publisherwebsite/publisherWebsite.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/panel/publisher/publisher.go" beforeDir="false" afterPath="$PROJECT_DIR$/panel/publisher/publisher.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/panel/publisher/script/template.js" beforeDir="false" afterPath="$PROJECT_DIR$/panel/publisher/script/template.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -142,9 +138,9 @@
     <recent_temporary>
       <list>
         <item itemvalue="Shell Script.publisherWebsite.sh" />
-        <item itemvalue="Shell Script.panel.sh" />
         <item itemvalue="Shell Script.eventservice.sh" />
         <item itemvalue="Shell Script.adserver.sh" />
+        <item itemvalue="Shell Script.panel.sh" />
       </list>
     </recent_temporary>
   </component>
@@ -154,7 +150,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="gitignore correction." />
-    <option name="LAST_COMMIT_MESSAGE" value="gitignore correction." />
+    <MESSAGE value="debugh .sh for deploy." />
+    <option name="LAST_COMMIT_MESSAGE" value="debugh .sh for deploy." />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
@@ -164,7 +161,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/panel/publisher/publisher.go</url>
-          <line>54</line>
+          <line>55</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
       </breakpoints>
