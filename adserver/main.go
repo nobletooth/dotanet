@@ -35,6 +35,7 @@ func main() {
 
 	router.GET("/getad/:pubID", GetAdsHandler)
 	router.GET("/getadinfo/:pubID", GetAdHandler)
+	GetAdsListPeriodically()
 	go GetAdsListPeriodically()
 	fmt.Println("Server running on port" + *AdserverPort)
 	router.Run(*AdserverPort)

@@ -9,7 +9,6 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
-	"strings"
 	"time"
 
 	"gorm.io/gorm"
@@ -27,13 +26,6 @@ type Ad struct {
 	Impressions  int     `gorm:"column:impressions"`
 	Url          string  `gorm:"column:url"`
 	AdvertiserId uint64  `gorm:"foreignKey:AdvertiserId"`
-}
-
-func constructImagePath(file File, ad Ad) string {
-	ext := filepath.Ext(file.Filename)
-	name := strings.TrimSuffix(file.Filename, ext)
-	newFilename := name + "_" + ad.Url + ext
-	return "./image/" + newFilename
 }
 
 func CreateAdHandler(c *gin.Context) {
@@ -55,7 +47,7 @@ func CreateAdHandler(c *gin.Context) {
 
 	imagePath := filepath.Join("./image", newFilename)
 
-	if err := c.SaveUploadedFile(file, constructImagePath(file, ad)); err != nil {
+	if err := c.SaveUploadedFile(file, imagePath); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save image"})
 		return
 	}
