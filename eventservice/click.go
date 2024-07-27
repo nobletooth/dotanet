@@ -48,7 +48,7 @@ func panelApiCall(ch chan common.EventServiceApiModel) {
 			if err != nil {
 				fmt.Errorf("error : " + err.Error())
 			}
-			resp, err := http.Post("http://localhost:8082/eventservice", "application/json", bytes.NewBuffer(jsonData))
+			resp, err := http.Post("http://localhost:8080/eventservice", "application/json", bytes.NewBuffer(jsonData))
 			if err != nil {
 				fmt.Errorf("Error making POST request: %s\n", err)
 			}
