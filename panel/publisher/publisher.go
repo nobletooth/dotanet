@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -105,12 +106,16 @@ func GetPublisherScript(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to read script file"})
 		return
 	}
+	scriptStr := string(scriptContent)
+	scriptStr = strings.ReplaceAll(scriptStr, "__PUBLISHER_ID__", idStr)
+	scriptStr = strings.ReplaceAll(scriptStr, "__ADSERVER_URL__", *database.AdServerURL)
+	modifiedScriptContent := []byte(scriptStr)
 
 	c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 	c.Writer.Header().Set("Access-Control-Allow-Methods", "GET")
 	c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 
-	c.DataFromReader(200, int64(len(scriptContent)), "application/javascript", bytes.NewReader(scriptContent), map[string]string{})
+	c.DataFromReader(http.StatusOK, int64(len(modifiedScriptContent)), "application/javascript", bytes.NewReader(modifiedScriptContent), map[string]string{})
 }
 
 func GetPublisherReports(c *gin.Context) {
