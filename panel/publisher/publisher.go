@@ -8,6 +8,7 @@ import (
 	"github.com/nobletooth/dotanet/panel/advertiser"
 	"github.com/nobletooth/dotanet/panel/database"
 	"gorm.io/gorm"
+	"math"
 	"net/http"
 	"os"
 	"strconv"
@@ -25,14 +26,14 @@ type Publisher struct {
 
 type Report struct {
 	Date        time.Time `json:"date"`
-	Income      float64   `json:"income"`
+	Income      float32   `json:"income"`
 	Clicks      int64     `json:"clicks"`
 	Impressions int64     `json:"impressions"`
 }
 
-func HandlePublisherCredit(ad advertiser.Ad, pid int) error {
-	creditAddition := int(ad.Price * 0.2)
-	result := database.DB.Model(&Publisher{}).Where("ID = ?", pid).Update("Credit", gorm.Expr("Credit + ?", creditAddition))
+func HandlePublisherCreditWithTx(tx *gorm.DB, ad advertiser.Ad, pid int) error {
+	creditAddition := int(math.Ceil(ad.Price * 0.2))
+	result := tx.Model(&Publisher{}).Where("ID = ?", pid).Update("Credit", gorm.Expr("Credit + ?", creditAddition))
 	if result.Error != nil {
 		return result.Error
 	}
@@ -128,28 +129,42 @@ func GetPublisherReports(c *gin.Context) {
 		return
 	}
 
-	now := time.Now().UTC()
+	now := time.Now()
 	endDate := now.Truncate(time.Minute)
 	startDate := endDate.Add(-1 * time.Hour)
 
 	var reports []Report
 	for date := startDate; !date.After(endDate); date = date.Add(time.Minute) {
 		var clickCount, impressionCount int64
-		var income float64
+		var income float32 = 0
 
 		database.DB.Model(&common.ClickedEvent{}).
-			Where("pid = ? AND time BETWEEN ? AND ?", publisherID, date, date.Add(time.Minute)).
+			Where("pid = ? AND time BETWEEN ? AND ?", strconv.Itoa(publisherID), date, date.Add(time.Minute)).
 			Count(&clickCount)
 
 		database.DB.Model(&common.ViewedEvent{}).
-			Where("pid = ? AND time BETWEEN ? AND ?", publisherID, date, date.Add(time.Minute)).
+			Where("pid = ? AND time BETWEEN ? AND ?", strconv.Itoa(publisherID), date, date.Add(time.Minute)).
 			Count(&impressionCount)
 
-		database.DB.Table("clicked_events").
-			Select("SUM(price * 0.2)").
-			Joins("JOIN ads ON clicked_events.ad_id = ads.id").
-			Where("clicked_events.pid = ? AND clicked_events.time BETWEEN ? AND ?", publisherID, date, date.Add(time.Minute)).
-			Scan(&income)
+		//database.DB.Table("clicked_events").
+		//	Select("SUM(ads.price * 0.2)").
+		//	Joins("JOIN ads ON clicked_events.ad_id = ads.id").
+		//	Where("clicked_events.pid = ? AND clicked_events.time BETWEEN ? AND ?", strconv.Itoa(publisherID), date, date.Add(time.Minute)).
+		//	Scan(&income)
+
+		query := `
+    SELECT COALESCE(SUM(ads.price * 0.2), 0)
+    FROM "clicked_events"
+    JOIN ads ON clicked_events.ad_id = ads.id
+    WHERE clicked_events.pid = $1
+    AND clicked_events.time BETWEEN $2 AND $3;`
+
+		err := database.DB.Raw(query, publisherID, startDate, endDate).Scan(&income).Error
+		if err != nil {
+			fmt.Printf("Error executing query: %v", err)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to execute query"})
+			return
+		}
 
 		reports = append(reports, Report{
 			Date:        date,

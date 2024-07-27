@@ -6,11 +6,15 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"sync"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/nobletooth/dotanet/common"
 )
+
+var processedClicks = make(map[string]bool)
+var mu sync.Mutex
 
 func clickHandler() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -25,8 +29,29 @@ func clickHandler() gin.HandlerFunc {
 		}
 		advNum32 := uint(advNum)
 		pub := c.Param("pub") // should decrypt adv and pub.
-		var updateApi = common.EventServiceApiModel{Time: clickTime, PubId: pub, AdId: adv, IsClicked: true}
-		ch <- updateApi
+
+		pubInt, err := strconv.Atoi(pub)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		}
+		adInt, err := strconv.Atoi(adv)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		}
+		//in this part I want to check  don't double-click
+		key := fmt.Sprintf("%d:%s", advNum32, pub)
+		mu.Lock()
+		if _, found := processedClicks[key]; !found {
+			processedClicks[key] = true
+			mu.Unlock()
+			var updateApi = common.EventServiceApiModel{Time: clickTime, PubId: pubInt, AdId: adInt, IsClicked: true}
+			ch <- updateApi
+		} else {
+			mu.Unlock()
+		}
+
+		//this is the end-of-it
+
 		var ad common.Ad
 		result := Db.First(&ad, advNum32)
 		if result.RowsAffected == 0 {
@@ -59,10 +84,4 @@ func panelApiCall(ch chan common.EventServiceApiModel) {
 		default:
 		}
 	}
-	//jsonData, err := json.Marshal(<-ch)
-	//if err != nil {
-	//	fmt.Errorf("error : " + err.Error())
-	//}
-	//resp, err := http.Post(*EventservicePort+"/eventservice", "application/json", bytes.NewBuffer(jsonData))
-	//_ = resp
 }

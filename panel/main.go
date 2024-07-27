@@ -4,7 +4,6 @@ import (
 	"flag"
 	"log"
 	"net/http"
-	"strconv"
 	"time"
 
 	"github.com/gin-contrib/cors"
@@ -26,23 +25,34 @@ var config = cors.Config{
 }
 
 func eventservice(event common.EventServiceApiModel) error {
+	tx := database.DB.Begin()
+	if tx.Error != nil {
+		return tx.Error
+	}
 	if event.IsClicked {
 		clickedEvent := common.ClickedEvent{
 			Pid:  event.PubId,
 			AdId: event.AdId,
 			Time: event.Time,
 		}
-		result := database.DB.Create(&clickedEvent)
-		realID, _ := strconv.Atoi(clickedEvent.AdId)
-		realPid, _ := strconv.Atoi(clickedEvent.Pid)
-		ad, _ := advertiser.FindAdById(realID)
-		err := advertiser.HandleAdvertiserCredit(ad)
-		err = publisher.HandlePublisherCredit(ad, realPid)
+		result := tx.Create(&clickedEvent)
+		if result.Error != nil {
+			tx.Rollback()
+			return result.Error
+		}
+
+		ad, err := advertiser.FindAdById(clickedEvent.AdId)
 		if err != nil {
+			tx.Rollback()
 			return err
 		}
-		if result.Error != nil {
-			return result.Error
+		if err := advertiser.HandleAdvertiserCredit(tx, ad); err != nil {
+			tx.Rollback()
+			return err
+		}
+		if err := publisher.HandlePublisherCreditWithTx(tx, ad, clickedEvent.Pid); err != nil {
+			tx.Rollback()
+			return err
 		}
 	} else {
 		viewedEvent := common.ViewedEvent{
@@ -50,11 +60,17 @@ func eventservice(event common.EventServiceApiModel) error {
 			AdId: event.AdId,
 			Time: event.Time,
 		}
-		result := database.DB.Create(&viewedEvent)
+
+		result := tx.Create(&viewedEvent)
 		if result.Error != nil {
+			tx.Rollback()
 			return result.Error
 		}
 	}
+	if err := tx.Commit().Error; err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -114,6 +130,8 @@ func main() {
 	router.POST("/advertisers", advertiser.CreateAdvertiser)
 	router.GET("/advertisers/:id", advertiser.GetAdvertiserCredit)
 	router.GET("/advertisers/:id/ads", advertiser.ListAdsByAdvertiserHandler)
+	router.GET("/advertisers/:id/reports", advertiser.GetAdvertiserAdReports)
+
 	router.GET("/ads/new", advertiser.CreateAdForm)
 	router.POST("/ads", advertiser.CreateAdHandler)
 	router.POST("/ads/update", advertiser.UpdateAdHandler)
