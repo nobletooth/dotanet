@@ -30,8 +30,9 @@ func clickHandler() gin.HandlerFunc {
 		var ad common.Ad
 		result := Db.First(&ad, advNum32)
 		if result.RowsAffected == 0 {
-			c.JSON(http.StatusNotFound, gin.H{"error": "advNum not found"})
+			c.JSON(http.StatusNotFound, gin.H{"error": "adNum not found"})
 		}
+		//c.Redirect(http.StatusOK, "ad.Url")
 		c.JSON(http.StatusOK, gin.H{"AdURL": ad.Url})
 	}
 }
@@ -46,7 +47,7 @@ func panelApiCall(ch chan common.EventServiceApiModel) {
 			if err != nil {
 				fmt.Errorf("error : " + err.Error())
 			}
-			resp, err := http.Post("http://localhost:8080/eventservice", "application/json", bytes.NewBuffer(jsonData))
+			resp, err := http.Post("http://localhost:8085/eventservice", "application/json", bytes.NewBuffer(jsonData))
 			if err != nil {
 				fmt.Errorf("Error making POST request: %s\n", err)
 			}
