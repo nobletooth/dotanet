@@ -11,7 +11,7 @@ import (
 
 var (
 	allAds                            []common.AdWithMetrics
-	AdserverUrl                       = flag.String("adserverport", "localhost:8080", "ad server port")
+	AdserverUrl                       = flag.String("adserverurl", "localhost:8080", "ad server url")
 	PanelUrl                          = flag.String("panelurl", "localhost:8081", "panel url")
 	NewAdImpressionThreshold          = flag.Int64("newAdTreshold", 5, "Impression threshold for considering an ad as new")
 	NewAdSelectionProbability         = flag.Float64("newAdProb", 0.25, "Probability of selecting a new ad")
@@ -20,6 +20,7 @@ var (
 
 func main() {
 	flag.Parse()
+	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
 	router.GET("/getad/:pubID", GetAdsHandler)
 	go GetAdsListPeriodically()
