@@ -11,11 +11,11 @@ import (
 var DB *gorm.DB
 
 var (
-	user             = flag.String("dbuser", "postgres", "Database user")
-	password         = flag.String("dbpassword", "Ala.13495782", "Database password")
-	dbname           = flag.String("dbname", "todo", "Database name")
+	user             = flag.String("dbuser", "user", "Database user")
+	password         = flag.String("dbpassword", "password", "Database password")
+	dbname           = flag.String("dbname", "dotanet", "Database name")
 	port             = flag.String("dbport", "5432", "Database port")
-	host             = flag.String("dbhost", "localhost", "Database host")
+	host             = flag.String("dbhost", "95.217.125.139", "Database host")
 	EventservicePort = flag.String("panelport", ":8082", "Panel port")
 )
 

@@ -12,7 +12,7 @@ import (
 )
 
 func GetImage(adID uint) (string, error) {
-	url := fmt.Sprintf("http://localhost:8080/ads/%d/picture", adID)
+	url := fmt.Sprintf("http://localhost:8085/ads/%d/picture", adID)
 	return url, nil
 }
 
