@@ -41,7 +41,6 @@ func eventservice(event common.EventServiceApiModel) error {
 		if err != nil {
 			return err
 		}
-		result = database.DB.Create(&clickedEvent)
 		if result.Error != nil {
 			return result.Error
 		}
