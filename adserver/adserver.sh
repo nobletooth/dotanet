@@ -53,7 +53,7 @@ fi
 log "Starting adserver..."
 
 
-sshpass -p $SERVER_PASSWORD ssh -t -p $SERVER_PORT $SERVER "chmod +x ~/$OUTPUT_BINARY && ~/$OUTPUT_BINARY -adserverurl $PROJECT_URL -panelurl $PANEL_URL -newAdTreshold 5 -newAdProb 0.25 -expAdProb 0.75"
+sshpass -p $SERVER_PASSWORD ssh -t -p $SERVER_PORT $SERVER "cd $SERVER_DIR && ./$OUTPUT_BINARY -adserverurl $PROJECT_URL -panelurl $PANEL_URL -newAdTreshold 5 -newAdProb 0.25 -expAdProb 0.75"
 if [ $? -eq 0 ]; then
   log "Panel started on port $PANEL_PORT"
   log "Deployment completed."
