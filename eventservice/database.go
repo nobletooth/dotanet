@@ -11,12 +11,12 @@ import (
 var DB *gorm.DB
 
 var (
-	user             = flag.String("dbuser", "postgres", "Database user")
-	password         = flag.String("dbpassword", "Ala.13495782", "Database password")
-	dbname           = flag.String("dbname", "todo", "Database name")
-	port             = flag.String("dbport", "5432", "Database port")
-	host             = flag.String("dbhost", "localhost", "Database host")
-	EventservicePort = flag.String("panelport", "http://localhost:8082", "Panel port")
+	user            = flag.String("dbuser", "postgres", "Database user")
+	password        = flag.String("dbpassword", "Ala.13495782", "Database password")
+	dbname          = flag.String("dbname", "todo", "Database name")
+	port            = flag.String("dbport", "5432", "Database port")
+	host            = flag.String("dbhost", "localhost", "Database host")
+	EventserviceUrl = flag.String("eventserviceurl", "http://localhost:8082", "Event service Url")
 )
 
 func OpenDbConnection() (*gorm.DB, error) {
