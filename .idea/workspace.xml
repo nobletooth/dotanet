@@ -4,13 +4,7 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0e6579ea-6863-46ef-8b93-3eaf6b194950" name="Changes" comment="debugh .sh for deploy.">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adserver/auction.go" beforeDir="false" afterPath="$PROJECT_DIR$/adserver/auction.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adserver/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/adserver/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/panel/publisher/publisher.go" beforeDir="false" afterPath="$PROJECT_DIR$/panel/publisher/publisher.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/panel/publisher/script/template.js" beforeDir="false" afterPath="$PROJECT_DIR$/panel/publisher/script/template.js" afterDir="false" />
-    </list>
+    <list default="true" id="0e6579ea-6863-46ef-8b93-3eaf6b194950" name="Changes" comment="first successful deploy" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -151,7 +145,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="gitignore correction." />
     <MESSAGE value="debugh .sh for deploy." />
-    <option name="LAST_COMMIT_MESSAGE" value="debugh .sh for deploy." />
+    <MESSAGE value="first successful deploy" />
+    <option name="LAST_COMMIT_MESSAGE" value="first successful deploy" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
