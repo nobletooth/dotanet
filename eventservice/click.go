@@ -32,9 +32,7 @@ func clickHandler() gin.HandlerFunc {
 		if result.RowsAffected == 0 {
 			c.JSON(http.StatusNotFound, gin.H{"error": "advNum not found"})
 		}
-
-		c.Redirect(http.StatusMovedPermanently, ad.Url)
-
+		c.JSON(http.StatusOK, gin.H{"AdURL": ad.Url})
 	}
 }
 
