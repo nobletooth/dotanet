@@ -12,9 +12,9 @@ import (
 var (
 	sitenames        = []string{"digikala", "digiland", "samsung", "torob", "varzesh3"}
 	PublisherService = flag.String("publisherservice", ":8083", "publisher service")
-	BaseURL          = flag.String("baseurl", "95.217.125.139:8085", "Base URL for HTML files")
+	BaseURL          = flag.String("baseurl", "http://95.217.125.139:8085", "Base URL for HTML files")
 )
-
++
 func main() {
 	flag.Parse()
 	router := gin.Default()
