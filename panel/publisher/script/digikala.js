@@ -35,9 +35,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 'Content-Type': 'application/json'
             }
         })
-            .then(response => response.json())
-            .then(data => console.log('Ad seen API response:', data))
-            .catch(error => console.error('Error:', error));
     }
 
     adImage.addEventListener('click', function() {
@@ -45,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function() {
             method: 'GET',
             mode:'no-cors',
                 headers: {
-                'Content-Type': 'nosniff'
+                'Content-Type': 'application/json'
             }
         })
     });
