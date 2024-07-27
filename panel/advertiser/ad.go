@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 
 	"gorm.io/gorm"
@@ -40,7 +41,7 @@ func CreateAdHandler(c *gin.Context) {
 		return
 	}
 
-	imagePath := "./image/" + file.Filename + ad.Url
+	imagePath := "./image/" + file.Filename[:strings.LastIndex(file.Filename, ".")] + "_" + ad.Url
 	if err := c.SaveUploadedFile(file, imagePath); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save image"})
 		return

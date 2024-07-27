@@ -57,7 +57,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }, { threshold: 0.5 });
 
-    // Ensure getAdInfo completes before setting up the observer
     getAdInfo().then(() => {
         observer.observe(adImage);
     });
