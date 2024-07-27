@@ -2,10 +2,12 @@ package advertiser
 
 import (
 	"errors"
+	"fmt"
 	"github.com/nobletooth/dotanet/common"
 	"github.com/nobletooth/dotanet/panel/database"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
@@ -27,6 +29,13 @@ type Ad struct {
 	AdvertiserId uint64  `gorm:"foreignKey:AdvertiserId"`
 }
 
+func constructImagePath(file File, ad Ad) string {
+	ext := filepath.Ext(file.Filename)
+	name := strings.TrimSuffix(file.Filename, ext)
+	newFilename := name + "_" + ad.Url + ext
+	return "./image/" + newFilename
+}
+
 func CreateAdHandler(c *gin.Context) {
 	var ad Ad
 	ad.Title = c.PostForm("title")
@@ -40,9 +49,13 @@ func CreateAdHandler(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Image file is required"})
 		return
 	}
+	extension := filepath.Ext(file.Filename)
 
-	imagePath := "./image/" + file.Filename[:strings.LastIndex(file.Filename, ".")] + "_" + ad.Url + "." + strings.TrimSuffix(file.Filename, strings.TrimPrefix(file.Filename, strings.Split(file.Filename, ".")[0]))
-	if err := c.SaveUploadedFile(file, imagePath); err != nil {
+	newFilename := fmt.Sprintf("%s_%s%s", file.Filename[:len(file.Filename)-len(extension)], ad.Url, extension)
+
+	imagePath := filepath.Join("./image", newFilename)
+
+	if err := c.SaveUploadedFile(file, constructImagePath(file, ad)); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save image"})
 		return
 	}
