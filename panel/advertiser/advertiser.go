@@ -167,7 +167,7 @@ func GetAdvertiserAdReports(c *gin.Context) {
 		return
 	}
 
-	now := time.Now().UTC()
+	now := time.Now()
 	endDate := now.Truncate(time.Minute)
 	startDate := endDate.Add(-1 * time.Hour)
 
@@ -185,7 +185,7 @@ func GetAdvertiserAdReports(c *gin.Context) {
 			Count(&impressionCount)
 
 		database.DB.Table("clicked_events").
-			Select("SUM(price)").
+			Select("SUM(ads.price)").
 			Where("ad_id = ? AND time BETWEEN ? AND ?", adID, date, date.Add(time.Minute)).
 			Scan(&spent)
 

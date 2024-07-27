@@ -122,7 +122,7 @@ func GetPublisherReports(c *gin.Context) {
 		return
 	}
 
-	now := time.Now().UTC()
+	now := time.Now()
 	endDate := now.Truncate(time.Minute)
 	startDate := endDate.Add(-1 * time.Hour)
 
@@ -140,7 +140,7 @@ func GetPublisherReports(c *gin.Context) {
 			Count(&impressionCount)
 
 		database.DB.Table("clicked_events").
-			Select("SUM(price * 0.2)").
+			Select("SUM(ads.price * 0.2)").
 			Joins("JOIN ads ON clicked_events.ad_id = ads.id").
 			Where("clicked_events.pid = ? AND clicked_events.time BETWEEN ? AND ?", publisherID, date, date.Add(time.Minute)).
 			Scan(&income)
