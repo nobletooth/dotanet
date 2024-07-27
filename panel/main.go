@@ -91,6 +91,7 @@ func LoadTemplates(templatesDir string) multitemplate.Renderer {
 
 func main() {
 	flag.Parse()
+	gin.SetMode(gin.ReleaseMode)
 	if err := database.NewDatabase(); err != nil {
 		log.Fatalf("failed to initialize database: %v", err)
 	}
