@@ -23,6 +23,7 @@ func main() {
 	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
 	router.GET("/getad/:pubID", GetAdsHandler)
+	ReturnAllAds()
 	go GetAdsListPeriodically()
 	fmt.Println("Server running on port" + *AdserverUrl)
 	router.Run(*AdserverUrl)
