@@ -12,7 +12,7 @@ import (
 var (
 	allAds                            []common.AdWithMetrics
 	AdserverUrl                       = flag.String("adserverurl", "localhost:8080", "ad server url")
-	PanelUrl                          = flag.String("panelurl", "localhost:8081", "panel url")
+	PanelUrl                          = flag.String("panelurl", "http://localhost:8081", "panel url")
 	NewAdImpressionThreshold          = flag.Int64("newAdTreshold", 5, "Impression threshold for considering an ad as new")
 	NewAdSelectionProbability         = flag.Float64("newAdProb", 0.25, "Probability of selecting a new ad")
 	ExperiencedAdSelectionProbability = flag.Float64("expAdProb", 0.75, "Probability of selecting a exprienced ad")

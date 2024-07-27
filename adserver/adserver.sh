@@ -2,7 +2,7 @@ OUTPUT_BINARY="Adserver"
 SERVER="gambron@95.217.125.139"
 SERVER_PORT="2233"
 PROJECT_URL="0.0.0.0:8080"
-PANEL_URL="0.0.0.0:8081"
+PANEL_URL="http://0.0.0.0:8081"
 PROJECT_DIR="./"
 LOG_FILE="./file.log"
 SERVER_PASSWORD="Oops123"
@@ -26,7 +26,7 @@ log() {
     echo "$(timestamp): $*" | tee -a $LOG_FILE
 }
 
-log "Building Linux binary for panel..."
+log "Building Linux binary"
 go build -o $OUTPUT_BINARY
 
 if [ $? -ne 0 ]; then
@@ -55,10 +55,10 @@ log "Starting adserver..."
 
 sshpass -p $SERVER_PASSWORD ssh -t -p $SERVER_PORT $SERVER "cd $SERVER_DIR && ./$OUTPUT_BINARY -adserverurl $PROJECT_URL -panelurl $PANEL_URL -newAdTreshold 5 -newAdProb 0.25 -expAdProb 0.75"
 if [ $? -eq 0 ]; then
-  log "Panel started on port $PANEL_PORT"
+  log "adserver started on $PROJECT_URL"
   log "Deployment completed."
 else
-  log "Failed to start panel."
+  log "Failed to start."
   exit 1
 fi
 
