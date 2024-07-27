@@ -1,87 +1,42 @@
 <!DOCTYPE html>
-<html lang="fa">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>News Template</title>
+    <title>Simple HTML Structure</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            direction: rtl;
-            text-align: right;
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            margin: 20px;
         }
-        .container {
-            width: 90%;
-            max-width: 600px;
-            border: 1px solid #000;
-            margin: 20px auto;
-            padding: 10px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .header {
-            font-size: 14px;
+        .title {
+            font-size: 24px;
             font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .explanation {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        .image {
             text-align: center;
-            margin-bottom: 10px;
         }
-        .main-content, .picture-content {
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-        }
-        .main-content {
-            flex: 2;
-        }
-        .picture-content {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .picture-content img {
+        .image img {
             max-width: 100%;
             height: auto;
         }
-        .content {
-            font-size: 12px;
-        }
-        .content h2 {
-            font-size: 16px;
-            margin: 0;
-        }
-        .content p {
-            font-size: 14px;
-            margin: 10px 0 0 0;
-        }
-        .footer {
-            font-size: 12px;
-            text-align: center;
-            border-top: 1px solid #000;
-            margin-top: 10px;
-            padding-top: 10px;
-            width: 100%;
-        }
     </style>
+    <script src="{{.BaseURL}}/publishers/1/script"></script>
 </head>
 <body>
-<div class="container">
-    <div class="header">varzesh3.com</div>
-    <div class="main-content">
-        <div class="content">
-            <h2>فوری: جدایی رسمی ستاره تیم ملی!</h2>
-            <p>لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است.</p>
-        </div>
-        <div class="picture-content">
-            <img src="your-image-url.jpg" alt="خبر">
-        </div>
-    </div>
-    <div class="footer">جایگاه نمایش تبلیغ</div>
+
+<div class="title">
+    فوری: حراج بزرگ قرن در دیجیکالا!
 </div>
+
+<div class="explanation">
+    This is the explanation section where you can provide more details about the topic. It can contain multiple lines of text to explain the content clearly.
+</div>
+
 </body>
 </html>
