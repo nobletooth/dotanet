@@ -4,7 +4,7 @@
     <title>Advertiser Reports</title>
 </head>
 <body>
-<h1>Advertiser Reports for Ad ID {{ .AdID }} from {{ .StartDate }} to {{ .EndDate }}</h1>
+<h1>Advertiser Reports for Ad ID {{ .AdID }} from {{ .StartDate.Format "2006-01-02 15:04:05" }} to {{ .EndDate.Format "2006-01-02 15:04:05" }}</h1>
 {{ if .Reports }}
 <table>
     <tr>
