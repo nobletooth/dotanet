@@ -1,0 +1,72 @@
+version: '3.8'
+
+services:
+  adserver:
+    build:
+      context: ./adserver
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    args:
+      - adserverurl=0.0.0.0:8081
+      - panelurl=http://panel:8085
+      - eventserviceurl=http://eventservice:8082
+      - newAdTreshold=5
+      - newAdProb=0.25
+      - expAdProb=0.75
+
+  panel:
+    build:
+      context: ./panel
+      dockerfile: Dockerfile
+    ports:
+      - "8085:8085"
+    args:
+      - dbuser=user
+      - dbpassword=password
+      - dbname=dotanet
+      - dbport=5432
+      - dbhost=95.217.125.139
+      - panelurl=0.0.0.0:8085
+      - adserverurl=http:/adserver:8081
+    depends_on:
+      - postgres
+
+  eventservice:
+    build:
+      context: ./eventservice
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8082"
+    args:
+      - dbuser=user
+      - dbpassword=password
+      - dbname=dotanet
+      - dbport=5432
+      - dbhost=95.217.125.139
+      - eventserviceurl=0.0.0.0:8082
+    depends_on:
+      - postgres
+
+  publisherwebsite:
+    build:
+      context: ./publisherwebsite
+      dockerfile: Dockerfile
+    ports:
+      - "8084:8084"
+    args:
+      - publisherservice=0.0.0.0:8084
+      - panelurl=http://panel:8085
+
+  postgres:
+    image: postgres:13
+    args:
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=dotanet
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
