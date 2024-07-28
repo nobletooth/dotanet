@@ -139,11 +139,11 @@ func GetPublisherReports(c *gin.Context) {
 		var income float32 = 0
 
 		database.DB.Model(&common.ClickedEvent{}).
-			Where("pid = ? AND time BETWEEN ? AND ?", strconv.Itoa(publisherID), date, date.Add(time.Minute)).
+			Where("pid = ? AND time BETWEEN ? AND ?", publisherID, date, date.Add(time.Minute)).
 			Count(&clickCount)
 
 		database.DB.Model(&common.ViewedEvent{}).
-			Where("pid = ? AND time BETWEEN ? AND ?", strconv.Itoa(publisherID), date, date.Add(time.Minute)).
+			Where("pid = ? AND time BETWEEN ? AND ?", publisherID, date, date.Add(time.Minute)).
 			Count(&impressionCount)
 
 		//database.DB.Table("clicked_events").
