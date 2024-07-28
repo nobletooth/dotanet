@@ -41,9 +41,8 @@ func CreateAdHandler(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Image file is required"})
 		return
 	}
-	extension := filepath.Ext(file.Filename)
 
-	newFilename := fmt.Sprintf("%s_%s%s", file.Filename[:len(file.Filename)-len(extension)], ad.Url, extension)
+	newFilename := fmt.Sprintf("%v-%s", ad.AdvertiserId, file.Filename)
 
 	imagePath := filepath.Join("./image", newFilename)
 
@@ -52,7 +51,7 @@ func CreateAdHandler(c *gin.Context) {
 		return
 	}
 
-	ad.Image = imagePath
+	ad.Image = newFilename
 
 	if err := database.DB.Create(&ad).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Creating ad failed"})

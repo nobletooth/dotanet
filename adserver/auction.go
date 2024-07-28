@@ -5,7 +5,6 @@ import (
 	"math/rand"
 	"net/http"
 	"strconv"
-	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -13,7 +12,7 @@ import (
 )
 
 func GetImage(adID uint) (string, error) {
-	url := fmt.Sprintf("http://localhost:8085/ads/%d/picture", adID)
+	url := fmt.Sprintf("%v/ads/%d/picture", *PanelUrl, adID)
 	return url, nil
 }
 
@@ -75,10 +74,7 @@ func GetAdHandler(c *gin.Context) {
 func sendAdResponse(c *gin.Context, ad common.AdWithMetrics, pubID string) {
 	fmt.Printf("adID: %d,ad title:%s,ad price:%f", ad.Id, ad.Title, ad.Price)
 	imageDataurl, err := GetImage(ad.AdInfo.Id)
-	newBaseURL := "http://95.217.125.139:8085"
-	oldBaseURL := "http://localhost:8085"
-	updatedImageURL := strings.Replace(imageDataurl, oldBaseURL, newBaseURL, 1)
-	fmt.Println("Updated Image URL:", updatedImageURL)
+
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get image"})
 		return
@@ -91,7 +87,7 @@ func sendAdResponse(c *gin.Context, ad common.AdWithMetrics, pubID string) {
 
 	response := gin.H{
 		"Title":          ad.Title,
-		"ImageData":      updatedImageURL,
+		"ImageData":      imageDataurl,
 		"ClicksURL":      fmt.Sprintf("%v/click/%d/%d", *EventServiceUrl, ad.Id, publisherID),
 		"ImpressionsURL": fmt.Sprintf("%v/impression/%d/%d", *EventServiceUrl, ad.Id, publisherID),
 	}
