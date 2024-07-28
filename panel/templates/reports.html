@@ -4,18 +4,18 @@
     <title>Publisher Reports</title>
 </head>
 <body>
-<h1>Publisher Reports for ID {{ .PublisherID }} from {{ .StartDate }} to {{ .EndDate }}</h1>
+<h1>Publisher Reports for ID {{ .PublisherID }} from {{ .StartDate.Format "2006-01-02 15:04:05" }} to {{ .EndDate.Format "2006-01-02 15:04:05" }}</h1>
 {{ if .Reports }}
 <table>
     <tr>
-        <th>Date</th>
+        <th>Date and Time</th>
         <th>Income</th>
         <th>Clicks</th>
         <th>Impressions</th>
     </tr>
     {{ range .Reports }}
     <tr>
-        <td>{{ .Date.Format "2006-01-02" }}</td>
+        <td>{{ .Date.Format "2006-01-02 15:04:05" }}</td>
         <td>{{ .Income }}</td>
         <td>{{ .Clicks }}</td>
         <td>{{ .Impressions }}</td>
