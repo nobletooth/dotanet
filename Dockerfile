@@ -50,12 +50,12 @@ CMD ["./eventservice"]
 FROM builder AS panel-builder
 WORKDIR /app/panel
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o panel .
+RUN ls
 
 FROM scratch AS panel
 COPY --from=panel-builder /app/panel/panel .
 COPY --from=panel-builder /app/panel/templates .
 COPY --from=panel-builder /app/panel/publisher .
-RUN ls
 EXPOSE 8085
 CMD ["./panel"]
 
