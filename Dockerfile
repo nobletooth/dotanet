@@ -55,6 +55,7 @@ FROM scratch AS panel
 COPY --from=panel-builder /app/panel/panel .
 COPY --from=panel-builder /app/panel/templates .
 COPY --from=panel-builder /app/panel/publisher .
+RUN ls
 EXPOSE 8085
 CMD ["./panel"]
 
