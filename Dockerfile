@@ -54,8 +54,8 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o panel .
 
 FROM scratch AS panel
 COPY --from=panel-builder /app/panel/panel .
-COPY --from=panel-builder /app/panel/templates .
-COPY --from=panel-builder /app/panel/publisher .
+COPY --from=panel-builder /app/panel/templates ./templates
+COPY --from=panel-builder /app/panel/publisher ./publisher
 EXPOSE 8085
 CMD ["./panel"]
 
@@ -64,9 +64,11 @@ FROM builder AS publisherwebsite-builder
 WORKDIR /app/publisherwebsite
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o publisherwebsite .
 
-FROM alpine AS publisherwebsite
-COPY --from=publisherwebsite-builder /app/publisherwebsite/publisherwebsite .
-COPY --from=publisherwebsite-builder /app/publisherwebsite/html .
+FROM scratch AS publisherwebsite
+WORKDIR /app/publisherwebsite
+COPY --from=publisherwebsite-builder /app/publisherwebsite/publisherwebsite ./publisherwebsite
+COPY --from=publisherwebsite-builder /app/publisherwebsite/html ./html
+
 
 EXPOSE 8084
 CMD ["./publisherwebsite"]
