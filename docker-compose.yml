@@ -1,72 +1,107 @@
 version: '3.8'
 
 services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: dotanet
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
   adserver:
     build:
-      context: ./adserver
+      context: .
       dockerfile: Dockerfile
-    ports:
-      - "8081:8081"
-    args:
-      - adserverurl=0.0.0.0:8081
-      - panelurl=http://panel:8085
-      - eventserviceurl=http://eventservice:8082
-      - newAdTreshold=5
-      - newAdProb=0.25
-      - expAdProb=0.75
-
-  panel:
-    build:
-      context: ./panel
-      dockerfile: Dockerfile
-    ports:
-      - "8085:8085"
-    args:
-      - dbuser=user
-      - dbpassword=password
-      - dbname=dotanet
-      - dbport=5432
-      - dbhost=95.217.125.139
-      - panelurl=0.0.0.0:8085
-      - adserverurl=http:/adserver:8081
+      target: adserver
+    image: adserver
+    command: [
+      "./adserver",
+      "-adserverurl", "0.0.0.0:8081",
+      "-panelurl", "http://panel:8085",
+      "-eventserviceurl", "http://eventservice:8082",
+      "-newAdTreshold", "5",
+      "-newAdProb", "0.25",
+      "-expAdProb", "0.75"
+    ]
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
 
   eventservice:
     build:
-      context: ./eventservice
+      context: .
       dockerfile: Dockerfile
-    ports:
-      - "8082:8082"
-    args:
-      - dbuser=user
-      - dbpassword=password
-      - dbname=dotanet
-      - dbport=5432
-      - dbhost=95.217.125.139
-      - eventserviceurl=0.0.0.0:8082
+      target: eventservice
+    image: eventservice
+    command: [
+      "./eventservice",
+      "-dbuser", "user",
+      "-dbpassword", "password",
+      "-dbname", "dotanet",
+      "-dbport", "5432",
+      "-dbhost", "postgres",
+      "-eventserviceurl", "0.0.0.0:8082"
+    ]
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
+      panel:
+        condition: service_started
+
+  panel:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: panel
+    image: panel
+    ports:
+      - "8085:8085"
+    command: [
+      "./panel",
+      "-dbuser", "user",
+      "-dbpassword", "password",
+      "-dbname", "dotanet",
+      "-dbport", "5432",
+      "-dbhost", "postgres",
+      "-panelurl", "0.0.0.0:8085",
+      "-adserverurl", "http://adserver:8081"
+    ]
+    depends_on:
+      postgres:
+        condition: service_healthy
 
   publisherwebsite:
     build:
-      context: ./publisherwebsite
+      context: .
       dockerfile: Dockerfile
+      target: publisherwebsite
+    image: publisherwebsite
     ports:
       - "8084:8084"
-    args:
-      - publisherservice=0.0.0.0:8084
-      - panelurl=http://panel:8085
-
-  postgres:
-    image: postgres:13
-    args:
-    environment:
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=dotanet
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
+    command: [
+      "./publisherwebsite",
+      "-publisherservice", "0.0.0.0:8084",
+      "-panelurl", "http://panel:8085"
+    ]
+    depends_on:
+      postgres:
+        condition: service_healthy
+      panel:
+        condition: service_started
+      eventservice:
+        condition: service_started
+      adserver:
+        condition: service_started
 
 volumes:
-  postgres_data:
+  pgdata:

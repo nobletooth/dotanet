@@ -8,6 +8,7 @@ COPY common ./common
 COPY ./adserver ./adserver
 COPY ./eventservice ./eventservice
 COPY ./panel ./panel
+
 COPY ./publisherwebsite ./publisherwebsite
 
 COPY ./adserver/go.mod ./adserver/
@@ -52,6 +53,8 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o panel .
 
 FROM scratch AS panel
 COPY --from=panel-builder /app/panel/panel .
+COPY --from=panel-builder /app/panel/templates .
+COPY --from=panel-builder /app/panel/publisher .
 EXPOSE 8085
 CMD ["./panel"]
 
@@ -62,5 +65,7 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o publisherwebsite 
 
 FROM scratch AS publisherwebsite
 COPY --from=publisherwebsite-builder /app/publisherwebsite/publisherwebsite .
+COPY --from=publisherwebsite-builder /app/publisherwebsite/html .
+
 EXPOSE 8084
 CMD ["./publisherwebsite"]
