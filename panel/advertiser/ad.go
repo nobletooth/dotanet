@@ -140,6 +140,7 @@ func LoadAdPictureHandler(c *gin.Context) {
 	}
 
 	imageFilePath := ad.Image
+
 	file, err := os.Open(imageFilePath)
 	if err != nil {
 		c.HTML(http.StatusInternalServerError, "advertiser_ads", gin.H{"error": "Failed to open image file"})
@@ -168,12 +169,13 @@ func ListAllAds(c *gin.Context) {
 		var clickCount int64
 		var impressionCount int64
 
-		database.DB.Table("viewed_events").
-			Select("COUNT(viewed_events.id) as impressionCount, COUNT(DISTINCT clicked_events.impression_id) as clickCount").
-			Joins("LEFT JOIN clicked_events ON viewed_events.id = clicked_events.impression_id").
-			Where("viewed_events.ad_id = ? AND viewed_events.time BETWEEN ? AND ?", ad.Id, startTime, endTime).
-			Group("viewed_events.ad_id").
-			Scan(&impressionCount, &clickCount)
+		database.DB.Model(&common.ClickedEvent{}).
+			Where("ad_id = ? AND time BETWEEN ? AND ?", ad.Id, startTime, endTime).
+			Count(&clickCount)
+
+		database.DB.Model(&common.ViewedEvent{}).
+			Where("ad_id = ? AND time BETWEEN ? AND ?", ad.Id, startTime, endTime).
+			Count(&impressionCount)
 
 		adinfo := common.AdInfo{
 			AdvertiserId: ad.AdvertiserId,

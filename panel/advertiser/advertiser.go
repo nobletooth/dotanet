@@ -176,12 +176,13 @@ func GetAdvertiserAdReports(c *gin.Context) {
 		var clickCount, impressionCount int64
 		var spent float64
 
-		database.DB.Table("viewed_events").
-			Select("COUNT(viewed_events.id) as impressionCount, COUNT(DISTINCT clicked_events.impression_id) as clickCount").
-			Joins("LEFT JOIN clicked_events ON viewed_events.id = clicked_events.impression_id").
-			Where("viewed_events.ad_id = ? AND viewed_events.time BETWEEN ? AND ?", ad.Id, startTime, endTime).
-			Group("viewed_events.ad_id").
-			Scan(&impressionCount, &clickCount)
+		database.DB.Model(&common.ClickedEvent{}).
+			Where("ad_id = ? AND time BETWEEN ? AND ?", adID, date, date.Add(time.Minute)).
+			Count(&clickCount)
+
+		database.DB.Model(&common.ViewedEvent{}).
+			Where("ad_id = ? AND time BETWEEN ? AND ?", adID, date, date.Add(time.Minute)).
+			Count(&impressionCount)
 
 		database.DB.Table("clicked_events").
 			Select("SUM(ads.price)").
