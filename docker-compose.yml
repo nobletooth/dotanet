@@ -27,8 +27,9 @@ services:
     command: [
       "./adserver",
       "-adserverurl", "0.0.0.0:8081",
-      "-panelurl", "http://panel:8085",
-      "-eventserviceurl", "http://eventservice:8082",
+      "-panelurlads", "http://panel:8085",
+      "-panelurlpic", "http://95.217.125.139:8085",
+      "-eventserviceurl", "http://95.217.125.139:8082",
       "-newAdTreshold", "5",
       "-newAdProb", "0.25",
       "-expAdProb", "0.75"
@@ -91,7 +92,7 @@ services:
     command: [
       "./publisherwebsite",
       "-publisherservice", "0.0.0.0:8084",
-      "-panelurl", "http://panel:8085"
+      "-panelurl", "http://95.217.125.139:8085"
     ]
     depends_on:
       postgres:

@@ -11,7 +11,7 @@ import (
 
 func GetAdsListPeriodically() []common.AdWithMetrics {
 	fetchads := func() {
-		response, err := http.Get(*PanelUrl + "/ads/list/")
+		response, err := http.Get(*PanelUrlGetAllAds + "/ads/list/")
 		if err != nil {
 			log.Println("Error fetching ads list:", err)
 			return
