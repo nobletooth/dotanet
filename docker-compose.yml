@@ -37,6 +37,7 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    container_name: adserver
 
   eventservice:
     build:
@@ -58,6 +59,7 @@ services:
         condition: service_healthy
       panel:
         condition: service_started
+    container_name: eventservice
 
   panel:
     build:
@@ -80,6 +82,7 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    container_name: panel
 
   publisherwebsite:
     build:
@@ -103,6 +106,7 @@ services:
         condition: service_started
       adserver:
         condition: service_started
+    container_name: publisherwebsite
 
 volumes:
   pgdata:
