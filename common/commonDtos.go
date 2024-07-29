@@ -16,10 +16,11 @@ type AdInfo struct {
 }
 
 type ClickedEvent struct {
-	ID   uint      `gorm:"primaryKey"`
-	Pid  int       `gorm:"index"`
-	AdId int       `gorm:"index"`
-	Time time.Time `gorm:"index"`
+	ID           uint      `gorm:"primaryKey"`
+	Pid          int       `gorm:"index"`
+	AdId         int       `gorm:"index"`
+	Time         time.Time `gorm:"index"`
+	ImpressionId uint      `gorm:"index"`
 }
 
 type ViewedEvent struct {
