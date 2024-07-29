@@ -50,7 +50,7 @@ CMD ["./eventservice"]
 FROM builder AS panel-builder
 WORKDIR /app/panel
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o panel .
-RUN ls
+
 
 FROM scratch AS panel
 COPY --from=panel-builder /app/panel/panel .
@@ -64,7 +64,7 @@ FROM builder AS publisherwebsite-builder
 WORKDIR /app/publisherwebsite
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o publisherwebsite .
 
-FROM scratch AS publisherwebsite
+FROM alpine AS publisherwebsite
 COPY --from=publisherwebsite-builder /app/publisherwebsite/publisherwebsite .
 COPY --from=publisherwebsite-builder /app/publisherwebsite/html .
 
