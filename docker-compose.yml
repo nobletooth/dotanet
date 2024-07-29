@@ -36,8 +36,6 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-      panel:
-        condition: service_healthy
 
   eventservice:
     build:
@@ -58,7 +56,7 @@ services:
       postgres:
         condition: service_healthy
       panel:
-        condition: service_healthy
+        condition: service_started
 
   panel:
     build:
@@ -81,11 +79,6 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8085/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
 
   publisherwebsite:
     build:
@@ -104,11 +97,11 @@ services:
       postgres:
         condition: service_healthy
       panel:
-        condition: service_healthy
+        condition: service_started
       eventservice:
-        condition: service_healthy
+        condition: service_started
       adserver:
-        condition: service_healthy
+        condition: service_started
 
 volumes:
   pgdata:
