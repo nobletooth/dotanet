@@ -5,15 +5,15 @@ services:
     image: postgres:latest
     container_name: postgres
     environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: dotanet
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
     ports:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U user"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -26,13 +26,13 @@ services:
     image: adserver
     command: [
       "./adserver",
-      "-adserverurl", "0.0.0.0:8081",
-      "-panelurlads", "http://panel:8085",
-      "-panelurlpic", "http://95.217.125.139:8085",
-      "-eventserviceurl", "http://95.217.125.139:8082",
-      "-newAdTreshold", "5",
-      "-newAdProb", "0.25",
-      "-expAdProb", "0.75"
+      "-adserverurl", "${ADSERVER_URL_PROJECT}",
+      "-panelurlads", "${PANEL_URL_INSIDE}",
+      "-panelurlpic", "${PANEL_URL_OUTSIDE}",
+      "-eventserviceurl", "${EVENTSERVICE_OUTSIDE}",
+      "-newAdTreshold", "${NEW_AD_THRESHOLD}",
+      "-newAdProb", "${NEW_AD_PROB}",
+      "-expAdProb", "${EXP_AD_PROB}"
     ]
     depends_on:
       postgres:
@@ -47,12 +47,12 @@ services:
     image: eventservice
     command: [
       "./eventservice",
-      "-dbuser", "user",
-      "-dbpassword", "password",
-      "-dbname", "dotanet",
-      "-dbport", "5432",
-      "-dbhost", "postgres",
-      "-eventserviceurl", "0.0.0.0:8082"
+      "-dbuser", "${DB_USER}",
+      "-dbpassword", "${DB_PASSWORD}",
+      "-dbname", "${DB_NAME}",
+      "-dbport", "${DB_PORT}",
+      "-dbhost", "${DB_HOST}",
+      "-eventserviceurl", "${EVENTSERVICE_URL_PROJECT}"
     ]
     depends_on:
       postgres:
@@ -71,13 +71,13 @@ services:
       - "8085:8085"
     command: [
       "./panel",
-      "-dbuser", "user",
-      "-dbpassword", "password",
-      "-dbname", "dotanet",
-      "-dbport", "5432",
-      "-dbhost", "postgres",
-      "-panelurl", "0.0.0.0:8085",
-      "-adserverurl", "http://95.217.125.139:8081"
+      "-dbuser", "${DB_USER}",
+      "-dbpassword", "${DB_PASSWORD}",
+      "-dbname", "${DB_NAME}",
+      "-dbport", "${DB_PORT}",
+      "-dbhost", "${DB_HOST}",
+      "-panelurl", "${PANEL_URL_PROJECT}",
+      "-adserverurl", "${ADSERVER_URL_OUTSIDE}"
     ]
     depends_on:
       postgres:
@@ -94,8 +94,8 @@ services:
       - "8084:8084"
     command: [
       "./publisherwebsite",
-      "-publisherservice", "0.0.0.0:8084",
-      "-panelurl", "http://95.217.125.139:8085"
+      "-publisherservice", "${PUBLISHER_URL_PROJECT}",
+      "-panelurl", "${PANEL_URL_OUTSIDE}"
     ]
     depends_on:
       postgres:
