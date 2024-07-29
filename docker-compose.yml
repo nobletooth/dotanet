@@ -77,7 +77,7 @@ services:
       "-dbport", "5432",
       "-dbhost", "postgres",
       "-panelurl", "0.0.0.0:8085",
-      "-adserverurl", "http://adserver:8081"
+      "-adserverurl", "http://95.217.125.139:8081"
     ]
     depends_on:
       postgres:
