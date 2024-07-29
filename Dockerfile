@@ -8,8 +8,7 @@ COPY common ./common
 COPY ./adserver ./adserver
 COPY ./eventservice ./eventservice
 COPY ./panel ./panel
-RUN ls ./panel
-Run exit 1
+
 COPY ./publisherwebsite ./publisherwebsite
 
 COPY ./adserver/go.mod ./adserver/
