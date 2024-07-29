@@ -7,6 +7,7 @@
     <list default="true" id="f7c5e80e-2e5b-4afa-95ad-b812782c630d" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/common/commonDtos.go" beforeDir="false" afterPath="$PROJECT_DIR$/common/commonDtos.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/panel/advertiser/ad.go" beforeDir="false" afterPath="$PROJECT_DIR$/panel/advertiser/ad.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/panel/advertiser/advertiser.go" beforeDir="false" afterPath="$PROJECT_DIR$/panel/advertiser/advertiser.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
