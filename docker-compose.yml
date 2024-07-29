@@ -12,6 +12,11 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
   adserver:
     build:
@@ -29,7 +34,8 @@ services:
       "-expAdProb", "0.75"
     ]
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
 
   eventservice:
     build:
@@ -47,8 +53,10 @@ services:
       "-eventserviceurl", "0.0.0.0:8082"
     ]
     depends_on:
-      - postgres
-      - panel
+      postgres:
+        condition: service_healthy
+      panel:
+        condition: service_started
 
   panel:
     build:
@@ -69,7 +77,8 @@ services:
       "-adserverurl", "http://adserver:8081"
     ]
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
 
   publisherwebsite:
     build:
@@ -85,10 +94,14 @@ services:
       "-panelurl", "http://panel:8085"
     ]
     depends_on:
-      - postgres
-      - panel
-      - eventservice
-      - adserver
+      postgres:
+        condition: service_healthy
+      panel:
+        condition: service_started
+      eventservice:
+        condition: service_started
+      adserver:
+        condition: service_started
 
 volumes:
   pgdata:
