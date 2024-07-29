@@ -21,7 +21,7 @@ services:
     image: adserver
     command: [
       "./adserver",
-      "-adserverurl", "http://adserver:8081",
+      "-adserverurl", "0.0.0.0:8081",
       "-panelurl", "http://panel:8085",
       "-eventserviceurl", "http://eventservice:8082",
       "-newAdTreshold", "5",
@@ -44,7 +44,7 @@ services:
       "-dbname", "dotanet",
       "-dbport", "5432",
       "-dbhost", "postgres",
-      "-eventserviceurl", "http://0.0.0.0:8082"
+      "-eventserviceurl", "0.0.0.0:8082"
     ]
     depends_on:
       - postgres
@@ -65,7 +65,7 @@ services:
       "-dbname", "dotanet",
       "-dbport", "5432",
       "-dbhost", "postgres",
-      "-panelurl", "http://0.0.0.0:8085",
+      "-panelurl", "0.0.0.0:8085",
       "-adserverurl", "http://adserver:8081"
     ]
     depends_on:
@@ -81,7 +81,7 @@ services:
       - "8084:8084"
     command: [
       "./publisherwebsite",
-      "-publisherservice", "http://0.0.0.0:8084",
+      "-publisherservice", "0.0.0.0:8084",
       "-panelurl", "http://panel:8085"
     ]
     depends_on:
