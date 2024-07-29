@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"github.com/confluentinc/confluent-kafka-go/kafka"
@@ -9,8 +10,8 @@ import (
 	"sync"
 	"time"
 
+	"common"
 	"github.com/gin-gonic/gin"
-	"github.com/nobletooth/dotanet/common"
 )
 
 var processedClicks = make(map[string]bool)
@@ -72,8 +73,13 @@ func panelApiCall(ch chan common.EventServiceApiModel) {
 			if err != nil {
 				fmt.Printf("can not umarshal event %s\n", err)
 			}
+			_, err = http.Post("http://localhost:8085/eventservice", "application/json", bytes.NewBuffer(jsonData)) //post to panel
+			if err != nil {
+				fmt.Printf("Error Posting to eventservice %s\n", err)
+
+			}
 			err = p.Produce(&kafka.Message{
-				TopicPartition: kafka.TopicPartition{Topic: &[]string{"my_topic"}[0], Partition: kafka.PartitionAny},
+				TopicPartition: kafka.TopicPartition{Topic: &[]string{"my_topic"}[0], Partition: kafka.PartitionAny}, //post to the kafka
 				Value:          jsonData,
 			}, nil)
 

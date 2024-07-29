@@ -1,8 +1,8 @@
 package main
 
 import (
+	"common"
 	"github.com/gin-gonic/gin"
-	"github.com/nobletooth/dotanet/common"
 	"net/http"
 	"strconv"
 	"time"
