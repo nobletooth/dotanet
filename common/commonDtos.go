@@ -18,11 +18,11 @@ type AdInfo struct {
 }
 
 type ClickedEvent struct {
-	ID     uuid.UUID `gorm:"type:uuid;primary_key;default:gen_random_uuid()"`
-	Pid    int       `gorm:"index"`
-	AdId   int       `gorm:"index"`
-	Time   time.Time `gorm:"index"`
-	ViewID uuid.UUID `gorm:"type:uuid;foreignKey:ID"`
+	ID           uuid.UUID `gorm:"type:uuid;primary_key;default:gen_random_uuid()"`
+	Pid          int       `gorm:"index"`
+	AdId         int       `gorm:"index"`
+	Time         time.Time `gorm:"index"`
+	ImpressionID uuid.UUID `gorm:"type:uuid;foreignKey:ID"`
 }
 
 type ViewedEvent struct {
