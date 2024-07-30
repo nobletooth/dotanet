@@ -2,26 +2,28 @@
 FROM golang:latest AS builder
 WORKDIR /app
 
-COPY go.work go.work.sum ./
-COPY common ./common
-
-COPY ./adserver ./adserver
-COPY ./eventservice ./eventservice
-COPY ./panel ./panel
-
-COPY ./publisherwebsite ./publisherwebsite
-
-COPY ./adserver/go.mod ./adserver/
-COPY ./adserver/go.sum ./adserver/
-
-COPY ./eventservice/go.mod ./eventservice/
-COPY ./eventservice/go.sum ./eventservice/
-
-COPY ./panel/go.mod ./panel/
-COPY ./panel/go.sum ./panel/
-
-COPY ./publisherwebsite/go.mod ./publisherwebsite/
-COPY ./publisherwebsite/go.sum ./publisherwebsite/
+COPY . .
+#COPY go.work go.work.sum ./
+#
+#COPY common ./common
+#
+#COPY ./adserver ./adserver
+#COPY ./eventservice ./eventservice
+#COPY ./panel ./panel
+#
+#COPY ./publisherwebsite ./publisherwebsite
+#
+#COPY ./adserver/go.mod ./adserver/
+#COPY ./adserver/go.sum ./adserver/
+#
+#COPY ./eventservice/go.mod ./eventservice/
+#COPY ./eventservice/go.sum ./eventservice/
+#
+#COPY ./panel/go.mod ./panel/
+#COPY ./panel/go.sum ./panel/
+#
+#COPY ./publisherwebsite/go.mod ./publisherwebsite/
+#COPY ./publisherwebsite/go.sum ./publisherwebsite/
 
 RUN go work sync && go mod download
 
