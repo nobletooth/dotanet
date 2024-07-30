@@ -81,7 +81,7 @@ func ListAdsByAdvertiserHandler(c *gin.Context) {
 		return
 	}
 
-	advertiser, err := FindAdvertiserByID(uint(id))
+	advertiser, err := FindAdvertiserByID(uint64(id))
 	if err != nil {
 		c.HTML(http.StatusInternalServerError, "index", gin.H{"error": err.Error()})
 		return
