@@ -1,20 +1,20 @@
 package main
 
 import (
+	"common"
 	"flag"
 	"fmt"
 	"github.com/gin-contrib/cors"
-	"time"
-
 	"github.com/gin-gonic/gin"
-	"github.com/nobletooth/dotanet/common"
+	"time"
 )
 
 var (
 	allAds                            []common.AdWithMetrics
 	AdserverUrl                       = flag.String("adserverurl", ":8081", "ad server port")
-	EventServiceUrl                   = flag.String("eventserviceurl", "http://localhost:8081", "ad server port")
-	PanelUrl                          = flag.String("panelurl", "http://localhost:8085", "panel url")
+	EventServiceUrl                   = flag.String("eventserviceurl", "http://localhost:8081", "ad server port") //
+	PanelUrlGetAllAds                 = flag.String("panelurlads", "http://localhost:8085", "panel url")
+	PanelUrlPicUrl                    = flag.String("panelurlpic", "http://localhost:8085", "panel url") //
 	NewAdImpressionThreshold          = flag.Int64("newAdTreshold", 5, "Impression threshold for considering an ad as new")
 	NewAdSelectionProbability         = flag.Float64("newAdProb", 0.25, "Probability of selecting a new ad")
 	ExperiencedAdSelectionProbability = flag.Float64("expAdProb", 0.75, "Probability of selecting a exprienced ad")

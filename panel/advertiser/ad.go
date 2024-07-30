@@ -1,9 +1,9 @@
 package advertiser
 
 import (
+	"common"
 	"errors"
 	"fmt"
-	"github.com/nobletooth/dotanet/common"
 	"github.com/nobletooth/dotanet/panel/database"
 	"net/http"
 	"os"
@@ -140,6 +140,7 @@ func LoadAdPictureHandler(c *gin.Context) {
 	}
 
 	imageFilePath := ad.Image
+
 	file, err := os.Open(imageFilePath)
 	if err != nil {
 		c.HTML(http.StatusInternalServerError, "advertiser_ads", gin.H{"error": "Failed to open image file"})
@@ -175,6 +176,7 @@ func ListAllAds(c *gin.Context) {
 
 		database.DB.Table("viewed_events").
 			Where("ad_id = ? AND time BETWEEN ? AND ?", ad.Id, startTime, endTime).
+			Count(&impressionCount)			Where("ad_id = ? AND time BETWEEN ? AND ?", ad.Id, startTime, endTime).
 			Count(&impressionCount)
 
 		adinfo := common.AdInfo{

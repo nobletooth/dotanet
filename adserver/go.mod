@@ -2,12 +2,24 @@ module github.com/nobletooth/dotanet/adserver
 
 go 1.22.5
 
-require github.com/gin-gonic/gin v1.10.0
+require (
+	github.com/gin-contrib/cors v1.7.2
+	github.com/gin-gonic/gin v1.10.0
+	github.com/gofiber/fiber v1.14.6
+)
 
 require (
+	github.com/andybalholm/brotli v1.0.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/gin-contrib/cors v1.7.2 // indirect
+	github.com/gofiber/utils v0.0.10 // indirect
+	github.com/gorilla/schema v1.1.0 // indirect
+	github.com/klauspost/compress v1.10.7 // indirect
+	github.com/kr/text v0.2.0 // indirect
+	github.com/mattn/go-colorable v0.1.7 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
+	github.com/valyala/bytebufferpool v1.0.0 // indirect
+	github.com/valyala/fasthttp v1.16.0 // indirect
+	github.com/valyala/tcplisten v0.0.0-20161114210144-ceec8f93295a // indirect
 )
 
 require (
