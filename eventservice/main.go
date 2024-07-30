@@ -3,8 +3,9 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/gin-contrib/cors"
 	"time"
+
+	"github.com/gin-contrib/cors"
 
 	"github.com/gin-gonic/gin"
 	"github.com/nobletooth/dotanet/common"
@@ -32,8 +33,8 @@ func main() {
 		MaxAge:           12 * time.Hour,
 	}))
 
-	router.GET("/click/:adv/:pub", clickHandler())
-	router.GET("/impression/:adv/:pub", impressionHandler())
+	router.GET("/click/:adv/:pub/:clickid/:impressionid/:time", clickHandler())
+	router.GET("/impression/:adv/:pub/:impressionid/:time", impressionHandler())
 
 	router.Run(*EventserviceUrl)
 

@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"github.com/nobletooth/dotanet/common"
 )
 
@@ -22,21 +23,32 @@ func clickHandler() gin.HandlerFunc {
 			err    error
 			advNum uint64
 		)
-		var clickTime = time.Now()
+
 		adv := c.Param("adv") // should decrypt adv and pub.
 		if advNum, err = strconv.ParseUint(adv, 10, 32); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
 		}
 		advNum32 := uint(advNum)
-		pub := c.Param("pub") // should decrypt adv and pub.
 
+		pub := c.Param("pub") // should decrypt adv and pub.
 		pubInt, err := strconv.Atoi(pub)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
 		}
 		adInt, err := strconv.Atoi(adv)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		clickId := uuid.MustParse(c.Param("clickid"))
+		impressionId := uuid.MustParse(c.Param("impressionid"))
+		time, err := time.Parse(time.RFC3339, c.Param("time"))
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid time"})
+			return
 		}
 		//in this part I want to check  don't double-click
 		key := fmt.Sprintf("%d:%s", advNum32, pub)
@@ -44,7 +56,9 @@ func clickHandler() gin.HandlerFunc {
 		if _, found := processedClicks[key]; !found {
 			processedClicks[key] = true
 			mu.Unlock()
-			var updateApi = common.EventServiceApiModel{Time: clickTime, PubId: pubInt, AdId: adInt, IsClicked: true}
+			var updateApi = common.EventServiceApiModel{Time: time,
+				PubId: pubInt, AdId: adInt, IsClicked: true, ClickID: clickId,
+				ImpressionID: impressionId}
 			ch <- updateApi
 		} else {
 			mu.Unlock()
@@ -56,6 +70,7 @@ func clickHandler() gin.HandlerFunc {
 		result := Db.First(&ad, advNum32)
 		if result.RowsAffected == 0 {
 			c.JSON(http.StatusNotFound, gin.H{"error": "adNum not found"})
+			return
 		}
 		//c.Redirect(http.StatusOK, "ad.Url")
 		c.JSON(http.StatusOK, gin.H{"AdURL": ad.Url})

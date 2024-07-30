@@ -1,16 +1,17 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/nobletooth/dotanet/common"
 	"net/http"
 	"strconv"
 	"time"
+
+	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
+	"github.com/nobletooth/dotanet/common"
 )
 
 func impressionHandler() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var impressionTime = time.Now()
 		adv := c.Param("adv") // should decrypt adv and pub.
 		pub := c.Param("pub") // should decrypt adv and pub.
 		pubInt, err := strconv.Atoi(pub)
@@ -21,7 +22,14 @@ func impressionHandler() gin.HandlerFunc {
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		}
-		var updateApi = common.EventServiceApiModel{Time: impressionTime, PubId: pubInt, AdId: adInt, IsClicked: false}
+		impressionId := uuid.MustParse(c.Param("impressionid"))
+		time, err := time.Parse(time.RFC3339, c.Param("time"))
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid time"})
+			return
+		}
+		var updateApi = common.EventServiceApiModel{Time: time,
+			PubId: pubInt, AdId: adInt, IsClicked: false, ImpressionID: impressionId}
 		ch <- updateApi
 		c.String(http.StatusOK, "its ok!")
 	}
