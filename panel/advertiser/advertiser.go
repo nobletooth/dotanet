@@ -1,12 +1,11 @@
 package advertiser
 
 import (
+	"common"
+	"dotanet/database"
 	"github.com/gin-gonic/gin"
-	"github.com/nobletooth/dotanet/common"
-	"github.com/nobletooth/dotanet/panel/database"
 	"gorm.io/gorm"
 	"math"
-	_ "math"
 	"net/http"
 	"strconv"
 	"time"

@@ -5,7 +5,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f7c5e80e-2e5b-4afa-95ad-b812782c630d" name="Changes" comment="image address bug fixed.">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/reporter/reportcraetion.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adserver/go.mod" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/adserver/go.sum" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/go.mod" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/panel/advertiser/ad.go" beforeDir="false" afterPath="$PROJECT_DIR$/panel/advertiser/ad.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/panel/advertiser/advertiser.go" beforeDir="false" afterPath="$PROJECT_DIR$/panel/advertiser/advertiser.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/panel/go.sum" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/panel/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/panel/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/panel/main_test.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/panel/publisher/publisher.go" beforeDir="false" afterPath="$PROJECT_DIR$/panel/publisher/publisher.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/panel/templates/advertiser_ads.html" beforeDir="false" afterPath="$PROJECT_DIR$/panel/templates/advertiser_ads.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/panel/templates/create_ad.html" beforeDir="false" afterPath="$PROJECT_DIR$/panel/templates/create_ad.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/panel/templates/edit_ad.html" beforeDir="false" afterPath="$PROJECT_DIR$/panel/templates/edit_ad.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/publisherwebsite/go.mod" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/publisherwebsite/go.sum" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,13 +36,40 @@
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "git-widget-placeholder": "sugest-system"
   }
-}</component>
+}]]></component>
+  <component name="RunManager">
+    <configuration name="go build dotanet" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="dotanet" />
+      <working_directory value="$PROJECT_DIR$/panel" />
+      <kind value="PACKAGE" />
+      <package value="dotanet" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$/panel/main.go" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Go Build.go build dotanet" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="image address bug fixed." />
     <option name="LAST_COMMIT_MESSAGE" value="image address bug fixed." />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/panel/advertiser/ad.go</url>
+          <line>144</line>
+          <option name="timeStamp" value="21" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
