@@ -8,7 +8,9 @@ import (
 	"time"
 
 	"common"
+
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 func GetImage(adID uint) (string, error) {
@@ -88,11 +90,22 @@ func sendAdResponse(c *gin.Context, ad *common.AdWithMetrics, pubID string) {
 		return
 	}
 
+	var impression = common.ViewedEvent{
+		ID:   uuid.New(),
+		Time: time.Now(),
+	}
+
+	var click = common.ClickedEvent{
+		ID:           uuid.New(),
+		Time:         time.Now(),
+		ImpressionID: impression.ID,
+	}
+
 	response := gin.H{
 		"Title":          ad.Title,
 		"ImageData":      imageDataurl,
-		"ClicksURL":      fmt.Sprintf("%v/click/%d/%d", *EventServiceUrl, ad.Id, publisherID),
-		"ImpressionsURL": fmt.Sprintf("%v/impression/%d/%d", *EventServiceUrl, ad.Id, publisherID),
+		"ClicksURL":      fmt.Sprintf("%v/click/%d/%d/%v/%v/%v", *EventServiceUrl, ad.Id, publisherID, click.ID, click.ImpressionID, click.Time),
+		"ImpressionsURL": fmt.Sprintf("%v/impression/%d/%d/%v/%v", *EventServiceUrl, ad.Id, publisherID, impression.ID, impression.Time),
 	}
 
 	c.JSON(http.StatusOK, response)

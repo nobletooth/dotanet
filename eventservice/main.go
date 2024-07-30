@@ -4,11 +4,12 @@ import (
 	"common"
 	"flag"
 	"fmt"
+	"time"
+
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
-	"time"
 )
 
 var Db *gorm.DB
@@ -38,8 +39,8 @@ func main() {
 		MaxAge:           12 * time.Hour,
 	}))
 
-	router.GET("/click/:adv/:pub", clickHandler())
-	router.GET("/impression/:adv/:pub", impressionHandler())
+	router.GET("/click/:adv/:pub/:clickid/:impressionid/:time", clickHandler())
+	router.GET("/impression/:adv/:pub/:impressionid/:time", impressionHandler())
 
 	router.Run(*EventserviceUrl)
 
