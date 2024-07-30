@@ -38,41 +38,39 @@ func GetAdHandler(c *gin.Context) {
 		}
 	}
 
-	var selectedNewAd common.AdWithMetrics
-	if len(newAds) > 0 {
-		rand.Seed(time.Now().UnixNano())
-		selectedNewAd = newAds[rand.Intn(len(newAds))]
-	}
-
-	totalScore := 0.0
-	for _, ctrPrice := range ctrPrices {
-		totalScore += ctrPrice
-	}
-
-	randomPoint := rand.Float64() * totalScore
-	currentSum := 0.0
-	var selectedExperiencedAd common.AdWithMetrics
-
-	for i, ad := range experiencedAds {
-		currentSum += ctrPrices[i]
-		if randomPoint <= currentSum {
-			selectedExperiencedAd = ad
-			break
-		}
-	}
+	rand.Seed(time.Now().UnixNano())
+	selectNewAd := rand.Float64() < *NewAdSelectionProbability
 
 	var finalAd common.AdWithMetrics
-	if (rand.Float64() < *NewAdSelectionProbability && selectedNewAd.Id != 0) || selectedExperiencedAd.Id == 0 {
-		finalAd = selectedNewAd
+	if selectNewAd && len(newAds) > 0 {
+		rand.Seed(time.Now().UnixNano())
+		finalAd = newAds[rand.Intn(len(newAds))]
+	} else if len(experiencedAds) > 0 {
+		totalScore := 0.0
+		for _, ctrPrice := range ctrPrices {
+			totalScore += ctrPrice
+		}
+
+		rand.Seed(time.Now().UnixNano())
+		randomPoint := rand.Float64() * totalScore
+		currentSum := 0.0
+		for i, ad := range experiencedAds {
+			currentSum += ctrPrices[i]
+			if randomPoint <= currentSum {
+				finalAd = ad
+				break
+			}
+		}
 	} else {
-		finalAd = selectedExperiencedAd
+		c.JSON(http.StatusNotFound, gin.H{"error": "No ads available"})
+		return
 	}
 
 	sendAdResponse(c, finalAd, pubID)
 }
 
 func sendAdResponse(c *gin.Context, ad common.AdWithMetrics, pubID string) {
-	fmt.Printf("adID: %d,ad title:%s,ad price:%f", ad.Id, ad.Title, ad.Price)
+	fmt.Printf("adID: %d, ad title: %s, ad price: %f\n", ad.Id, ad.Title, ad.Price)
 	imageDataurl, err := GetImage(ad.AdInfo.Id)
 
 	if err != nil {
