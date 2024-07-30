@@ -3,6 +3,7 @@ package advertiser
 import (
 	"common"
 	"github.com/gin-gonic/gin"
+  "common"
 	"github.com/nobletooth/dotanet/panel/database"
 	"gorm.io/gorm"
 	"math"
@@ -176,12 +177,13 @@ func GetAdvertiserAdReports(c *gin.Context) {
 		var clickCount, impressionCount int64
 		var spent float64
 
-		database.DB.Model(&common.ClickedEvent{}).
-			Where("ad_id = ? AND time BETWEEN ? AND ?", adID, date, date.Add(time.Minute)).
+		database.DB.Table("clicked_events").
+			Joins("INNER JOIN viewed_events ON clicked_events.impression_id = viewed_events.id").
+			Where("viewed_events.ad_id = ? AND viewed_events.time BETWEEN ? AND ?", adID, startDate, endDate).
 			Count(&clickCount)
 
-		database.DB.Model(&common.ViewedEvent{}).
-			Where("ad_id = ? AND time BETWEEN ? AND ?", adID, date, date.Add(time.Minute)).
+		database.DB.Table("viewed_events").
+			Where("ad_id = ? AND time BETWEEN ? AND ?", adID, startDate, endDate).
 			Count(&impressionCount)
 
 		database.DB.Table("clicked_events").
