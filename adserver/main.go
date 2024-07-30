@@ -6,8 +6,8 @@ import (
 	"github.com/gin-contrib/cors"
 	"time"
 
+	"common"
 	"github.com/gin-gonic/gin"
-	"github.com/nobletooth/dotanet/common"
 )
 
 var (

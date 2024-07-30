@@ -1,18 +1,17 @@
 package main
 
 import (
-	"flag"
-	"log"
-	"net/http"
-	"time"
-
 	"common"
 	"dotanet/advertiser"
 	"dotanet/database"
 	"dotanet/publisher"
+	"flag"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/multitemplate"
 	"github.com/gin-gonic/gin"
+	"log"
+	"net/http"
+	"time"
 )
 
 var config = cors.Config{

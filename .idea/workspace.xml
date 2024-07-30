@@ -1,46 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="AutoImportSettings">
-    <option name="autoReloadType" value="SELECTIVE" />
+    <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f7c5e80e-2e5b-4afa-95ad-b812782c630d" name="Changes" comment="image address bug fixed.">
-      <change afterPath="$PROJECT_DIR$/reporter/reportcraetion.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adserver/go.mod" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/adserver/go.sum" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/go.mod" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/panel/advertiser/ad.go" beforeDir="false" afterPath="$PROJECT_DIR$/panel/advertiser/ad.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/panel/advertiser/advertiser.go" beforeDir="false" afterPath="$PROJECT_DIR$/panel/advertiser/advertiser.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/panel/go.sum" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dotanet.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dotanet.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adserver/adRetriever.go" beforeDir="false" afterPath="$PROJECT_DIR$/adserver/adRetriever.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adserver/adserver_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/adserver/adserver_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adserver/auction.go" beforeDir="false" afterPath="$PROJECT_DIR$/adserver/auction.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adserver/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/adserver/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/go.sum" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/eventservice/go.mod" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/eventservice/go.sum" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/panel/go.mod" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/panel/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/panel/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/panel/main_test.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/panel/publisher/publisher.go" beforeDir="false" afterPath="$PROJECT_DIR$/panel/publisher/publisher.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/panel/templates/advertiser_ads.html" beforeDir="false" afterPath="$PROJECT_DIR$/panel/templates/advertiser_ads.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/panel/templates/create_ad.html" beforeDir="false" afterPath="$PROJECT_DIR$/panel/templates/create_ad.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/panel/templates/edit_ad.html" beforeDir="false" afterPath="$PROJECT_DIR$/panel/templates/edit_ad.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/publisherwebsite/go.mod" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/publisherwebsite/go.sum" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="GOROOT" url="file://$PROJECT_DIR$/../../../Program Files/Go" />
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
         <entry key="$PROJECT_DIR$" value="dockerFileEventserver" />
       </map>
     </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GoLibraries">
+    <option name="indexEntireGoPath" value="true" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 4
+}</component>
+  <component name="ProjectId" id="2jxFKiNCcYSlQEG1uGr4AgAXFFD" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "git-widget-placeholder": "sugest-system"
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.modules.go.list.on.any.changes.was.set&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;sugest-system&quot;,
+    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
+    &quot;go.sdk.automatically.set&quot;: &quot;true&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Click&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="go build dotanet" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="dotanet" />
@@ -57,9 +77,28 @@
       </list>
     </recent_temporary>
   </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="image address bug fixed." />
     <option name="LAST_COMMIT_MESSAGE" value="image address bug fixed." />
+  </component>
+  <component name="VgoProject">
+    <integration-enabled>false</integration-enabled>
+    <settings-migrated>true</settings-migrated>
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/nobletooth/dotanet/common"
+	"common"
 )
 
 func GetAdsListPeriodically() []common.AdWithMetrics {
