@@ -1,12 +1,12 @@
 package main
 
 import (
+	"common"
 	"flag"
 	"fmt"
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"github.com/nobletooth/dotanet/common"
 	"gorm.io/gorm"
 	"time"
 )

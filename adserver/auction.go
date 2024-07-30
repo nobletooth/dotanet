@@ -7,8 +7,8 @@ import (
 	"strconv"
 	"time"
 
+	"common"
 	"github.com/gin-gonic/gin"
-	"github.com/nobletooth/dotanet/common"
 )
 
 func GetImage(adID uint) (string, error) {

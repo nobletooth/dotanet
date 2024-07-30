@@ -6,8 +6,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"common"
 	"github.com/gin-gonic/gin"
-	"github.com/nobletooth/dotanet/common"
 	"github.com/stretchr/testify/assert"
 )
 

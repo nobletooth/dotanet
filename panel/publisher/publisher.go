@@ -2,9 +2,9 @@ package publisher
 
 import (
 	"bytes"
+	"common"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/nobletooth/dotanet/common"
 	"github.com/nobletooth/dotanet/panel/advertiser"
 	"github.com/nobletooth/dotanet/panel/database"
 	"gorm.io/gorm"

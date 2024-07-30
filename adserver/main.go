@@ -1,13 +1,12 @@
 package main
 
 import (
+	"common"
 	"flag"
 	"fmt"
 	"github.com/gin-contrib/cors"
-	"time"
-
 	"github.com/gin-gonic/gin"
-	"github.com/nobletooth/dotanet/common"
+	"time"
 )
 
 var (

@@ -1,9 +1,9 @@
 package advertiser
 
 import (
+	"common"
 	"errors"
 	"fmt"
-	"github.com/nobletooth/dotanet/common"
 	"github.com/nobletooth/dotanet/panel/database"
 	"net/http"
 	"os"
