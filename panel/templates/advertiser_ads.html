@@ -24,6 +24,11 @@
                 <label for="url-{{.Id}}">Ad URL:</label>
                 <input type="text" id="url-{{.Id}}" name="url" value="{{.Url}}" required>
                 <br>
+                <br>
+                <label for="keyword-{{.Id}}">Ad keyword:</label>
+                <input type="text" id="keyword-{{.Id}}" name="keyword" value="{{.keyword}}">
+                <button type="button" onclick="document.getElementById('keyword-{{.Id}}').value=''">Clear Keyword</button>
+                <br>
                 <label for="status-{{.Id}}">Status:</label>
                 <input type="checkbox" id="status-{{.Id}}" name="status" {{if .Status}}checked{{end}}>
                 <br>
@@ -34,7 +39,7 @@
     {{end}}
 </ul>
 
-<a href="/ads/new?advertiser_id={{.Advertiser.Id}}">Create New Ad</a>
+<a href="/ads/new?advertiser_id={{.Advertiser.ID}}">Create New Ad</a>
 <a href="/">Back to Advertisers</a>
 </body>
 </html>
