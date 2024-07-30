@@ -20,7 +20,7 @@ func GetAdHandler(c *gin.Context) {
 	pubID := c.Param("pubID")
 
 	if len(allAds) == 0 {
-		c.JSON(http.StatusNotFound, gin.H{"error": "No ads available"})
+		sendAdResponse(c, nil, pubID)
 		return
 	}
 
@@ -41,10 +41,11 @@ func GetAdHandler(c *gin.Context) {
 	rand.Seed(time.Now().UnixNano())
 	selectNewAd := rand.Float64() < *NewAdSelectionProbability
 
-	var finalAd common.AdWithMetrics
+	var finalAd *common.AdWithMetrics
 	if selectNewAd && len(newAds) > 0 {
 		rand.Seed(time.Now().UnixNano())
-		finalAd = newAds[rand.Intn(len(newAds))]
+		selectedAd := newAds[rand.Intn(len(newAds))]
+		finalAd = &selectedAd
 	} else if len(experiencedAds) > 0 {
 		totalScore := 0.0
 		for _, ctrPrice := range ctrPrices {
@@ -57,19 +58,23 @@ func GetAdHandler(c *gin.Context) {
 		for i, ad := range experiencedAds {
 			currentSum += ctrPrices[i]
 			if randomPoint <= currentSum {
-				finalAd = ad
+				finalAd = &ad
 				break
 			}
 		}
 	} else {
-		c.JSON(http.StatusNotFound, gin.H{"error": "No ads available"})
-		return
+		finalAd = nil
 	}
 
 	sendAdResponse(c, finalAd, pubID)
 }
 
-func sendAdResponse(c *gin.Context, ad common.AdWithMetrics, pubID string) {
+func sendAdResponse(c *gin.Context, ad *common.AdWithMetrics, pubID string) {
+	if ad == nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "No ads available"})
+		return
+	}
+
 	fmt.Printf("adID: %d, ad title: %s, ad price: %f\n", ad.Id, ad.Title, ad.Price)
 	imageDataurl, err := GetImage(ad.AdInfo.Id)
 
