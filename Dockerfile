@@ -30,8 +30,8 @@ RUN go work sync && go mod download
 # Ad Server Stage
 
 FROM builder AS adserver-builder
-WORKDIR /app/adserver
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o adserver .
+#WORKDIR /app/adserver
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o adserver /app/adserver
 
 FROM scratch AS adserver
 COPY --from=adserver-builder /app/adserver/adserver .
@@ -40,8 +40,8 @@ CMD ["./adserver"]
 
 # Event Server Stage
 FROM builder AS eventservice-builder
-WORKDIR /app/eventservice
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o eventservice .
+#WORKDIR /app/eventservice
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o eventservice /app/eventservice
 
 FROM scratch AS eventservice
 COPY --from=eventservice-builder /app/eventservice/eventservice .
@@ -50,8 +50,8 @@ CMD ["./eventservice"]
 
 # Panel Stage
 FROM builder AS panel-builder
-WORKDIR /app/panel
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o panel .
+#WORKDIR /app/panel
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o panel /app/panel
 
 
 FROM scratch AS panel
@@ -63,8 +63,8 @@ CMD ["./panel"]
 
 # Publisher Website Stage
 FROM builder AS publisherwebsite-builder
-WORKDIR /app/publisherwebsite
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o publisherwebsite .
+#WORKDIR /app/publisherwebsite
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o publisherwebsite /app/publisherwebsite
 
 FROM scratch AS publisherwebsite
 WORKDIR /app/publisherwebsite
