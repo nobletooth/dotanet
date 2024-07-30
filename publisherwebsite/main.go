@@ -3,16 +3,17 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/gin-contrib/cors"
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"time"
+
+	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
 )
 
 var (
 	sitenames        = []string{"digikala", "digiland", "samsung", "torob", "varzesh3"}
 	PublisherService = flag.String("publisherservice", ":8083", "publisher service")
-	PanelUrl         = flag.String("panelurl", "http://95.217.125.139:8085", "Base URL for HTML files")
+	PanelUrl         = flag.String("panelurl", "http://localhost:8085", "Base URL for HTML files")
 )
 
 func main() {
