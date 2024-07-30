@@ -2,6 +2,8 @@ package common
 
 import (
 	"time"
+
+	"github.com/google/uuid"
 )
 
 type AdInfo struct {
@@ -16,17 +18,19 @@ type AdInfo struct {
 }
 
 type ClickedEvent struct {
-	ID   uint      `gorm:"primaryKey"`
-	Pid  int       `gorm:"index"`
-	AdId int       `gorm:"index"`
-	Time time.Time `gorm:"index"`
+	ID           uuid.UUID `gorm:"type:uuid;primary_key;default:gen_random_uuid()"`
+	Pid          int       `gorm:"index"`
+	AdId         int       `gorm:"index"`
+	Time         time.Time `gorm:"index"`
+	ImpressionID uuid.UUID `gorm:"type:uuid;foreignKey:ID"`
 }
 
 type ViewedEvent struct {
-	ID   uint      `gorm:"primaryKey"`
-	Pid  int       `gorm:"index"`
-	AdId int       `gorm:"index"`
-	Time time.Time `gorm:"index"`
+	ID      uuid.UUID `gorm:"type:uuid;primary_key;default:gen_random_uuid()"`
+	Pid     int       `gorm:"index"`
+	AdId    int       `gorm:"index"`
+	Time    time.Time `gorm:"index"`
+	ClickID uuid.UUID `gorm:"type:uuid;foreignKey:ID"`
 }
 
 type EventServiceApiModel struct {

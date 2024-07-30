@@ -6,6 +6,7 @@ require github.com/gin-gonic/gin v1.10.0
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/gin-contrib/cors v1.7.2 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 )
 
