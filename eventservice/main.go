@@ -3,19 +3,25 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/gin-contrib/cors"
-	"time"
-
 	"github.com/gin-gonic/gin"
 	"github.com/nobletooth/dotanet/common"
 	"gorm.io/gorm"
+	"time"
 )
 
 var Db *gorm.DB
 var ch = make(chan common.EventServiceApiModel, 10)
+var p *kafka.Producer
 
 func main() {
 	go panelApiCall(ch)
+	_, err := kafka.NewProducer(&kafka.ConfigMap{"bootstrap.servers": "localhost:9092"})
+	if err != nil {
+		fmt.Errorf("error opening kafka connection: %v", err)
+
+	}
 	flag.Parse()
 	if db, err := OpenDbConnection(); err != nil {
 		fmt.Errorf("error opening db connection: %v", err)
