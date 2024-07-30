@@ -1,0 +1,14 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "server": "95.217.125.139",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "dotanet",
+            "database": "dotanet",
+            "username": "user",
+            "password": "password"
+        }
+    ]
+}

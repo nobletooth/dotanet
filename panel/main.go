@@ -31,9 +31,11 @@ func eventservice(event common.EventServiceApiModel) error {
 	}
 	if event.IsClicked {
 		clickedEvent := common.ClickedEvent{
-			Pid:  event.PubId,
-			AdId: event.AdId,
-			Time: event.Time,
+			ID:           event.ClickID,
+			ImpressionID: event.ImpressionID,
+			Pid:          event.PubId,
+			AdId:         event.AdId,
+			Time:         event.Time,
 		}
 		result := tx.Create(&clickedEvent)
 		if result.Error != nil {
@@ -56,6 +58,7 @@ func eventservice(event common.EventServiceApiModel) error {
 		}
 	} else {
 		viewedEvent := common.ViewedEvent{
+			ID:   event.ImpressionID,
 			Pid:  event.PubId,
 			AdId: event.AdId,
 			Time: event.Time,
