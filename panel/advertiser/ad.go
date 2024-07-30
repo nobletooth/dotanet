@@ -176,7 +176,6 @@ func ListAllAds(c *gin.Context) {
 
 		database.DB.Table("viewed_events").
 			Where("ad_id = ? AND time BETWEEN ? AND ?", ad.Id, startTime, endTime).
-			Count(&impressionCount)			Where("ad_id = ? AND time BETWEEN ? AND ?", ad.Id, startTime, endTime).
 			Count(&impressionCount)
 
 		adinfo := common.AdInfo{
