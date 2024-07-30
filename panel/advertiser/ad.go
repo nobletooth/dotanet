@@ -68,7 +68,7 @@ func CreateAdForm(c *gin.Context) {
 		return
 	}
 
-	advertiser, err := FindAdvertiserByID(uint(id))
+	advertiser, err := FindAdvertiserByID(uint64(id))
 	if err != nil {
 		c.HTML(http.StatusInternalServerError, "index", gin.H{"error": err.Error()})
 		return
@@ -77,7 +77,7 @@ func CreateAdForm(c *gin.Context) {
 	c.HTML(http.StatusOK, "create_ad", gin.H{"Advertiser": advertiser})
 }
 
-func FindAdvertiserByID(id uint) (Entity, error) {
+func FindAdvertiserByID(id uint64) (Entity, error) {
 	var entity Entity
 	result := database.DB.First(&entity, id)
 	if result.Error != nil {
@@ -166,6 +166,17 @@ func ListAllAds(c *gin.Context) {
 	var adMetrics []common.AdWithMetrics
 
 	for _, ad := range ads {
+
+		advertiser, err := FindAdvertiserByID(ad.AdvertiserId)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch advertiser data"})
+			return
+		}
+
+		if advertiser.Credit <= 0 {
+			continue
+		}
+
 		var clickCount int64
 		var impressionCount int64
 

@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -56,6 +57,17 @@ func eventservice(event common.EventServiceApiModel) error {
 			tx.Rollback()
 			return err
 		}
+
+		advertiser, err := advertiser.FindAdvertiserByID(ad.AdvertiserId)
+		if err != nil {
+			tx.Rollback()
+			return err
+		}
+		if advertiser.Credit <= 0 { //check credit
+			tx.Rollback()
+			return fmt.Errorf("advertiser credit below limit, ads will not be displayed")
+		}
+
 	} else {
 		viewedEvent := common.ViewedEvent{
 			ID:   event.ImpressionID,
