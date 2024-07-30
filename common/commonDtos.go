@@ -26,18 +26,19 @@ type ClickedEvent struct {
 }
 
 type ViewedEvent struct {
-	ID      uuid.UUID `gorm:"type:uuid;primary_key;default:gen_random_uuid()"`
-	Pid     int       `gorm:"index"`
-	AdId    int       `gorm:"index"`
-	Time    time.Time `gorm:"index"`
-	ClickID uuid.UUID `gorm:"type:uuid;foreignKey:ID"`
+	ID   uuid.UUID `gorm:"type:uuid;primary_key;default:gen_random_uuid()"`
+	Pid  int       `gorm:"index"`
+	AdId int       `gorm:"index"`
+	Time time.Time `gorm:"index"`
 }
 
 type EventServiceApiModel struct {
-	Time      time.Time
-	PubId     int
-	AdId      int
-	IsClicked bool
+	Time         time.Time
+	PubId        int
+	AdId         int
+	IsClicked    bool
+	ClickID      uuid.UUID
+	ImpressionID uuid.UUID
 }
 
 type AdWithMetrics struct {

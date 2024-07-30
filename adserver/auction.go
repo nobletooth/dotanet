@@ -8,7 +8,9 @@ import (
 	"time"
 
 	"common"
+
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 func GetImage(adID uint) (string, error) {
@@ -20,7 +22,7 @@ func GetAdHandler(c *gin.Context) {
 	pubID := c.Param("pubID")
 
 	if len(allAds) == 0 {
-		c.JSON(http.StatusNotFound, gin.H{"error": "No ads available"})
+		sendAdResponse(c, nil, pubID)
 		return
 	}
 
@@ -38,41 +40,44 @@ func GetAdHandler(c *gin.Context) {
 		}
 	}
 
-	var selectedNewAd common.AdWithMetrics
-	if len(newAds) > 0 {
+	rand.Seed(time.Now().UnixNano())
+	selectNewAd := rand.Float64() < *NewAdSelectionProbability
+
+	var finalAd *common.AdWithMetrics
+	if selectNewAd && len(newAds) > 0 {
 		rand.Seed(time.Now().UnixNano())
-		selectedNewAd = newAds[rand.Intn(len(newAds))]
-	}
-
-	totalScore := 0.0
-	for _, ctrPrice := range ctrPrices {
-		totalScore += ctrPrice
-	}
-
-	randomPoint := rand.Float64() * totalScore
-	currentSum := 0.0
-	var selectedExperiencedAd common.AdWithMetrics
-
-	for i, ad := range experiencedAds {
-		currentSum += ctrPrices[i]
-		if randomPoint <= currentSum {
-			selectedExperiencedAd = ad
-			break
+		selectedAd := newAds[rand.Intn(len(newAds))]
+		finalAd = &selectedAd
+	} else if len(experiencedAds) > 0 {
+		totalScore := 0.0
+		for _, ctrPrice := range ctrPrices {
+			totalScore += ctrPrice
 		}
-	}
 
-	var finalAd common.AdWithMetrics
-	if (rand.Float64() < *NewAdSelectionProbability && selectedNewAd.Id != 0) || selectedExperiencedAd.Id == 0 {
-		finalAd = selectedNewAd
+		rand.Seed(time.Now().UnixNano())
+		randomPoint := rand.Float64() * totalScore
+		currentSum := 0.0
+		for i, ad := range experiencedAds {
+			currentSum += ctrPrices[i]
+			if randomPoint <= currentSum {
+				finalAd = &ad
+				break
+			}
+		}
 	} else {
-		finalAd = selectedExperiencedAd
+		finalAd = nil
 	}
 
 	sendAdResponse(c, finalAd, pubID)
 }
 
-func sendAdResponse(c *gin.Context, ad common.AdWithMetrics, pubID string) {
-	fmt.Printf("adID: %d,ad title:%s,ad price:%f", ad.Id, ad.Title, ad.Price)
+func sendAdResponse(c *gin.Context, ad *common.AdWithMetrics, pubID string) {
+	if ad == nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "No ads available"})
+		return
+	}
+
+	fmt.Printf("adID: %d, ad title: %s, ad price: %f\n", ad.Id, ad.Title, ad.Price)
 	imageDataurl, err := GetImage(ad.AdInfo.Id)
 
 	if err != nil {
@@ -85,11 +90,22 @@ func sendAdResponse(c *gin.Context, ad common.AdWithMetrics, pubID string) {
 		return
 	}
 
+	var impression = common.ViewedEvent{
+		ID:   uuid.New(),
+		Time: time.Now(),
+	}
+
+	var click = common.ClickedEvent{
+		ID:           uuid.New(),
+		Time:         time.Now(),
+		ImpressionID: impression.ID,
+	}
+
 	response := gin.H{
 		"Title":          ad.Title,
 		"ImageData":      imageDataurl,
-		"ClicksURL":      fmt.Sprintf("%v/click/%d/%d", *EventServiceUrl, ad.Id, publisherID),
-		"ImpressionsURL": fmt.Sprintf("%v/impression/%d/%d", *EventServiceUrl, ad.Id, publisherID),
+		"ClicksURL":      fmt.Sprintf("%v/click/%d/%d/%v/%v/%v", *EventServiceUrl, ad.Id, publisherID, click.ID, click.ImpressionID, click.Time),
+		"ImpressionsURL": fmt.Sprintf("%v/impression/%d/%d/%v/%v", *EventServiceUrl, ad.Id, publisherID, impression.ID, impression.Time),
 	}
 
 	c.JSON(http.StatusOK, response)

@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var adSeen = false;
     const publisherId = "__PUBLISHER_ID__";
     const adserverurl = "__ADSERVER_URL__";
-
+    let impressionTime;
 
     // Create the image div
     var imageDiv = document.createElement('div');
@@ -25,40 +25,48 @@ document.addEventListener('DOMContentLoaded', function() {
             const response = await fetch(`${adserverurl}/getadinfo/${publisherId}`);
             const data = await response.json();
             adImage.src = data.ImageData;
-            window.ImpressionsURL = data.ImpressionsURL;
-            window.ClicksURL = data.ClicksURL;
+            window.ImpressionURL = `${data.ImpressionURL}/${data.ImpressionId}/
+            ${encodeURIComponent(new Date().toISOString())}`;
+            window.ClickURL = `${data.ClickURL}/${data.ClickId}/
+            ${data.ImpressionId}/${encodeURIComponent(new Date().toISOString())}`;
         } catch (error) {
             console.error('Error:', error);
         }
     }
 
     function callAdSeenApi() {
-        fetch(window.ImpressionsURL, {
+        impressionTime = new Date()
+        fetch(window.ImpressionURL, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
             }
-        }).catch(error => console.error('Error:', error));
+        }).then(response => response.json())
+        .catch(error => console.error('Error:', error));
     }
 
     adImage.addEventListener('click', function(event) {
         event.preventDefault();
-
-        fetch(window.ClicksURL, {
-
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
+    
+        const clickTime = new Date();
+        const timeDiff = (clickTime - impressionTime) / 1000; // difference in seconds
+    
+        if (timeDiff > 10 && timeDiff < 30) {
+            fetch(window.ClickURL, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
             .then(response => response.json())
             .then(data => {
-                //adImage.onclick=data.AdURL
                 window.open(data.AdURL, '_blank');
             })
             .catch(error => console.error('Error:', error));
+        } else {
+            console.log('Click time is not in the valid range');
+        }
     });
-
 
     var observer = new IntersectionObserver(function(entries) {
         entries.forEach(entry => {
