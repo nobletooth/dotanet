@@ -18,6 +18,9 @@
     <label for="url">Ad URL:</label>
     <input type="text" id="url" name="url" required>
     <br>
+    <label for="ad_limit">Ad Limit (optional):</label>
+    <input type="number" id="ad_limit" name="ad_limit" step="0.01" placeholder="Enter Ad Limit">
+    <br>
     <input type="hidden" id="advertiser_id" name="advertiser_id" value="{{.Advertiser.ID}}">
     <br>
     <button type="submit">Create</button>

@@ -24,6 +24,9 @@
                 <label for="url-{{.Id}}">Ad URL:</label>
                 <input type="text" id="url-{{.Id}}" name="url" value="{{.Url}}" required>
                 <br>
+                <label for="ad_limit-{{.Id}}">Ad Limit (optional):</label>
+                <input type="number" id="ad_limit-{{.Id}}" name="ad_limit" step="0.01" value="{{if .AdLimit}}{{.AdLimit}}{{end}}">
+                <br>
                 <label for="status-{{.Id}}">Status:</label>
                 <input type="checkbox" id="status-{{.Id}}" name="status" {{if .Status}}checked{{end}}>
                 <br>
