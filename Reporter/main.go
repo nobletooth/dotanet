@@ -3,10 +3,22 @@ package main
 import (
 	"fmt"
 	"github.com/confluentinc/confluent-kafka-go/kafka"
+	"gorm.io/gorm"
 )
 
+var DB *gorm.DB
+var msgChan chan *kafka.Message
+
 func main() {
+	OpenDbConnection()
+	DB.AutoMigrate(&aggrClick{})
+	DB.AutoMigrate(&aggrImpression{})
 	// Define Kafka consumer configuration
+	ComsumeMessageKafka()
+
+}
+
+func ComsumeMessageKafka() {
 	config := kafka.ConfigMap{
 		"bootstrap.servers": "localhost:9092",
 		"group.id":          "my-group",

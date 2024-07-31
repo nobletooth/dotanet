@@ -88,7 +88,7 @@ func panelApiCall(ch chan common.EventServiceApiModel) {
 				fmt.Printf("can not umarshal event %s\n", err)
 			}
 			err = p.Produce(&kafka.Message{
-				TopicPartition: kafka.TopicPartition{Topic: &[]string{"my_topic"}[0], Partition: kafka.PartitionAny},
+				TopicPartition: kafka.TopicPartition{Topic: &[]string{"clickview"}[0], Partition: kafka.PartitionAny},
 				Value:          jsonData,
 			}, nil)
 
