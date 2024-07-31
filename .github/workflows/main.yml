@@ -29,9 +29,15 @@ jobs:
         cd ${{ matrix.module }}
         go build -v
 
-    - name: Build Docker image 
-      if: matrix.module == 'Dockerfile' 
-      run: docker build -t myapp:latest .
+    - name: Archive artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: build-artifacts
+        path: |
+          ${{ github.workspace }}/Dockerfile
+          ${{ github.workspace }}/docker-compose.yml
+          ${{ github.workspace }}/path/to/other/required/files/
+          ${{ matrix.module }}/build/${{ matrix.module }} # Assuming the build output is here
 
   deploy:
     needs: build
@@ -39,11 +45,23 @@ jobs:
     if: github.ref == 'refs/heads/main'
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+    - name: Download build artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: build-artifacts
+
+    - name: Copy files to server
+      env:
+        DEPLOY_USER: ${{ "gambron" }}
+        DEPLOY_HOST: ${{ "95.217.125.139" }}
+        DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+      run: |
+        scp -r build-artifacts/* $DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH
 
     - name: Deploy using Docker Compose
-
+      env:
+        DEPLOY_USER: ${{ "gambron" }}
+        DEPLOY_HOST: ${{ "95.217.125.139" }}
+        DEPLOY_PATH: ${{ / }}
       run: |
-        scp docker-compose.yml $DEPLOY_USER@$DEPLOY_HOST:/path/to/deploy
-        ssh $DEPLOY_USER@$DEPLOY_HOST 'docker-compose -f /path/to/deploy/docker-compose.yml pull && docker-compose -f /path/to/deploy/docker-compose.yml up -d'
+        ssh $DEPLOY_USER@$DEPLOY_HOST 'cd $DEPLOY_PATH && docker-compose -f docker-compose.yml pull && docker-compose -f docker-compose.yml up -d'
