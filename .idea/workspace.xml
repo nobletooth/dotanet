@@ -4,15 +4,9 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f7c5e80e-2e5b-4afa-95ad-b812782c630d" name="Changes" comment="finishing ui and finish scrapping">
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_7_23_24,_2_55_PM_[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_7_23_24__2_55_PM__Changes_.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_7_24_24,_10_13_AM_[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_7_24_24,_10_58_AM_[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_7_24_24__10_13_AM__Changes_.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_7_24_24__10_58_AM__Changes_.xml" beforeDir="false" />
+    <list default="true" id="f7c5e80e-2e5b-4afa-95ad-b812782c630d" name="Changes" comment="done the scrapper part some how">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/screper/database.go" beforeDir="false" afterPath="$PROJECT_DIR$/screper/database.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/adserver/auction.go" beforeDir="false" afterPath="$PROJECT_DIR$/adserver/auction.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/screper/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/screper/main.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -64,6 +58,7 @@
   "keyToString": {
     "DefaultGoTemplateProperty": "Go File",
     "Go Build.go build github.com/nobletooth/dotanet/panel.executor": "Run",
+    "Go Build.go build github.com/nobletooth/dotanet/publisherwebsite.executor": "Run",
     "Go Build.go build main.go (1).executor": "Run",
     "Go Build.go build main.go (2).executor": "Run",
     "Go Build.go build main.go.executor": "Run",
@@ -103,6 +98,15 @@
       <filePath value="$PROJECT_DIR$/panel/main.go" />
       <method v="2" />
     </configuration>
+    <configuration name="go build github.com/nobletooth/dotanet/publisherwebsite" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="dotanet" />
+      <working_directory value="$PROJECT_DIR$/publisherwebsite" />
+      <kind value="PACKAGE" />
+      <package value="github.com/nobletooth/dotanet/publisherwebsite" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$/publisherwebsite/main.go" />
+      <method v="2" />
+    </configuration>
     <configuration name="go build scrapper" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="dotanet" />
       <working_directory value="$PROJECT_DIR$/screper" />
@@ -114,12 +118,14 @@
       <method v="2" />
     </configuration>
     <list>
+      <item itemvalue="Go Build.go build github.com/nobletooth/dotanet/publisherwebsite" />
       <item itemvalue="Go Build.go build scrapper" />
       <item itemvalue="Go Build.go build github.com/nobletooth/dotanet/panel" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="Go Build.go build scrapper" />
+        <item itemvalue="Go Build.go build github.com/nobletooth/dotanet/publisherwebsite" />
         <item itemvalue="Go Build.go build github.com/nobletooth/dotanet/panel" />
       </list>
     </recent_temporary>
@@ -154,7 +160,8 @@
     <MESSAGE value=".env production added." />
     <MESSAGE value="done Ui" />
     <MESSAGE value="finishing ui and finish scrapping" />
-    <option name="LAST_COMMIT_MESSAGE" value="finishing ui and finish scrapping" />
+    <MESSAGE value="done the scrapper part some how" />
+    <option name="LAST_COMMIT_MESSAGE" value="done the scrapper part some how" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
@@ -163,9 +170,9 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/panel/advertiser/ad.go</url>
-          <line>105</line>
-          <option name="timeStamp" value="27" />
+          <url>file://$PROJECT_DIR$/publisherwebsite/main.go</url>
+          <line>17</line>
+          <option name="timeStamp" value="57" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

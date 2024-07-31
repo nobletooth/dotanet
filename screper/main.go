@@ -136,11 +136,11 @@ func ScrapData() {
 				}
 			}
 
-			if err := DB.Model(&token).Association("Publishers").Append(&publisher); err != nil {
+			if err := DB.Model(&token).Association("PublisherTokens").Append(&publisher); err != nil {
 				log.Printf("failed to associate Token with PublisherToken %d: %v", publisher.PublisherID, err)
 				continue
 			}
-			log.Printf("associated Token with value %s to PublisherToken %d", tokenValue, publisher.PublisherID)
+			log.Printf("associated Token with value %s to PublisherToken %d", tokenValue, publisher.ID)
 		}
 	}
 }
