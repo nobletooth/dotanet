@@ -4,6 +4,7 @@ import (
 	"common"
 	"flag"
 	"fmt"
+	"sync"
 	"time"
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
@@ -12,23 +13,28 @@ import (
 	"gorm.io/gorm"
 )
 
-var Db *gorm.DB
-var ch = make(chan common.EventServiceApiModel, 10)
-var p *kafka.Producer
+var (
+	Db               *gorm.DB
+	p                *kafka.Producer
+	ch               = make(chan common.EventServiceApiModel, 10)
+	impressionEvents []common.EventServiceApiModel
+	eventsMutex      sync.Mutex
+)
 
 func main() {
 	go panelApiCall(ch)
-	_, err := kafka.NewProducer(&kafka.ConfigMap{"bootstrap.servers": "localhost:9092"})
-	if err != nil {
-		fmt.Errorf("error opening kafka connection: %v", err)
+	// _, err := kafka.NewProducer(&kafka.ConfigMap{"bootstrap.servers": "localhost:9092"})
+	// if err != nil {
+	// 	fmt.Errorf("error opening kafka connection: %v", err)
 
-	}
+	// }
 	flag.Parse()
 	if db, err := OpenDbConnection(); err != nil {
 		fmt.Errorf("error opening db connection: %v", err)
 	} else {
 		Db = db
 	}
+	go cleanOldEvents()
 	router := gin.Default()
 	router.Use(cors.New(cors.Config{
 		AllowAllOrigins:  true, // Change to your frontend domain
@@ -39,8 +45,8 @@ func main() {
 		MaxAge:           12 * time.Hour,
 	}))
 
-	router.GET("/click/:adv/:pub/:clickid/:impressionid/:time", clickHandler())
-	router.GET("/impression/:adv/:pub/:impressionid/:time", impressionHandler())
+	router.GET("/click/:adv/:pub/:clickid/:impressionid", clickHandler())
+	router.GET("/impression/:adv/:pub/:impressionid", impressionHandler())
 
 	router.Run(*EventserviceUrl)
 
