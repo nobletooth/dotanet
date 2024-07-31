@@ -4,27 +4,37 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f7c5e80e-2e5b-4afa-95ad-b812782c630d" name="Changes" comment=".env production added.">
-      <change afterPath="$PROJECT_DIR$/rebuildImages.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
+    <list default="true" id="f7c5e80e-2e5b-4afa-95ad-b812782c630d" name="Changes" comment="done Ui">
+      <change afterPath="$PROJECT_DIR$/screper/database.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/screper/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/75a561d4-8f0e-4f38-a4cc-62a6bd8ea0c8.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/f5321ab8-029b-4c0a-8fcb-741b1a316761.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/f5321ab8-029b-4c0a-8fcb-741b1a316761.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_7_23_24,_11_56_AM_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_7_23_24__11_56_AM__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_7_23_24__2_55_PM__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_7_23_24__2_55_PM__Changes_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_7_24_24__10_13_AM__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_7_24_24__10_13_AM__Changes_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_7_24_24__10_58_AM__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_7_24_24__10_58_AM__Changes_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_7_27_24__6_26_PM__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_7_27_24__6_26_PM__Changes_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_7_28_24__9_30_AM__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_7_28_24__9_30_AM__Changes_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]1/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]2/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]3/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]4/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase__Changes_1.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase__Changes_2.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase__Changes_3.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase__Changes_4.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adserver/adRetriever.go" beforeDir="false" afterPath="$PROJECT_DIR$/adserver/adRetriever.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adserver/adserver_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/adserver/adserver_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adserver/auction.go" beforeDir="false" afterPath="$PROJECT_DIR$/adserver/auction.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adserver/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/adserver/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adserver/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/adserver/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/adserver/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/adserver/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eventservice/click.go" beforeDir="false" afterPath="$PROJECT_DIR$/eventservice/click.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eventservice/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/eventservice/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eventservice/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/eventservice/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eventservice/impression.go" beforeDir="false" afterPath="$PROJECT_DIR$/eventservice/impression.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/eventservice/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/eventservice/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.work" beforeDir="false" afterPath="$PROJECT_DIR$/go.work" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go.work.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.work.sum" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/panel/advertiser/ad.go" beforeDir="false" afterPath="$PROJECT_DIR$/panel/advertiser/ad.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/panel/advertiser/advertiser.go" beforeDir="false" afterPath="$PROJECT_DIR$/panel/advertiser/advertiser.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/panel/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/panel/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/panel/main_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/panel/main_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/panel/publisher/publisher.go" beforeDir="false" afterPath="$PROJECT_DIR$/panel/publisher/publisher.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/panel/database/db.go" beforeDir="false" afterPath="$PROJECT_DIR$/panel/database/db.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/panel/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/panel/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/panel/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/panel/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/panel/templates/advertiser_ads.html" beforeDir="false" afterPath="$PROJECT_DIR$/panel/templates/advertiser_ads.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,10 +45,11 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Dockerfile" />
+        <option value="Go File" />
       </list>
     </option>
   </component>
-  <component name="GOROOT" url="file:///snap/go/10660" />
+  <component name="GOROOT" url="file://$PROJECT_DIR$/../../../Program Files/Go" />
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
@@ -72,6 +83,8 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "DefaultGoTemplateProperty": "Go File",
+    "Go Build.go build github.com/nobletooth/dotanet/panel.executor": "Run",
     "Go Build.go build main.go (1).executor": "Run",
     "Go Build.go build main.go (2).executor": "Run",
     "Go Build.go build main.go.executor": "Run",
@@ -80,10 +93,11 @@
     "RunOnceActivity.go.migrated.go.modules.settings": "true",
     "RunOnceActivity.go.modules.automatic.dependencies.download": "true",
     "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "optimization-search",
     "go.import.settings.migrated": "true",
     "go.sdk.automatically.set": "true",
-    "last_opened_file_path": "/home/amin/Desktop/yellowbloom/dotanet",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "C:/Users/Click",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
@@ -94,55 +108,35 @@
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
     </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Click\dotanet" />
+    </key>
   </component>
-  <component name="RunManager" selected="Shell Script.rebuildImages.sh">
-    <configuration name="go build main.go (1)" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
-      <module name="dotanet" />
-      <working_directory value="$PROJECT_DIR$/eventservice" />
-      <kind value="FILE" />
-      <directory value="$PROJECT_DIR$" />
-      <filePath value="$PROJECT_DIR$/eventservice/main.go" />
-      <method v="2" />
-    </configuration>
-    <configuration name="go build main.go (2)" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Go Build.go build github.com/nobletooth/dotanet/panel">
+    <configuration name="go build github.com/nobletooth/dotanet/panel" type="GoApplicationRunConfiguration" factoryName="Go Application" nameIsGenerated="true">
       <module name="dotanet" />
       <working_directory value="$PROJECT_DIR$/panel" />
-      <kind value="FILE" />
+      <parameters value="--dbuser postgres --dbpassword Ala.13495782 --dbname todo --dbport 5432 --dbhost localHost " />
+      <kind value="PACKAGE" />
+      <package value="github.com/nobletooth/dotanet/panel" />
       <directory value="$PROJECT_DIR$" />
       <filePath value="$PROJECT_DIR$/panel/main.go" />
       <method v="2" />
     </configuration>
-    <configuration name="go build main.go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+    <configuration name="go build scrapper" type="GoApplicationRunConfiguration" factoryName="Go Application" nameIsGenerated="true">
       <module name="dotanet" />
-      <working_directory value="$PROJECT_DIR$/adserver" />
-      <kind value="FILE" />
+      <working_directory value="$PROJECT_DIR$/screper" />
+      <parameters value="--dbuser postgres --dbpassword Ala.13495782 --dbname todo --dbport 5432 --dbhost localHost " />
+      <kind value="PACKAGE" />
+      <package value="scrapper" />
       <directory value="$PROJECT_DIR$" />
-      <filePath value="$PROJECT_DIR$/adserver/main.go" />
+      <filePath value="$PROJECT_DIR$/screper/main.go" />
       <method v="2" />
     </configuration>
-    <configuration name="rebuildImages.sh" type="ShConfigurationType" temporary="true">
-      <option name="SCRIPT_TEXT" value="" />
-      <option name="INDEPENDENT_SCRIPT_PATH" value="true" />
-      <option name="SCRIPT_PATH" value="$PROJECT_DIR$/rebuildImages.sh" />
-      <option name="SCRIPT_OPTIONS" value="" />
-      <option name="INDEPENDENT_SCRIPT_WORKING_DIRECTORY" value="true" />
-      <option name="SCRIPT_WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="INDEPENDENT_INTERPRETER_PATH" value="true" />
-      <option name="INTERPRETER_PATH" value="/bin/bash" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="EXECUTE_IN_TERMINAL" value="true" />
-      <option name="EXECUTE_SCRIPT_FILE" value="true" />
-      <envs />
-      <method v="2" />
-    </configuration>
-    <recent_temporary>
-      <list>
-        <item itemvalue="Shell Script.rebuildImages.sh" />
-        <item itemvalue="Go Build.go build main.go (1)" />
-        <item itemvalue="Go Build.go build main.go" />
-        <item itemvalue="Go Build.go build main.go (2)" />
-      </list>
-    </recent_temporary>
+    <list>
+      <item itemvalue="Go Build.go build scrapper" />
+      <item itemvalue="Go Build.go build github.com/nobletooth/dotanet/panel" />
+    </list>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TypeScriptGeneratedFilesManager">
@@ -161,9 +155,21 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value=".env production added." />
-    <option name="LAST_COMMIT_MESSAGE" value=".env production added." />
+    <MESSAGE value="done Ui" />
+    <option name="LAST_COMMIT_MESSAGE" value="done Ui" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/panel/advertiser/ad.go</url>
+          <line>105</line>
+          <option name="timeStamp" value="27" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

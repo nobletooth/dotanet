@@ -4,6 +4,7 @@ import (
 	"common"
 	"errors"
 	"fmt"
+	"github.com/lib/pq"
 	"github.com/nobletooth/dotanet/panel/database"
 	"net/http"
 	"os"
@@ -17,67 +18,28 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var sitenames = []string{"digikala", "digiland", "samsung", "torob", "varzesh3"}
-
 type Ad struct {
-	Id           uint     `gorm:"column:id;primary_key"`
-	Title        string   `gorm:"column:title"`
-	Image        string   `gorm:"column:image"`
-	Price        float64  `gorm:"column:price"`
-	Status       bool     `gorm:"column:status"`
-	Clicks       int      `gorm:"column:clicks"`
-	Impressions  int      `gorm:"column:impressions"`
-	Url          string   `gorm:"column:url"`
-	keyword      []string `gorm:"column:keywords"`
-	AdvertiserId uint64   `gorm:"foreignKey:AdvertiserId"`
+	Id           uint           `gorm:"column:id;primary_key"`
+	Title        string         `gorm:"column:title"`
+	Image        string         `gorm:"column:image"`
+	Price        float64        `gorm:"column:price"`
+	Status       bool           `gorm:"column:status"`
+	Clicks       int            `gorm:"column:clicks"`
+	Impressions  int            `gorm:"column:impressions"`
+	Url          string         `gorm:"column:url"`
+	Keyword      pq.StringArray `gorm:"type:text[]"`
+	AdvertiserId uint64         `gorm:"foreignKey:AdvertiserId"`
 }
 
-func parse_keyword(keyword string) []string {
-	return strings.Split(keyword, ",")
-
-}
-func handlekeyword(keyword string, empty bool, ad *Ad) {
-	if keyword != "" && empty == false {
-		ad.keyword = nil
-		ad.keyword = parse_keyword(keyword)
+func handlekeyword(keyword string, clearkeyword bool, ad *Ad) {
+	if clearkeyword == true {
+		ad.Keyword = nil
+	} else if keyword != "" {
+		ad.Keyword = strings.Split(keyword, ",")
 	}
-	if empty {
-		ad.keyword = nil
-	}
+
 }
 
-//func FindBestPublisher(keyword string) {
-//	for _, site := range sitenames {
-//		url := fmt.Sprintf("https://%s.com", site)
-//		htmltext, err := fetchPageText(url)
-//		if err != nil {
-//			log.Printf("Error fetching ads from %s: %v", site, err)
-//			continue
-//		}
-//		htmltext
-//	}
-//}
-
-//	func fetchPageText(url string) (string, error) {
-//		resp, err := http.Get(url)
-//		if err != nil {
-//			return "", err
-//		}
-//		defer resp.Body.Close()
-//
-//		if resp.StatusCode != 200 {
-//			return "", fmt.Errorf("status code error: %d %s", resp.StatusCode, resp.Status)
-//		}
-//
-//		doc, err := goquery.NewDocumentFromReader(resp.Body)
-//		if err != nil {
-//			return "", err
-//		}
-//
-//		text := doc.Text()
-//
-//		return text, nil
-//	}
 func CreateAdHandler(c *gin.Context) {
 	var ad Ad
 	ad.Title = c.PostForm("title")
@@ -85,7 +47,7 @@ func CreateAdHandler(c *gin.Context) {
 	ad.Url = c.PostForm("url")
 	keyword := c.PostForm("keyword")
 	if keyword != "" {
-		ad.keyword = parse_keyword(keyword)
+		ad.Keyword = strings.Split(keyword, ",")
 	}
 	ad.AdvertiserId, _ = strconv.ParseUint(c.PostForm("advertiser_id"), 10, 32)
 	ad.Status = true
