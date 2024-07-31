@@ -4,16 +4,17 @@ import (
 	"bytes"
 	"common"
 	"fmt"
-	"github.com/gin-gonic/gin"
-	"github.com/nobletooth/dotanet/panel/advertiser"
-	"github.com/nobletooth/dotanet/panel/database"
-	"gorm.io/gorm"
 	"math"
 	"net/http"
 	"os"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/gin-gonic/gin"
+	"github.com/nobletooth/dotanet/panel/advertiser"
+	"github.com/nobletooth/dotanet/panel/database"
+	"gorm.io/gorm"
 )
 
 type Publisher struct {
@@ -145,12 +146,6 @@ func GetPublisherReports(c *gin.Context) {
 		database.DB.Model(&common.ViewedEvent{}).
 			Where("pid = ? AND time BETWEEN ? AND ?", publisherID, date, date.Add(time.Minute)).
 			Count(&impressionCount)
-
-		//database.DB.Table("clicked_events").
-		//	Select("SUM(ads.price * 0.2)").
-		//	Joins("JOIN ads ON clicked_events.ad_id = ads.id").
-		//	Where("clicked_events.pid = ? AND clicked_events.time BETWEEN ? AND ?", strconv.Itoa(publisherID), date, date.Add(time.Minute)).
-		//	Scan(&income)
 
 		query := `
     SELECT COALESCE(SUM(ads.price * 0.2), 0)

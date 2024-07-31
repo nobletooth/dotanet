@@ -17,20 +17,47 @@ func impressionHandler() gin.HandlerFunc {
 		pubInt, err := strconv.Atoi(pub)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
 		}
 		adInt, err := strconv.Atoi(adv)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		}
-		impressionId := uuid.MustParse(c.Param("impressionid"))
-		time, err := time.Parse(time.RFC3339, c.Param("time"))
-		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid time"})
 			return
 		}
-		var updateApi = common.EventServiceApiModel{Time: time,
-			PubId: pubInt, AdId: adInt, IsClicked: false, ImpressionID: impressionId}
+		impressionId := uuid.MustParse(c.Param("impressionid"))
+		impressionTime := time.Now()
+		var updateApi = common.EventServiceApiModel{
+			Time:         impressionTime,
+			PubId:        pubInt,
+			AdId:         adInt,
+			IsClicked:    false,
+			ImpressionID: impressionId,
+		}
+		eventsMutex.Lock()
+		impressionEvents = append(impressionEvents, updateApi)
+		eventsMutex.Unlock()
 		ch <- updateApi
 		c.String(http.StatusOK, "its ok!")
+	}
+}
+
+func cleanOldEvents() {
+	ticker := time.NewTicker(60 * time.Second)
+	defer ticker.Stop()
+	for {
+		select {
+		case <-ticker.C:
+			currentTime := time.Now()
+			eventsMutex.Lock()
+			i := 0
+			for _, event := range impressionEvents {
+				if currentTime.Sub(event.Time) <= 30*time.Second {
+					impressionEvents[i] = event
+					i++
+				}
+			}
+			impressionEvents = impressionEvents[:i]
+			eventsMutex.Unlock()
+		}
 	}
 }

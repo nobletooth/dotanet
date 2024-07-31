@@ -22,7 +22,7 @@ type ClickedEvent struct {
 	Pid          int       `gorm:"index"`
 	AdId         int       `gorm:"index"`
 	Time         time.Time `gorm:"index"`
-	ImpressionID uuid.UUID `gorm:"type:uuid;foreignKey:ID"`
+	ImpressionID uuid.UUID `gorm:"type:uuid;unique;foreignKey:ID"`
 }
 
 type ViewedEvent struct {
