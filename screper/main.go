@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"flag"
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
 	"github.com/liuzl/tokenizer"
@@ -13,10 +14,11 @@ import (
 )
 
 type PublisherToken struct {
-	ID     uint     `gorm:"primaryKey;autoIncrement"`
-	Name   string   `gorm:"column:name;unique;not null"`
-	Url    string   `gorm:"column:url;unique;not null"`
-	Tokens []*Token `gorm:"many2many:publisher_tokens;"`
+	ID          uint     `gorm:"primaryKey"`
+	PublisherID uint     `gorm:"column:publisher_id;index"`
+	Name        string   `gorm:"column:name;not null"`
+	Url         string   `gorm:"column:url;unique;not null"`
+	Tokens      []*Token `gorm:"many2many:publisher_token_associations;"`
 }
 
 type Publisher struct {
@@ -29,9 +31,14 @@ type Publisher struct {
 }
 
 type Token struct {
-	ID         uint              `gorm:"primaryKey;autoIncrement"`
-	Value      string            `gorm:"column:value;unique;not null"`
-	Publishers []*PublisherToken `gorm:"many2many:publisher_tokens;"`
+	ID              uint              `gorm:"primaryKey"`
+	Value           string            `gorm:"unique;not null"`
+	PublisherTokens []*PublisherToken `gorm:"many2many:publisher_token_associations;"`
+}
+
+type PublisherTokenAssociation struct {
+	PublisherTokenID uint `gorm:"primaryKey"`
+	TokenID          uint `gorm:"primaryKey"`
 }
 
 func htmlTokenizer(htmlText string) []string {
@@ -64,20 +71,20 @@ func fetchPageText(url string) (string, error) {
 	return text, nil
 }
 
-func ScrapData() {
+func createPubToken() {
 	var publishers []Publisher
 	if err := DB.Find(&publishers).Error; err != nil {
 		log.Fatalf("failed to fetch publishers: %v", err)
 	}
 
 	for _, publisher := range publishers {
-		var publisherToken PublisherToken
-		if err := DB.Where("id = ?", publisher.ID).First(&publisherToken).Error; err != nil {
+		var existingPublisherToken PublisherToken
+		if err := DB.Where("publisher_id = ?", publisher.ID).First(&existingPublisherToken).Error; err != nil {
 			if errors.Is(err, gorm.ErrRecordNotFound) {
-				publisherToken = PublisherToken{
-					ID:   publisher.ID,
-					Name: publisher.Name,
-					Url:  publisher.Url,
+				publisherToken := PublisherToken{
+					PublisherID: publisher.ID,
+					Name:        publisher.Name,
+					Url:         publisher.Url,
 				}
 				if err := DB.Create(&publisherToken).Error; err != nil {
 					log.Printf("failed to create PublisherToken for publisher %d: %v", publisher.ID, err)
@@ -85,11 +92,24 @@ func ScrapData() {
 				}
 				log.Printf("created PublisherToken for publisher %d", publisher.ID)
 			} else {
-				log.Printf("failed to fetch PublisherToken for publisher %d: %v", publisher.ID, err)
-				continue
+				log.Printf("error checking PublisherToken for publisher %d: %v", publisher.ID, err)
 			}
+		} else {
+			log.Printf("PublisherToken already exists for publisher %d", publisher.ID)
 		}
+	}
+}
 
+func ScrapData() {
+	createPubToken()
+
+	var publishertoken []PublisherToken
+
+	if err := DB.Find(&publishertoken).Error; err != nil {
+		log.Fatalf("failed to fetch publishers: %v", err)
+	}
+
+	for _, publisher := range publishertoken {
 		text, err := fetchPageText(publisher.Url)
 		if err != nil {
 			log.Printf("failed to fetch page text for URL %s: %v", publisher.Url, err)
@@ -116,42 +136,41 @@ func ScrapData() {
 				}
 			}
 
-			if err := DB.Model(&token).Association("Publishers").Append(&publisherToken); err != nil {
-				log.Printf("failed to associate Token with PublisherToken %d: %v", publisherToken.ID, err)
+			if err := DB.Model(&token).Association("Publishers").Append(&publisher); err != nil {
+				log.Printf("failed to associate Token with PublisherToken %d: %v", publisher.PublisherID, err)
 				continue
 			}
-			log.Printf("associated Token with value %s to PublisherToken %d", tokenValue, publisherToken.ID)
+			log.Printf("associated Token with value %s to PublisherToken %d", tokenValue, publisher.PublisherID)
 		}
 	}
 }
 
 func ScrapRepetead() {
-	ticker := time.NewTicker(5 * time.Minute)
-	quit := make(chan struct{})
-	go func() {
-		for {
-			select {
-			case <-ticker.C:
-				log.Println("Starting new scraping cycle...")
-				ScrapData()
-			case <-quit:
-				ticker.Stop()
-				return
+	ticker := time.NewTicker(5 * time.Second)
+	for {
+		go func() {
+			for {
+				select {
+				case <-ticker.C:
+					log.Println("Starting new scraping cycle...")
+					ScrapData()
+				}
 			}
-		}
-	}()
+		}()
+	}
 }
 
 func main() {
+	flag.Parse()
 	err := NewDatabase()
 	if err != nil {
 		log.Fatalf("cannot create database: %v", err)
 	}
 
-	err = DB.AutoMigrate(&Publisher{}, &Token{}, &PublisherToken{})
-	if err != nil {
+	if err := DB.AutoMigrate(&PublisherToken{}, &Token{}, &PublisherTokenAssociation{}); err != nil {
 		log.Fatalf("cannot migrate schema: %v", err)
 	}
 
-	ScrapRepetead()
+	ScrapData()
+
 }

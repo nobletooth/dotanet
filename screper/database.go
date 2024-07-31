@@ -15,7 +15,6 @@ var (
 	dbname   = flag.String("dbname", "dotanet", "Database name")
 	port     = flag.String("dbport", "5432", "Database port")
 	host     = flag.String("dbhost", "95.217.125.139", "Database host") //95.217.125.139
-	scrapper = flag.String("scrapper", ":8085", "Panel port")
 )
 
 func NewDatabase() error {

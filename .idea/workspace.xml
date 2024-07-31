@@ -4,37 +4,16 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f7c5e80e-2e5b-4afa-95ad-b812782c630d" name="Changes" comment="done Ui">
-      <change afterPath="$PROJECT_DIR$/screper/database.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/screper/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/75a561d4-8f0e-4f38-a4cc-62a6bd8ea0c8.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/f5321ab8-029b-4c0a-8fcb-741b1a316761.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/f5321ab8-029b-4c0a-8fcb-741b1a316761.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_7_23_24,_11_56_AM_[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_7_23_24__11_56_AM__Changes_.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_7_23_24__2_55_PM__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_7_23_24__2_55_PM__Changes_.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_7_24_24__10_13_AM__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_7_24_24__10_13_AM__Changes_.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_7_24_24__10_58_AM__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_7_24_24__10_58_AM__Changes_.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_7_27_24__6_26_PM__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_7_27_24__6_26_PM__Changes_.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_7_28_24__9_30_AM__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_7_28_24__9_30_AM__Changes_.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]1/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]2/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]3/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]4/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase__Changes_.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase__Changes_1.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase__Changes_2.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase__Changes_3.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_rebase__Changes_4.xml" beforeDir="false" />
+    <list default="true" id="f7c5e80e-2e5b-4afa-95ad-b812782c630d" name="Changes" comment="finishing ui and finish scrapping">
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_7_23_24,_2_55_PM_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_7_23_24__2_55_PM__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_7_24_24,_10_13_AM_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_7_24_24,_10_58_AM_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_7_24_24__10_13_AM__Changes_.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_7_24_24__10_58_AM__Changes_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.work" beforeDir="false" afterPath="$PROJECT_DIR$/go.work" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.work.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.work.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/panel/advertiser/ad.go" beforeDir="false" afterPath="$PROJECT_DIR$/panel/advertiser/ad.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/panel/database/db.go" beforeDir="false" afterPath="$PROJECT_DIR$/panel/database/db.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/panel/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/panel/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/panel/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/panel/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/panel/templates/advertiser_ads.html" beforeDir="false" afterPath="$PROJECT_DIR$/panel/templates/advertiser_ads.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/screper/database.go" beforeDir="false" afterPath="$PROJECT_DIR$/screper/database.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/screper/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/screper/main.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -88,6 +67,7 @@
     "Go Build.go build main.go (1).executor": "Run",
     "Go Build.go build main.go (2).executor": "Run",
     "Go Build.go build main.go.executor": "Run",
+    "Go Build.go build scrapper.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.go.formatter.settings.were.checked": "true",
     "RunOnceActivity.go.migrated.go.modules.settings": "true",
@@ -112,8 +92,8 @@
       <recent name="C:\Users\Click\dotanet" />
     </key>
   </component>
-  <component name="RunManager" selected="Go Build.go build github.com/nobletooth/dotanet/panel">
-    <configuration name="go build github.com/nobletooth/dotanet/panel" type="GoApplicationRunConfiguration" factoryName="Go Application" nameIsGenerated="true">
+  <component name="RunManager" selected="Go Build.go build scrapper">
+    <configuration name="go build github.com/nobletooth/dotanet/panel" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="dotanet" />
       <working_directory value="$PROJECT_DIR$/panel" />
       <parameters value="--dbuser postgres --dbpassword Ala.13495782 --dbname todo --dbport 5432 --dbhost localHost " />
@@ -123,7 +103,7 @@
       <filePath value="$PROJECT_DIR$/panel/main.go" />
       <method v="2" />
     </configuration>
-    <configuration name="go build scrapper" type="GoApplicationRunConfiguration" factoryName="Go Application" nameIsGenerated="true">
+    <configuration name="go build scrapper" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="dotanet" />
       <working_directory value="$PROJECT_DIR$/screper" />
       <parameters value="--dbuser postgres --dbpassword Ala.13495782 --dbname todo --dbport 5432 --dbhost localHost " />
@@ -137,10 +117,27 @@
       <item itemvalue="Go Build.go build scrapper" />
       <item itemvalue="Go Build.go build github.com/nobletooth/dotanet/panel" />
     </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Go Build.go build scrapper" />
+        <item itemvalue="Go Build.go build github.com/nobletooth/dotanet/panel" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ID_ORDER">
+      <list>
+        <option value="Default.Root" />
+        <option value="Default.Author" />
+        <option value="Default.Date" />
+        <option value="Default.Subject" />
+        <option value="GitHub.CommitStatus" />
+      </list>
+    </option>
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -156,7 +153,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value=".env production added." />
     <MESSAGE value="done Ui" />
-    <option name="LAST_COMMIT_MESSAGE" value="done Ui" />
+    <MESSAGE value="finishing ui and finish scrapping" />
+    <option name="LAST_COMMIT_MESSAGE" value="finishing ui and finish scrapping" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
