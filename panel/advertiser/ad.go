@@ -188,6 +188,11 @@ func ListAllAds(c *gin.Context) {
 			return
 		}
 
+		// Check if the ad status is active
+		if !ad.Status {
+			continue
+		}
+
 		// Advertiser credit check
 		if float64(advertiser.Credit) <= ad.Price {
 			continue
