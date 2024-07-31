@@ -1,21 +1,52 @@
 package main
 
 import (
+	"common"
 	"fmt"
 	"github.com/confluentinc/confluent-kafka-go/kafka"
+	"github.com/goccy/go-json"
 	"gorm.io/gorm"
+	"sync"
 )
 
-var DB *gorm.DB
-var msgChan chan *kafka.Message
+var (
+	DB                 *gorm.DB
+	msgChan            = make(chan common.EventServiceApiModel, 10000)
+	batchMapImpression = make(map[int]int)
+	batchMapClick      = make(map[int]int)
+	mu                 sync.Mutex
+)
 
 func main() {
-	OpenDbConnection()
-	DB.AutoMigrate(&aggrClick{})
-	DB.AutoMigrate(&aggrImpression{})
+	if err := OpenDbConnection(); err != nil {
+		fmt.Printf("open db connection failed, err:%v\n", err)
+	}
+	if err := DB.AutoMigrate(&aggrClick{}); err != nil {
+		fmt.Printf("auto migrate failed, err:%v\n", err)
+	}
+	if err := DB.AutoMigrate(&aggrImpression{}); err != nil {
+		fmt.Printf("auto migrate failed, err:%v\n", err)
+	}
 	// Define Kafka consumer configuration
-	ComsumeMessageKafka()
+	go ComsumeMessageKafka()
+	go handlebatch(msgChan)
 
+}
+
+func handlebatch(ch chan common.EventServiceApiModel) {
+	for {
+		select {
+		case event := <-ch:
+			mu.Lock()
+			if event.IsClicked == true {
+				batchMapClick[event.AdId]++
+			} else {
+				batchMapImpression[event.AdId]++
+			}
+			mu.Unlock()
+		default:
+		}
+	}
 }
 
 func ComsumeMessageKafka() {
@@ -28,13 +59,13 @@ func ComsumeMessageKafka() {
 	// Create a new Kafka consumer
 	consumer, err := kafka.NewConsumer(&config)
 	if err != nil {
-		fmt.Errorf("Error creating consumer: %v", err)
+		fmt.Println("Error creating consumer: %v", err)
 	}
 
 	// Subscribe to the topic
 	err = consumer.Subscribe("clickview", nil)
 	if err != nil {
-		fmt.Errorf("Error subscribing: %v", err)
+		fmt.Println("Error subscribing: %v", err)
 	}
 
 	// Consume messages
@@ -42,6 +73,11 @@ func ComsumeMessageKafka() {
 		msg, err := consumer.ReadMessage(-1)
 		if err == nil {
 			fmt.Printf("Message on %s: %s\n", msg.TopicPartition, string(msg.Value))
+			var infoImpressionClick common.EventServiceApiModel
+			if err := json.Unmarshal(msg.Value, &infoImpressionClick); err != nil {
+				fmt.Printf("Error unmarshalling message: %v", err)
+			}
+			msgChan <- infoImpressionClick
 		} else {
 			// The client will automatically try to recover from all errors.
 			fmt.Printf("Consumer error: %v (%v)\n", err, msg)
