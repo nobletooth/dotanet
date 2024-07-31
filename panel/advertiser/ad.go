@@ -17,15 +17,16 @@ import (
 )
 
 type Ad struct {
-	Id           uint    `gorm:"column:id;primary_key"`
-	Title        string  `gorm:"column:title"`
-	Image        string  `gorm:"column:image"`
-	Price        float64 `gorm:"column:price"`
-	Status       bool    `gorm:"column:status"`
-	Clicks       int     `gorm:"column:clicks"`
-	Impressions  int     `gorm:"column:impressions"`
-	Url          string  `gorm:"column:url"`
-	AdvertiserId uint64  `gorm:"foreignKey:AdvertiserId"`
+	Id           uint     `gorm:"column:id;primary_key"`
+	Title        string   `gorm:"column:title"`
+	Image        string   `gorm:"column:image"`
+	Price        float64  `gorm:"column:price"`
+	Status       bool     `gorm:"column:status"`
+	Clicks       int      `gorm:"column:clicks"`
+	Impressions  int      `gorm:"column:impressions"`
+	Url          string   `gorm:"column:url"`
+	AdvertiserId uint64   `gorm:"foreignKey:AdvertiserId"`
+	AdLimit      *float64 `gorm:"column:ad_limit"`
 }
 
 func CreateAdHandler(c *gin.Context) {
@@ -35,6 +36,13 @@ func CreateAdHandler(c *gin.Context) {
 	ad.Url = c.PostForm("url")
 	ad.AdvertiserId, _ = strconv.ParseUint(c.PostForm("advertiser_id"), 10, 32)
 	ad.Status = true
+
+	if adLimitStr := c.PostForm("ad_limit"); adLimitStr != "" {
+		adLimit, _ := strconv.ParseFloat(adLimitStr, 64)
+		ad.AdLimit = &adLimit
+	} else {
+		ad.AdLimit = nil
+	}
 
 	file, err := c.FormFile("image")
 	if err != nil {
@@ -105,6 +113,13 @@ func UpdateAdHandler(c *gin.Context) {
 	ad.Url = c.PostForm("url")
 	ad.Status = c.PostForm("status") == "on"
 
+	if adLimitStr := c.PostForm("ad_limit"); adLimitStr != "" {
+		adLimit, _ := strconv.ParseFloat(adLimitStr, 64)
+		ad.AdLimit = &adLimit
+	} else {
+		ad.AdLimit = nil
+	}
+
 	if err := database.DB.Save(&ad).Error; err != nil {
 		c.HTML(http.StatusInternalServerError, "advertiser_ads", gin.H{"error": "Failed to update ad"})
 		return
@@ -174,6 +189,17 @@ func ListAllAds(c *gin.Context) {
 		}
 
 		if advertiser.Credit <= 0 {
+			continue
+		}
+
+		var totalClicks int64
+
+		database.DB.Table("clicked_events").
+			Where("ad_id = ?", ad.Id).
+			Count(&totalClicks)
+
+		//Ad limit check
+		if ad.AdLimit != nil && totalClicks >= int64(*ad.AdLimit/ad.Price) {
 			continue
 		}
 
