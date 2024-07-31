@@ -1,12 +1,11 @@
 package main
 
 import (
+	"common"
 	"encoding/json"
 	"log"
 	"net/http"
 	"time"
-
-	"common"
 )
 
 func GetAdsListPeriodically() []common.AdWithMetrics {
@@ -17,12 +16,10 @@ func GetAdsListPeriodically() []common.AdWithMetrics {
 			return
 		}
 		defer response.Body.Close()
-
 		if response.StatusCode == http.StatusOK {
 			var result struct {
 				Ads []common.AdWithMetrics `json:"ads"`
 			}
-
 			err = json.NewDecoder(response.Body).Decode(&result)
 			if err != nil {
 				log.Println("Error decoding response body:", err)
@@ -34,7 +31,6 @@ func GetAdsListPeriodically() []common.AdWithMetrics {
 			log.Println("Failed to fetch ads list, status code:", response.StatusCode)
 		}
 	}
-
 	fetchads()
 	ticker := time.NewTicker(1 * time.Minute)
 	defer ticker.Stop()
@@ -42,7 +38,6 @@ func GetAdsListPeriodically() []common.AdWithMetrics {
 		select {
 		case <-ticker.C:
 			fetchads()
-
 		}
 	}
 }

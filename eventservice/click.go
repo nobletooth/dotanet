@@ -1,21 +1,17 @@
 package main
 
 import (
+	"bytes"
 	"common"
 	"encoding/json"
 	"fmt"
 	"net/http"
 	"strconv"
-	"sync"
 	"time"
 
-	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
-
-var processedClicks = make(map[string]bool)
-var mu sync.Mutex
 
 func clickHandler() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -45,36 +41,58 @@ func clickHandler() gin.HandlerFunc {
 
 		clickId := uuid.MustParse(c.Param("clickid"))
 		impressionId := uuid.MustParse(c.Param("impressionid"))
-		time, err := time.Parse(time.RFC3339, c.Param("time"))
-		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid time"})
+
+		// deduplicate click
+		if !checkDuplicateClick(impressionId) {
+			clickTime := time.Now()
+
+			// click expiration and daskhor
+			eventsMutex.Lock()
+			for i, event := range impressionEvents {
+				if event.ImpressionID == impressionId {
+					timeDiff := clickTime.Sub(event.Time).Seconds()
+					if timeDiff > 2 && timeDiff < 30 {
+						impressionEvents[i].IsClicked = true
+						impressionEvents[i].ClickID = clickId
+						var updateApi = common.EventServiceApiModel{
+							Time:         clickTime,
+							PubId:        pubInt,
+							AdId:         adInt,
+							IsClicked:    true,
+							ClickID:      clickId,
+							ImpressionID: impressionId,
+						}
+						ch <- updateApi
+					} else {
+						c.JSON(http.StatusBadRequest, gin.H{"error": "Click time is not in the valid range"})
+					}
+					break
+				}
+			}
+			eventsMutex.Unlock()
+		} else {
+			c.JSON(http.StatusConflict, gin.H{"error": "Duplicate click"})
 			return
 		}
-		//in this part I want to check  don't double-click
-		key := fmt.Sprintf("%d:%s", advNum32, pub)
-		mu.Lock()
-		if _, found := processedClicks[key]; !found {
-			processedClicks[key] = true
-			mu.Unlock()
-			var updateApi = common.EventServiceApiModel{Time: time,
-				PubId: pubInt, AdId: adInt, IsClicked: true, ClickID: clickId,
-				ImpressionID: impressionId}
-			ch <- updateApi
-		} else {
-			mu.Unlock()
-		}
-
-		//this is the end-of-it
-
 		var ad common.Ad
 		result := Db.First(&ad, advNum32)
 		if result.RowsAffected == 0 {
 			c.JSON(http.StatusNotFound, gin.H{"error": "adNum not found"})
 			return
 		}
-		//c.Redirect(http.StatusOK, "ad.Url")
 		c.JSON(http.StatusOK, gin.H{"AdURL": ad.Url})
 	}
+}
+
+func checkDuplicateClick(impressionId uuid.UUID) bool {
+	eventsMutex.Lock()
+	defer eventsMutex.Unlock()
+	for _, event := range impressionEvents {
+		if event.ImpressionID == impressionId && event.IsClicked {
+			return true
+		}
+	}
+	return false
 }
 
 func panelApiCall(ch chan common.EventServiceApiModel) {
@@ -87,14 +105,17 @@ func panelApiCall(ch chan common.EventServiceApiModel) {
 			if err != nil {
 				fmt.Printf("can not umarshal event %s\n", err)
 			}
-			err = p.Produce(&kafka.Message{
-				TopicPartition: kafka.TopicPartition{Topic: &[]string{"my_topic"}[0], Partition: kafka.PartitionAny},
-				Value:          jsonData,
-			}, nil)
+			fmt.Printf("event %s\n", jsonData)
+			http.Post("/eventservice", "application/json", bytes.NewReader(jsonData))
 
-			if err != nil {
-				fmt.Printf("Error Posting to kafka %s\n", err)
-			}
+			// err = p.Produce(&kafka.Message{
+			// 	TopicPartition: kafka.TopicPartition{Topic: &[]string{"my_topic"}[0], Partition: kafka.PartitionAny},
+			// 	Value:          jsonData,
+			// }, nil)
+
+			// if err != nil {
+			// 	fmt.Printf("Error Posting to kafka %s\n", err)
+			// }
 		default:
 		}
 	}
