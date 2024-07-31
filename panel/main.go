@@ -63,7 +63,8 @@ func eventservice(event common.EventServiceApiModel) error {
 			tx.Rollback()
 			return err
 		}
-		if advertiser.Credit <= 0 { //check credit
+		// Advertiser credit check
+		if float64(advertiser.Credit) < ad.Price {
 			tx.Rollback()
 			return fmt.Errorf("advertiser credit below limit, ads will not be displayed")
 		}

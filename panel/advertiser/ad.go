@@ -188,7 +188,8 @@ func ListAllAds(c *gin.Context) {
 			return
 		}
 
-		if advertiser.Credit <= 0 {
+		// Advertiser credit check
+		if float64(advertiser.Credit) <= ad.Price {
 			continue
 		}
 
