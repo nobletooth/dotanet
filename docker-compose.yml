@@ -36,7 +36,14 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      panel:
+        condition: service_healthy
     container_name: adserver
+    healthcheck:
+      test: [ "CMD-SHELL", "nc -z localhost 8081 || exit 1" ]  # Adjust port as needed
+      interval: 30s
+      timeout: 10s
+      retries: 3
     networks:
       - dotanet-net
 
@@ -58,9 +65,14 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-      panel:
-        condition: service_started
+      publisherwebsite:
+        condition: service_healthy
     container_name: eventservice
+    healthcheck:
+      test: [ "CMD-SHELL", "nc -z localhost 8082 || exit 1" ]  # Adjust port as needed
+      interval: 30s
+      timeout: 10s
+      retries: 3
     networks:
       - dotanet-net
 
@@ -86,6 +98,11 @@ services:
       postgres:
         condition: service_healthy
     container_name: panel
+    healthcheck:
+      test: [ "CMD-SHELL", "nc -z localhost 8085 || exit 1" ]  # Adjust port as needed
+      interval: 30s
+      timeout: 10s
+      retries: 3
     networks:
       - dotanet-net
 
@@ -105,13 +122,14 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-      panel:
-        condition: service_started
-      eventservice:
-        condition: service_started
       adserver:
-        condition: service_started
+        condition: service_healthy
     container_name: publisherwebsite
+    healthcheck:
+      test: [ "CMD-SHELL", "nc -z localhost 8084 || exit 1" ]  # Adjust port as needed
+      interval: 30s
+      timeout: 10s
+      retries: 3
     networks:
       - dotanet-net
 
