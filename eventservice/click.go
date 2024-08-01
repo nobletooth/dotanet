@@ -1,10 +1,10 @@
 package main
 
 import (
-	"bytes"
 	"common"
 	"encoding/json"
 	"fmt"
+	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"net/http"
 	"strconv"
 	"time"

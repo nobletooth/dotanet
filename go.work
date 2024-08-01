@@ -6,5 +6,5 @@ use (
 	adserver
 	panel
 	publisherwebsite
-	Reporter
+	./reporter
 )

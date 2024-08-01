@@ -7,11 +7,12 @@ import (
 	"github.com/goccy/go-json"
 	"gorm.io/gorm"
 	"sync"
+	"time"
 )
 
 var (
 	DB                 *gorm.DB
-	msgChan            = make(chan common.EventServiceApiModel, 10000)
+	msgChan            = make(chan common.EventServiceApiModel, 100)
 	batchMapImpression = make(map[int]int)
 	batchMapClick      = make(map[int]int)
 	mu                 sync.Mutex
@@ -31,6 +32,7 @@ func main() {
 	go ComsumeMessageKafka()
 	go handlebatch(msgChan)
 
+	select {}
 }
 
 func handlebatch(ch chan common.EventServiceApiModel) {
@@ -45,6 +47,7 @@ func handlebatch(ch chan common.EventServiceApiModel) {
 			}
 			mu.Unlock()
 		default:
+			time.Sleep(100 * time.Millisecond)
 		}
 	}
 }
@@ -76,6 +79,7 @@ func ComsumeMessageKafka() {
 			var infoImpressionClick common.EventServiceApiModel
 			if err := json.Unmarshal(msg.Value, &infoImpressionClick); err != nil {
 				fmt.Printf("Error unmarshalling message: %v", err)
+				continue
 			}
 			msgChan <- infoImpressionClick
 		} else {
