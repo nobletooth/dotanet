@@ -183,6 +183,8 @@ services:
       publisherwebsite:
         condition: service_started
     container_name: screper
+    networks:
+      - dotanet-net
 
 volumes:
   pgdata:
