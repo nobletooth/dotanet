@@ -81,32 +81,31 @@ func sendAdResponse(c *gin.Context, ad *common.AdWithMetrics, pubID string) {
 	imageDataurl, err := GetImage(ad.AdInfo.Id)
 
 	if err != nil {
+		fmt.Printf("\nFailed to get image\n")
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get image"})
 		return
 	}
 	publisherID, err := strconv.ParseUint(pubID, 10, 64)
 	if err != nil {
+		fmt.Printf("\nFailed to get publisherID\n")
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid publisher ID"})
 		return
 	}
 
 	var impression = common.ViewedEvent{
-		ID:   uuid.New(),
-		Time: time.Now(),
+		ID: uuid.New(),
 	}
 
 	var click = common.ClickedEvent{
 		ID:           uuid.New(),
-		Time:         time.Now(),
 		ImpressionID: impression.ID,
 	}
 
 	response := gin.H{
 		"Title":          ad.Title,
 		"ImageData":      imageDataurl,
-		"ClicksURL":      fmt.Sprintf("%v/click/%d/%d/%v/%v/%v", *EventServiceUrl, ad.Id, publisherID, click.ID, click.ImpressionID, click.Time),
-		"ImpressionsURL": fmt.Sprintf("%v/impression/%d/%d/%v/%v", *EventServiceUrl, ad.Id, publisherID, impression.ID, impression.Time),
+		"ClicksURL":      fmt.Sprintf("%v/click/%d/%d/%v/%v", *EventServiceUrl, ad.Id, publisherID, click.ID, click.ImpressionID),
+		"ImpressionsURL": fmt.Sprintf("%v/impression/%d/%d/%v", *EventServiceUrl, ad.Id, publisherID, impression.ID),
 	}
-
 	c.JSON(http.StatusOK, response)
 }

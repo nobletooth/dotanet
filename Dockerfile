@@ -1,74 +1,37 @@
 # Builder
 FROM golang:latest AS builder
 WORKDIR /app
-
-COPY go.work go.work.sum ./
-COPY common ./common
-
-COPY ./adserver ./adserver
-COPY ./eventservice ./eventservice
-COPY ./panel ./panel
-
-COPY ./publisherwebsite ./publisherwebsite
-
-COPY ./adserver/go.mod ./adserver/
-COPY ./adserver/go.sum ./adserver/
-
-COPY ./eventservice/go.mod ./eventservice/
-COPY ./eventservice/go.sum ./eventservice/
-
-COPY ./panel/go.mod ./panel/
-COPY ./panel/go.sum ./panel/
-
-COPY ./publisherwebsite/go.mod ./publisherwebsite/
-COPY ./publisherwebsite/go.sum ./publisherwebsite/
-
+COPY . .
 RUN go work sync && go mod download
 
 # Ad Server Stage
-
-FROM builder AS adserver-builder
-WORKDIR /app/adserver
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o adserver .
-
-FROM scratch AS adserver
-COPY --from=adserver-builder /app/adserver/adserver .
+FROM builder AS adserver
+WORKDIR /app
+RUN  go build -o ./adserver/bin ./adserver
 EXPOSE 8081
-CMD ["./adserver"]
+WORKDIR /app/adserver
+CMD ["./adserver/bin"]
 
 # Event Server Stage
-FROM builder AS eventservice-builder
-WORKDIR /app/eventservice
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o eventservice .
-
-FROM scratch AS eventservice
-COPY --from=eventservice-builder /app/eventservice/eventservice .
+FROM builder AS eventservice
+WORKDIR /app
+RUN go build -o ./eventservice/bin ./eventservice
 EXPOSE 8082
-CMD ["./eventservice"]
+WORKDIR /app/eventservice
+CMD ["./eventservice/bin"]
 
 # Panel Stage
-FROM builder AS panel-builder
-WORKDIR /app/panel
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o panel .
-
-
-FROM scratch AS panel
-COPY --from=panel-builder /app/panel/panel .
-COPY --from=panel-builder /app/panel/templates ./templates
-COPY --from=panel-builder /app/panel/publisher ./publisher
+FROM builder AS panel
+WORKDIR /app
+RUN go build -o ./panel/bin ./panel
 EXPOSE 8085
-CMD ["./panel"]
+WORKDIR /app/panel
+CMD ["./panel/bin"]
 
 # Publisher Website Stage
-FROM builder AS publisherwebsite-builder
-WORKDIR /app/publisherwebsite
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o publisherwebsite .
-
-FROM scratch AS publisherwebsite
-WORKDIR /app/publisherwebsite
-COPY --from=publisherwebsite-builder /app/publisherwebsite/publisherwebsite ./publisherwebsite
-COPY --from=publisherwebsite-builder /app/publisherwebsite/html ./html
-
-
+FROM builder AS publisherwebsite
+WORKDIR /app
+RUN go build -o ./publisherwebsite/bin ./publisherwebsite
 EXPOSE 8084
-CMD ["./publisherwebsite"]
+WORKDIR /app/publisherwebsite
+CMD ["./publisherwebsite/bin"]

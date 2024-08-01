@@ -1,16 +1,14 @@
 package advertiser
 
 import (
-	"common"
-	"github.com/gin-gonic/gin"
-  "common"
-	"github.com/nobletooth/dotanet/panel/database"
-	"gorm.io/gorm"
 	"math"
-	_ "math"
 	"net/http"
 	"strconv"
 	"time"
+
+	"github.com/gin-gonic/gin"
+	"github.com/nobletooth/dotanet/panel/database"
+	"gorm.io/gorm"
 )
 
 type Entity struct {
@@ -83,7 +81,7 @@ func ListAdsByAdvertiserHandler(c *gin.Context) {
 		return
 	}
 
-	advertiser, err := FindAdvertiserByID(uint(id))
+	advertiser, err := FindAdvertiserByID(uint64(id))
 	if err != nil {
 		c.HTML(http.StatusInternalServerError, "index", gin.H{"error": err.Error()})
 		return

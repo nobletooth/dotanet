@@ -29,9 +29,7 @@ func main() {
 	}))
 
 	router.LoadHTMLGlob("./html/*")
-
 	router.GET("/:sitename", siteHandler(*PanelUrl))
-
 	router.Run(*PublisherService)
 }
 

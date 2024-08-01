@@ -17,15 +17,16 @@ import (
 )
 
 type Ad struct {
-	Id           uint    `gorm:"column:id;primary_key"`
-	Title        string  `gorm:"column:title"`
-	Image        string  `gorm:"column:image"`
-	Price        float64 `gorm:"column:price"`
-	Status       bool    `gorm:"column:status"`
-	Clicks       int     `gorm:"column:clicks"`
-	Impressions  int     `gorm:"column:impressions"`
-	Url          string  `gorm:"column:url"`
-	AdvertiserId uint64  `gorm:"foreignKey:AdvertiserId"`
+	Id           uint     `gorm:"column:id;primary_key"`
+	Title        string   `gorm:"column:title"`
+	Image        string   `gorm:"column:image"`
+	Price        float64  `gorm:"column:price"`
+	Status       bool     `gorm:"column:status"`
+	Clicks       int      `gorm:"column:clicks"`
+	Impressions  int      `gorm:"column:impressions"`
+	Url          string   `gorm:"column:url"`
+	AdvertiserId uint64   `gorm:"foreignKey:AdvertiserId"`
+	AdLimit      *float64 `gorm:"column:ad_limit"`
 }
 
 func CreateAdHandler(c *gin.Context) {
@@ -35,6 +36,13 @@ func CreateAdHandler(c *gin.Context) {
 	ad.Url = c.PostForm("url")
 	ad.AdvertiserId, _ = strconv.ParseUint(c.PostForm("advertiser_id"), 10, 32)
 	ad.Status = true
+
+	if adLimitStr := c.PostForm("ad_limit"); adLimitStr != "" {
+		adLimit, _ := strconv.ParseFloat(adLimitStr, 64)
+		ad.AdLimit = &adLimit
+	} else {
+		ad.AdLimit = nil
+	}
 
 	file, err := c.FormFile("image")
 	if err != nil {
@@ -68,7 +76,7 @@ func CreateAdForm(c *gin.Context) {
 		return
 	}
 
-	advertiser, err := FindAdvertiserByID(uint(id))
+	advertiser, err := FindAdvertiserByID(uint64(id))
 	if err != nil {
 		c.HTML(http.StatusInternalServerError, "index", gin.H{"error": err.Error()})
 		return
@@ -77,7 +85,7 @@ func CreateAdForm(c *gin.Context) {
 	c.HTML(http.StatusOK, "create_ad", gin.H{"Advertiser": advertiser})
 }
 
-func FindAdvertiserByID(id uint) (Entity, error) {
+func FindAdvertiserByID(id uint64) (Entity, error) {
 	var entity Entity
 	result := database.DB.First(&entity, id)
 	if result.Error != nil {
@@ -104,6 +112,13 @@ func UpdateAdHandler(c *gin.Context) {
 	ad.Price, _ = strconv.ParseFloat(c.PostForm("price"), 64)
 	ad.Url = c.PostForm("url")
 	ad.Status = c.PostForm("status") == "on"
+
+	if adLimitStr := c.PostForm("ad_limit"); adLimitStr != "" {
+		adLimit, _ := strconv.ParseFloat(adLimitStr, 64)
+		ad.AdLimit = &adLimit
+	} else {
+		ad.AdLimit = nil
+	}
 
 	if err := database.DB.Save(&ad).Error; err != nil {
 		c.HTML(http.StatusInternalServerError, "advertiser_ads", gin.H{"error": "Failed to update ad"})
@@ -139,10 +154,12 @@ func LoadAdPictureHandler(c *gin.Context) {
 		return
 	}
 
-	imageFilePath := ad.Image
+	imageFilePath := "./image/" + ad.Image
 
+	fmt.Println("\n\n\n\n\n\n image file path: " + imageFilePath)
 	file, err := os.Open(imageFilePath)
 	if err != nil {
+		fmt.Println("500")
 		c.HTML(http.StatusInternalServerError, "advertiser_ads", gin.H{"error": "Failed to open image file"})
 		return
 	}
@@ -166,6 +183,34 @@ func ListAllAds(c *gin.Context) {
 	var adMetrics []common.AdWithMetrics
 
 	for _, ad := range ads {
+
+		advertiser, err := FindAdvertiserByID(ad.AdvertiserId)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch advertiser data"})
+			return
+		}
+
+		// Check if the ad status is active
+		if !ad.Status {
+			continue
+		}
+
+		// Advertiser credit check
+		if float64(advertiser.Credit) <= ad.Price {
+			continue
+		}
+
+		var totalClicks int64
+
+		database.DB.Table("clicked_events").
+			Where("ad_id = ?", ad.Id).
+			Count(&totalClicks)
+
+		//Ad limit check
+		if ad.AdLimit != nil && totalClicks >= int64(*ad.AdLimit/ad.Price) {
+			continue
+		}
+
 		var clickCount int64
 		var impressionCount int64
 
