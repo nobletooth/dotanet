@@ -173,7 +173,7 @@ services:
       "-dbname", "${DB_NAME}",
       "-dbport", "${DB_PORT}",
       "-dbhost", "${DB_HOST}",
-      "port","${SCRAPER_PORT}" #help me here
+      "-port","${SCRAPER_PORT}"
     ]
     depends_on:
       postgres:
