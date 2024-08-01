@@ -167,7 +167,7 @@ services:
     ports:
       - "8089:8089"
     command: [
-      "./screper",
+      "./bin",
       "-dbuser", "${DB_USER}",
       "-dbpassword", "${DB_PASSWORD}",
       "-dbname", "${DB_NAME}",
