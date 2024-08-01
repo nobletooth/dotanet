@@ -187,7 +187,7 @@ func main() {
 	r := gin.Default()
 
 	r.GET("/health", healthCheck)
-	r.POST("/scrape", triggerScrape)
+	r.GET("/scrape", triggerScrape)
 
 	log.Printf("Starting server on port %s", *scrapport)
 	if err := r.Run(*scrapport); err != nil {
