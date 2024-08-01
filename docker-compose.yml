@@ -1,4 +1,3 @@
-
 services:
   postgres:
     image: postgres:latest
@@ -12,19 +11,20 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
-      interval: 30s
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_USER}" ]
+      interval: 1s
       timeout: 10s
       retries: 5
+    networks:
+      - dotanet-net
 
   adserver:
     build:
       context: .
       dockerfile: Dockerfile
       target: adserver
-    image: adserver
     command: [
-      "./adserver",
+      "./bin",
       "-adserverurl", "${ADSERVER_URL_PROJECT}",
       "-panelurlads", "${PANEL_URL_INSIDE}",
       "-panelurlpic", "${PANEL_URL_OUTSIDE}",
@@ -36,7 +36,16 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      panel:
+        condition: service_healthy
     container_name: adserver
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://localhost:8081/getadinfo/1 || exit 1" ]  # Adjust port as needed
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - dotanet-net
 
   eventservice:
     build:
@@ -45,7 +54,7 @@ services:
       target: eventservice
     image: eventservice
     command: [
-      "./eventservice",
+      "./bin",
       "-dbuser", "${DB_USER}",
       "-dbpassword", "${DB_PASSWORD}",
       "-dbname", "${DB_NAME}",
@@ -56,9 +65,9 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-      panel:
-        condition: service_started
     container_name: eventservice
+    networks:
+      - dotanet-net
 
   panel:
     build:
@@ -69,7 +78,7 @@ services:
     ports:
       - "8085:8085"
     command: [
-      "./panel",
+      "./bin",
       "-dbuser", "${DB_USER}",
       "-dbpassword", "${DB_PASSWORD}",
       "-dbname", "${DB_NAME}",
@@ -82,6 +91,13 @@ services:
       postgres:
         condition: service_healthy
     container_name: panel
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://localhost:8085/ads/list || exit 1" ]  # Adjust port as needed
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - dotanet-net
 
   publisherwebsite:
     build:
@@ -92,20 +108,22 @@ services:
     ports:
       - "8084:8084"
     command: [
-      "./publisherwebsite",
+      "./bin",
       "-publisherservice", "${PUBLISHER_URL_PROJECT}",
       "-panelurl", "${PANEL_URL_OUTSIDE}"
     ]
     depends_on:
       postgres:
         condition: service_healthy
-      panel:
-        condition: service_started
-      eventservice:
-        condition: service_started
       adserver:
-        condition: service_started
+        condition: service_healthy
     container_name: publisherwebsite
+    networks:
+      - dotanet-net
 
 volumes:
   pgdata:
+
+networks:
+  dotanet-net:
+    driver: bridge

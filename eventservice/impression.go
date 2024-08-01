@@ -36,6 +36,7 @@ func impressionHandler() gin.HandlerFunc {
 			IsClicked:    false,
 			ImpressionID: impressionId,
 		}
+
 		eventsMutex.Lock()
 		impressionEvents = append(impressionEvents, updateApi)
 		eventsMutex.Unlock()
