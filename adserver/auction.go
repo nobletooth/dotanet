@@ -31,11 +31,14 @@ func GetAdHandler(c *gin.Context) {
 	var ctrPrices []float64
 	var acceptbleadd []common.AdWithMetrics
 	for _, firstad := range allAds {
-		if slices.Contains(firstad.PreferdPubID, uint(pubidint)) || firstad.PreferdPubID[0] == 0 {
+		if len(firstad.PreferdPubID) == 0 {
+			continue
+		} else if slices.Contains(firstad.PreferdPubID, uint(pubidint)) || firstad.PreferdPubID[0] == 0 {
 			acceptbleadd = append(acceptbleadd, firstad)
 		}
 
 	}
+	fmt.Println(acceptbleadd)
 
 	for _, ad := range acceptbleadd {
 		if ad.ImpressionCount < *NewAdImpressionThreshold {
