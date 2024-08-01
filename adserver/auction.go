@@ -1,13 +1,18 @@
 package main
 
 import (
+	"common"
+	"crypto/aes"
+	"crypto/cipher"
+	crand "crypto/rand"
+	"encoding/base64"
+	"encoding/json"
 	"fmt"
+	"io"
 	"math/rand"
 	"net/http"
 	"strconv"
 	"time"
-
-	"common"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -20,7 +25,6 @@ func GetImage(adID uint) (string, error) {
 
 func GetAdHandler(c *gin.Context) {
 	pubID := c.Param("pubID")
-
 	if len(allAds) == 0 {
 		sendAdResponse(c, nil, pubID)
 		return
@@ -67,7 +71,6 @@ func GetAdHandler(c *gin.Context) {
 	} else {
 		finalAd = nil
 	}
-
 	sendAdResponse(c, finalAd, pubID)
 }
 
@@ -76,7 +79,6 @@ func sendAdResponse(c *gin.Context, ad *common.AdWithMetrics, pubID string) {
 		c.JSON(http.StatusNotFound, gin.H{"error": "No ads available"})
 		return
 	}
-
 	fmt.Printf("adID: %d, ad title: %s, ad price: %f\n", ad.Id, ad.Title, ad.Price)
 	imageDataurl, err := GetImage(ad.AdInfo.Id)
 
@@ -91,19 +93,54 @@ func sendAdResponse(c *gin.Context, ad *common.AdWithMetrics, pubID string) {
 	}
 
 	var impression = common.ViewedEvent{
-		ID: uuid.New(),
+		ID:   uuid.New(),
+		Pid:  int(publisherID),
+		AdId: int(ad.Id),
 	}
 
 	var click = common.ClickedEvent{
 		ID:           uuid.New(),
+		Pid:          int(publisherID),
+		AdId:         int(ad.Id),
 		ImpressionID: impression.ID,
+	}
+
+	// encryption
+	jsonClickParams, _ := json.Marshal(click)
+	encryptedClickParams, err := encrypt(jsonClickParams)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to encrypt click params"})
+		return
+	}
+
+	jsonImpressionParams, _ := json.Marshal(impression)
+	encryptedImpressionParams, err := encrypt(jsonImpressionParams)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to encrypt impression params"})
+		return
 	}
 
 	response := gin.H{
 		"Title":          ad.Title,
 		"ImageData":      imageDataurl,
-		"ClicksURL":      fmt.Sprintf("%v/click/%d/%d/%v/%v", *EventServiceUrl, ad.Id, publisherID, click.ID, click.ImpressionID),
-		"ImpressionsURL": fmt.Sprintf("%v/impression/%d/%d/%v", *EventServiceUrl, ad.Id, publisherID, impression.ID),
+		"ClicksURL":      fmt.Sprintf("%v/click/%v", *EventServiceUrl, encryptedClickParams),
+		"ImpressionsURL": fmt.Sprintf("%v/impression/%v", *EventServiceUrl, encryptedImpressionParams),
 	}
 	c.JSON(http.StatusOK, response)
+}
+
+func encrypt(data []byte) (string, error) {
+	block, err := aes.NewCipher([]byte(*secretKey))
+	if err != nil {
+		return "", err
+	}
+	ciphertext := make([]byte, aes.BlockSize+len(data))
+	iv := ciphertext[:aes.BlockSize]
+	if _, err := io.ReadFull(crand.Reader, iv); err != nil {
+		return "", err
+	}
+	stream := cipher.NewCFBEncrypter(block, iv)
+	stream.XORKeyStream(ciphertext[aes.BlockSize:], data)
+
+	return base64.URLEncoding.EncodeToString(ciphertext), nil
 }

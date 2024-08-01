@@ -2,12 +2,15 @@ package main
 
 import (
 	"common"
+	"crypto/aes"
+	"crypto/cipher"
+	"encoding/base64"
+	"errors"
 	"flag"
 	"fmt"
 	"sync"
 	"time"
 
-	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -15,7 +18,6 @@ import (
 
 var (
 	Db               *gorm.DB
-	p                *kafka.Producer
 	ch               = make(chan common.EventServiceApiModel, 10)
 	impressionEvents []common.EventServiceApiModel
 	eventsMutex      sync.Mutex
@@ -23,11 +25,6 @@ var (
 
 func main() {
 	go panelApiCall(ch)
-	// _, err := kafka.NewProducer(&kafka.ConfigMap{"bootstrap.servers": "localhost:9092"})
-	// if err != nil {
-	// 	fmt.Errorf("error opening kafka connection: %v", err)
-
-	// }
 	flag.Parse()
 	if db, err := OpenDbConnection(); err != nil {
 		fmt.Errorf("error opening db connection: %v", err)
@@ -45,9 +42,29 @@ func main() {
 		MaxAge:           12 * time.Hour,
 	}))
 
-	router.GET("/click/:adv/:pub/:clickid/:impressionid", clickHandler())
-	router.GET("/impression/:adv/:pub/:impressionid", impressionHandler())
+	router.GET("/click/:encryptedClickParams", clickHandler())
+	router.GET("/impression/:encryptedImpressionParams", impressionHandler())
 
 	router.Run(*EventserviceUrl)
 
+}
+
+func decrypt(encodedData string) ([]byte, error) {
+	ciphertext, err := base64.URLEncoding.DecodeString(encodedData)
+	if err != nil {
+		return nil, err
+	}
+	block, err := aes.NewCipher([]byte(*secretKey))
+	if err != nil {
+		return nil, err
+	}
+	if len(ciphertext) < aes.BlockSize {
+		return nil, errors.New("ciphertext too short")
+	}
+	iv := ciphertext[:aes.BlockSize]
+	ciphertext = ciphertext[aes.BlockSize:]
+	stream := cipher.NewCFBDecrypter(block, iv)
+	stream.XORKeyStream(ciphertext, ciphertext)
+
+	return ciphertext, nil
 }

@@ -17,6 +17,7 @@ var (
 	port            = flag.String("dbport", "5432", "Database port")
 	host            = flag.String("dbhost", "95.217.125.139", "Database host")
 	EventserviceUrl = flag.String("eventserviceurl", ":8082", "Panel port")
+	secretKey       = flag.String("secretkey", "X9K3jM5nR7pL2qT8vW1cY6bF4hG0xA9E", "secret key")
 )
 
 func OpenDbConnection() (*gorm.DB, error) {

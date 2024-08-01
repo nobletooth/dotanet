@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -15,32 +14,17 @@ import (
 
 func clickHandler() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var (
-			err    error
-			advNum uint64
-		)
 
-		adv := c.Param("adv") // should decrypt adv and pub.
-		if advNum, err = strconv.ParseUint(adv, 10, 32); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		}
-		advNum32 := uint(advNum)
-
-		pub := c.Param("pub") // should decrypt adv and pub.
-		pubInt, err := strconv.Atoi(pub)
-		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		}
-		adInt, err := strconv.Atoi(adv)
-		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		}
-
-		clickId := uuid.MustParse(c.Param("clickid"))
-		impressionId := uuid.MustParse(c.Param("impressionid"))
+		// decryption
+		encryptedClickParams := c.Param("encryptedClickParams")
+		decryptedClickParams, _ := decrypt(encryptedClickParams)
+		fmt.Println(decryptedClickParams)
+		var clickParams common.ClickedEvent
+		json.Unmarshal(decryptedClickParams, &clickParams)
+		adID := clickParams.AdId
+		pubID := clickParams.Pid
+		clickId := clickParams.ID
+		impressionId := clickParams.ImpressionID
 
 		// deduplicate click
 		if !checkDuplicateClick(impressionId) {
@@ -56,8 +40,8 @@ func clickHandler() gin.HandlerFunc {
 						impressionEvents[i].ClickID = clickId
 						var updateApi = common.EventServiceApiModel{
 							Time:         clickTime,
-							PubId:        pubInt,
-							AdId:         adInt,
+							PubId:        pubID,
+							AdId:         adID,
 							IsClicked:    true,
 							ClickID:      clickId,
 							ImpressionID: impressionId,
@@ -75,7 +59,7 @@ func clickHandler() gin.HandlerFunc {
 			return
 		}
 		var ad common.Ad
-		result := Db.First(&ad, advNum32)
+		result := Db.First(&ad, adID)
 		if result.RowsAffected == 0 {
 			c.JSON(http.StatusNotFound, gin.H{"error": "adNum not found"})
 			return
@@ -107,16 +91,6 @@ func panelApiCall(ch chan common.EventServiceApiModel) {
 			}
 			fmt.Printf("event %s\n", jsonData)
 			http.Post("http://localhost:8085/eventservice", "application/json", bytes.NewReader(jsonData))
-
-
-			// err = p.Produce(&kafka.Message{
-			// 	TopicPartition: kafka.TopicPartition{Topic: &[]string{"my_topic"}[0], Partition: kafka.PartitionAny},
-			// 	Value:          jsonData,
-			// }, nil)
-
-			// if err != nil {
-			// 	fmt.Printf("Error Posting to kafka %s\n", err)
-			// }
 		default:
 		}
 	}

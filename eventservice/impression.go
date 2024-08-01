@@ -2,9 +2,8 @@ package main
 
 import (
 	"common"
-	"fmt"
+	"encoding/json"
 	"net/http"
-	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -13,21 +12,15 @@ import (
 
 func impressionHandler() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		adv := c.Param("adv") // should decrypt adv and pub.
-		pub := c.Param("pub") // should decrypt adv and pub.
-		pubInt, err := strconv.Atoi(pub)
-		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		}
-		adInt, err := strconv.Atoi(adv)
-		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		}
 
-		impressionId := uuid.MustParse(c.Param("impressionid")) //primary key : uuid
-		fmt.Printf("\n\n\nImpressionId: %x\n\n\n", impressionId)
+		// decryption
+		encryptedImpressionParams := c.Param("encryptedImpressionParams")
+		decryptedImpressionParams, _ := decrypt(encryptedImpressionParams)
+		var impressionParams common.ViewedEvent
+		json.Unmarshal(decryptedImpressionParams, &impressionParams)
+		adID := impressionParams.AdId
+		pubID := impressionParams.Pid
+		impressionId := impressionParams.ID
 
 		// deduplicate impression
 		if !checkDuplicateImpression(impressionId) {
@@ -35,8 +28,8 @@ func impressionHandler() gin.HandlerFunc {
 			impressionTime := time.Now()
 			var updateApi = common.EventServiceApiModel{
 				Time:         impressionTime,
-				PubId:        pubInt,
-				AdId:         adInt,
+				PubId:        adID,
+				AdId:         pubID,
 				IsClicked:    false,
 				ImpressionID: impressionId,
 			}

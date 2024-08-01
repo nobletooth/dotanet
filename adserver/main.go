@@ -19,6 +19,7 @@ var (
 	NewAdImpressionThreshold          = flag.Int64("newAdTreshold", 5, "Impression threshold for considering an ad as new")
 	NewAdSelectionProbability         = flag.Float64("newAdProb", 0.25, "Probability of selecting a new ad")
 	ExperiencedAdSelectionProbability = flag.Float64("expAdProb", 0.75, "Probability of selecting a exprienced ad")
+	secretKey                         = flag.String("secretkey", "X9K3jM5nR7pL2qT8vW1cY6bF4hG0xA9E", "secret key")
 )
 var config = cors.Config{
 	AllowAllOrigins:  true,
