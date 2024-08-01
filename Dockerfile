@@ -40,7 +40,7 @@ FROM builder AS screper
 WORKDIR /app
 RUN go build -o ./screper/bin ./screper
 EXPOSE 8088
-WORKDIR /app/publisherwebsite
+WORKDIR /app/screper
 CMD ["./screper/bin"]
 
 FROM builder AS reporter
