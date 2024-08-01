@@ -22,7 +22,7 @@ var (
 )
 
 func main() {
-	producer, err := kafka.NewProducer(&kafka.ConfigMap{"bootstrap.servers": "localhost:9092"})
+	producer, err := kafka.NewProducer(&kafka.ConfigMap{"bootstrap.servers": *kafkaendpoint})
 	if err != nil {
 		fmt.Printf("\nerror opening kafka connection: %v\n", err)
 	}

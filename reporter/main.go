@@ -21,11 +21,12 @@ var (
 
 // set flags
 var (
-	dbuser     = flag.String("dbuser", "user", "Database user")
-	dbpassword = flag.String("dbpassword", "password", "Database password")
-	dbname     = flag.String("dbname", "dotanet", "Database name")
-	dbport     = flag.String("dbport", "5432", "Database port")
-	dbhost     = flag.String("dbhost", "95.217.125.139", "Database host")
+	dbuser        = flag.String("dbuser", "user", "Database user")
+	dbpassword    = flag.String("dbpassword", "password", "Database password")
+	dbname        = flag.String("dbname", "dotanet", "Database name")
+	dbport        = flag.String("dbport", "5432", "Database port")
+	dbhost        = flag.String("dbhost", "95.217.125.139", "Database host")
+	kafkaendpoint = flag.String("kafkaendpoint", "localhost:9092", "kafka end point")
 )
 
 func main() {
@@ -67,7 +68,7 @@ func handlebatch(ch chan common.EventServiceApiModel) {
 
 func ComsumeMessageKafka() {
 	config := kafka.ConfigMap{
-		"bootstrap.servers": "localhost:9092",
+		"bootstrap.servers": *kafkaendpoint,
 		"group.id":          "my-group",
 		"auto.offset.reset": "earliest",
 	}
