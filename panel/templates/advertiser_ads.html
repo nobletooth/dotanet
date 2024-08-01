@@ -30,6 +30,13 @@
                 <label for="status-{{.Id}}">Status:</label>
                 <input type="checkbox" id="status-{{.Id}}" name="status" {{if .Status}}checked{{end}}>
                 <br>
+                <label for="keyword-{{.Id}}">Ad keyword:</label>
+                <input type="text" id="keyword-{{.Id}}" name="keyword" value="{{.Keyword}}">
+                <button type="button" onclick="document.getElementById('keyword-{{.Id}}').value=''">Clear Keyword</button>
+                <label for="status-{{.Id}}">Status:</label>
+                <label for="clear-keyword-button"></label><input type="checkbox" id="clear-keyword-button" name="clear-keyword-button" {{if .Status}}checked{{end}}>
+                <br>
+
                 <button type="submit">Update Ad</button>
             </form>
         </div>
@@ -37,7 +44,7 @@
     {{end}}
 </ul>
 
-<a href="/ads/new?advertiser_id={{.Advertiser.Id}}">Create New Ad</a>
+<a href="/ads/new?advertiser_id={{.Advertiser.ID}}">Create New Ad</a>
 <a href="/">Back to Advertisers</a>
 </body>
 </html>

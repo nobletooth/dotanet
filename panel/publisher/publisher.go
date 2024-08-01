@@ -20,6 +20,7 @@ import (
 type Publisher struct {
 	ID          uint   `gorm:"primaryKey;autoIncrement"`
 	Name        string `gorm:"column:name;unique;not null"`
+	Url         string `gorm:"column:url;unique;not null"`
 	Credit      int    `gorm:"column:credit"`
 	Clicks      int    `gorm:"column:clicks"`
 	Impressions int    `gorm:"column:impressions"`
@@ -57,7 +58,8 @@ func NewPublisherForm(c *gin.Context) {
 
 func CreatePublisherHandler(c *gin.Context) {
 	name := c.PostForm("name")
-	publisher := Publisher{Name: name, Credit: 0}
+	url := c.PostForm("url")
+	publisher := Publisher{Name: name, Credit: 0, Url: url}
 	if err := database.DB.Create(&publisher).Error; err != nil {
 		c.HTML(http.StatusInternalServerError, "index", gin.H{"error": "Failed to create publisher"})
 		return

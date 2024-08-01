@@ -2,7 +2,11 @@ module github.com/nobletooth/dotanet/panel
 
 go 1.22.5
 
-require gorm.io/gorm v1.25.11
+require (
+	github.com/lib/pq v1.10.9
+	github.com/stretchr/testify v1.9.0
+	gorm.io/gorm v1.25.11
+)
 
 require (
 	github.com/bytedance/sonic v1.11.6 // indirect

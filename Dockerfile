@@ -35,3 +35,10 @@ RUN go build -o ./publisherwebsite/bin ./publisherwebsite
 EXPOSE 8084
 WORKDIR /app/publisherwebsite
 CMD ["./publisherwebsite/bin"]
+
+FROM builder AS screper
+WORKDIR /app
+RUN go build -o ./screper/bin ./screper
+EXPOSE 8088
+WORKDIR /app/publisherwebsite
+CMD ["./screper/bin"]

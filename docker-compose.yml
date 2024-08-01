@@ -121,6 +121,34 @@ services:
     networks:
       - dotanet-net
 
+
+  screper:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: screper
+    image: screper
+    ports:
+      - "8089:8089"
+    command: [
+      "./screper",
+      "-dbuser", "${DB_USER}",
+      "-dbpassword", "${DB_PASSWORD}",
+      "-dbname", "${DB_NAME}",
+      "-dbport", "${DB_PORT}",
+      "-dbhost", "${DB_HOST}",
+      "port","${SCRAPER_PORT}" #help me here
+    ]
+    depends_on:
+      postgres:
+        condition: service_healthy
+      panel:
+        condition: service_started
+
+      publisherwebsite:
+        condition: service_started
+    container_name: screper
+
 volumes:
   pgdata:
 
