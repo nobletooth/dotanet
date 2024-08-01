@@ -25,24 +25,43 @@ func impressionHandler() gin.HandlerFunc {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
+
 		impressionId := uuid.MustParse(c.Param("impressionid")) //primary key : uuid
 		fmt.Printf("\n\n\nImpressionId: %x\n\n\n", impressionId)
 
-		impressionTime := time.Now()
-		var updateApi = common.EventServiceApiModel{
-			Time:         impressionTime,
-			PubId:        pubInt,
-			AdId:         adInt,
-			IsClicked:    false,
-			ImpressionID: impressionId,
-		}
+		// deduplicate impression
+		if !checkDuplicateImpression(impressionId) {
 
-		eventsMutex.Lock()
-		impressionEvents = append(impressionEvents, updateApi)
-		eventsMutex.Unlock()
-		ch <- updateApi
+			impressionTime := time.Now()
+			var updateApi = common.EventServiceApiModel{
+				Time:         impressionTime,
+				PubId:        pubInt,
+				AdId:         adInt,
+				IsClicked:    false,
+				ImpressionID: impressionId,
+			}
+
+			eventsMutex.Lock()
+			impressionEvents = append(impressionEvents, updateApi)
+			eventsMutex.Unlock()
+			ch <- updateApi
+		} else {
+			c.JSON(http.StatusConflict, gin.H{"error": "Duplicate impression"})
+			return
+		}
 		c.String(http.StatusOK, "its ok!")
 	}
+}
+
+func checkDuplicateImpression(impressionId uuid.UUID) bool {
+	eventsMutex.Lock()
+	defer eventsMutex.Unlock()
+	for _, event := range impressionEvents {
+		if event.ImpressionID == impressionId && event.IsClicked {
+			return true
+		}
+	}
+	return false
 }
 
 func cleanOldEvents() {
