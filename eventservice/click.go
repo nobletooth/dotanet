@@ -106,7 +106,7 @@ func panelApiCall(ch chan common.EventServiceApiModel) {
 				fmt.Printf("can not umarshal event %s\n", err)
 			}
 			fmt.Printf("event %s\n", jsonData)
-			http.Post("/eventservice", "application/json", bytes.NewReader(jsonData))
+			http.Post("http://localhost:8085/eventservice", "application/json", bytes.NewReader(jsonData))
 
 			// err = p.Produce(&kafka.Message{
 			// 	TopicPartition: kafka.TopicPartition{Topic: &[]string{"my_topic"}[0], Partition: kafka.PartitionAny},
