@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"github.com/lib/pq"
 	"github.com/nobletooth/dotanet/panel/database"
-	_ "github.com/nobletooth/dotanet/panel/publisher"
 	"log"
 	"net/http"
 	"os"
@@ -244,6 +243,7 @@ func ListAllAds(c *gin.Context) {
 			PreferdPubID:    pubids,
 		})
 	}
+	fmt.Printf("%v", adMetrics[0].PreferdPubID)
 
 	c.JSON(http.StatusOK, gin.H{"ads": adMetrics})
 }
