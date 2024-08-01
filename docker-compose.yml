@@ -49,8 +49,6 @@ services:
       context: .
       dockerfile: Dockerfile
       target: eventservice
-    ports:
-      - "8085:8085"
     command: [
       "./bin",
       "-dbuser", "${DB_USER}",
