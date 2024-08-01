@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="ALL" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="f7c5e80e-2e5b-4afa-95ad-b812782c630d" name="Changes" comment="docer-compose.yml">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/screper/database.go" beforeDir="false" afterPath="$PROJECT_DIR$/screper/database.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/screper/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/screper/main.go" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Dockerfile" />
+        <option value="Go File" />
+      </list>
+    </option>
+  </component>
+  <component name="GOROOT" url="file://$PROJECT_DIR$/../../../Program Files/Go" />
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;amirata051&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;git@github.com:nobletooth/dotanet.git&quot;,
+    &quot;accountId&quot;: &quot;65f488ab-0219-46c2-b42f-b32e468a9226&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8
+}</component>
+  <component name="ProjectId" id="2jtEgKF1dgKvTNaCQkzVoTaEt5d" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultGoTemplateProperty": "Go File",
+    "Go Build.go build github.com/nobletooth/dotanet/adserver.executor": "Debug",
+    "Go Build.go build github.com/nobletooth/dotanet/panel.executor": "Run",
+    "Go Build.go build github.com/nobletooth/dotanet/publisherwebsite.executor": "Run",
+    "Go Build.go build main.go (1).executor": "Run",
+    "Go Build.go build main.go (2).executor": "Run",
+    "Go Build.go build main.go.executor": "Run",
+    "Go Build.go build scrapper.executor": "Debug",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.go.formatter.settings.were.checked": "true",
+    "RunOnceActivity.go.migrated.go.modules.settings": "true",
+    "RunOnceActivity.go.modules.automatic.dependencies.download": "true",
+    "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
+    "git-widget-placeholder": "optimization-search",
+    "go.import.settings.migrated": "true",
+    "go.sdk.automatically.set": "true",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "C:/Users/Click",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "http.proxy"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Click\dotanet" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Go Build.go build scrapper">
+    <configuration name="go build github.com/nobletooth/dotanet/adserver" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="dotanet" />
+      <working_directory value="$PROJECT_DIR$/adserver" />
+      <kind value="PACKAGE" />
+      <package value="github.com/nobletooth/dotanet/adserver" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$/adserver/main.go" />
+      <method v="2" />
+    </configuration>
+    <configuration name="go build github.com/nobletooth/dotanet/panel" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="dotanet" />
+      <working_directory value="$PROJECT_DIR$/panel" />
+      <parameters value="--dbuser postgres --dbpassword Ala.13495782 --dbname todo --dbport 5432 --dbhost localHost " />
+      <kind value="PACKAGE" />
+      <package value="github.com/nobletooth/dotanet/panel" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$/panel/main.go" />
+      <method v="2" />
+    </configuration>
+    <configuration name="go build github.com/nobletooth/dotanet/publisherwebsite" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="dotanet" />
+      <working_directory value="$PROJECT_DIR$/publisherwebsite" />
+      <kind value="PACKAGE" />
+      <package value="github.com/nobletooth/dotanet/publisherwebsite" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$/publisherwebsite/main.go" />
+      <method v="2" />
+    </configuration>
+    <configuration name="go build scrapper" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="dotanet" />
+      <working_directory value="$PROJECT_DIR$/screper" />
+      <parameters value="--dbuser postgres --dbpassword Ala.13495782 --dbname todo --dbport 5432 --dbhost localHost " />
+      <kind value="PACKAGE" />
+      <package value="scrapper" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$/screper/main.go" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Go Build.go build github.com/nobletooth/dotanet/adserver" />
+      <item itemvalue="Go Build.go build github.com/nobletooth/dotanet/publisherwebsite" />
+      <item itemvalue="Go Build.go build scrapper" />
+      <item itemvalue="Go Build.go build github.com/nobletooth/dotanet/panel" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Go Build.go build scrapper" />
+        <item itemvalue="Go Build.go build github.com/nobletooth/dotanet/adserver" />
+        <item itemvalue="Go Build.go build github.com/nobletooth/dotanet/panel" />
+        <item itemvalue="Go Build.go build github.com/nobletooth/dotanet/publisherwebsite" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ID_ORDER">
+      <list>
+        <option value="Default.Root" />
+        <option value="Default.Author" />
+        <option value="Default.Date" />
+        <option value="Default.Subject" />
+        <option value="GitHub.CommitStatus" />
+      </list>
+    </option>
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value=".env production added." />
+    <MESSAGE value="done Ui" />
+    <MESSAGE value="finishing ui and finish scrapping" />
+    <MESSAGE value="done the scrapper part some how" />
+    <MESSAGE value="done now start testing" />
+    <MESSAGE value="done the wrapper with testing" />
+    <MESSAGE value="done the screpper with testing doing the final test later" />
+    <MESSAGE value="docker image for scrapper" />
+    <MESSAGE value="docer-compose.yml" />
+    <option name="LAST_COMMIT_MESSAGE" value="docer-compose.yml" />
+  </component>
+  <component name="VgoProject">
+    <settings-migrated>true</settings-migrated>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/panel/advertiser/ad.go</url>
+          <line>214</line>
+          <option name="timeStamp" value="64" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>

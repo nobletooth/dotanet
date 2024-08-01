@@ -1,16 +1,18 @@
 package main
 
 import (
+	"common"
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"math/rand"
 	"net/http"
+	"slices"
+	_ "slices"
 	"strconv"
 	"time"
 
 	"common"
-
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 )
 
 func GetImage(adID uint) (string, error) {
@@ -25,12 +27,23 @@ func GetAdHandler(c *gin.Context) {
 		sendAdResponse(c, nil, pubID)
 		return
 	}
+	pubidint, _ := strconv.Atoi(pubID)
 
 	var newAds []common.AdWithMetrics
 	var experiencedAds []common.AdWithMetrics
 	var ctrPrices []float64
+	var acceptbleadd []common.AdWithMetrics
+	for _, firstad := range allAds {
+		if len(firstad.PreferdPubID) == 0 {
+			continue
+		} else if slices.Contains(firstad.PreferdPubID, uint(pubidint)) || firstad.PreferdPubID[0] == 0 {
+			acceptbleadd = append(acceptbleadd, firstad)
+		}
 
-	for _, ad := range allAds {
+	}
+	fmt.Println(acceptbleadd)
+
+	for _, ad := range acceptbleadd {
 		if ad.ImpressionCount < *NewAdImpressionThreshold {
 			newAds = append(newAds, ad)
 		} else {

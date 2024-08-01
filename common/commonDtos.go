@@ -43,8 +43,9 @@ type EventServiceApiModel struct {
 
 type AdWithMetrics struct {
 	AdInfo
-	ClickCount      int64 `json:"clickCount"`
-	ImpressionCount int64 `json:"impressionCount"`
+	ClickCount      int64  `json:"clickCount"`
+	ImpressionCount int64  `json:"impressionCount"`
+	PreferdPubID    []uint `json:"preferd-pub-id"`
 }
 
 type Ad struct {

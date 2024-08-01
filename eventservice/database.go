@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"fmt"
-
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
