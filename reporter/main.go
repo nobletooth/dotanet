@@ -2,6 +2,7 @@ package main
 
 import (
 	"common"
+	"flag"
 	"fmt"
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/goccy/go-json"
@@ -18,7 +19,17 @@ var (
 	mu                 sync.Mutex
 )
 
+// set flags
+var (
+	dbuser     = flag.String("dbuser", "user", "Database user")
+	dbpassword = flag.String("dbpassword", "password", "Database password")
+	dbname     = flag.String("dbname", "dotanet", "Database name")
+	dbport     = flag.String("dbport", "5432", "Database port")
+	dbhost     = flag.String("dbhost", "95.217.125.139", "Database host")
+)
+
 func main() {
+	flag.Parse()
 	if err := OpenDbConnection(); err != nil {
 		fmt.Printf("open db connection failed, err:%v\n", err)
 	}
@@ -31,6 +42,8 @@ func main() {
 	// Define Kafka consumer configuration
 	go ComsumeMessageKafka()
 	go handlebatch(msgChan)
+	go addAggrImpressionDb()
+	go addAggrClickDb()
 
 	select {}
 }

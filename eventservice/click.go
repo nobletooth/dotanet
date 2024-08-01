@@ -95,7 +95,7 @@ func checkDuplicateClick(impressionId uuid.UUID) bool {
 	return false
 }
 
-func panelApiCall(ch chan common.EventServiceApiModel) {
+func panelApiCall(ch chan common.EventServiceApiModel, producer *kafka.Producer) {
 	for {
 		select {
 		case event := <-ch:
@@ -105,7 +105,7 @@ func panelApiCall(ch chan common.EventServiceApiModel) {
 			if err != nil {
 				fmt.Printf("can not umarshal event %s\n", err)
 			}
-			err = p.Produce(&kafka.Message{
+			err = producer.Produce(&kafka.Message{
 				TopicPartition: kafka.TopicPartition{Topic: &[]string{"clickview"}[0], Partition: kafka.PartitionAny},
 				Value:          jsonData,
 			}, nil)
