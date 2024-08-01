@@ -124,11 +124,15 @@ services:
       "-dbname", "${DB_NAME}",
       "-dbport", "${DB_PORT}",
       "-dbhost", "${DB_HOST}",
+      "port","${SCRAPER_PORT}" #help me here
     ]
     depends_on:
       postgres:
         condition: service_healthy
       panel:
+        condition: service_started
+
+      publisherwebsite:
         condition: service_started
     container_name: screper
 

@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
+	"github.com/gin-gonic/gin"
 	"github.com/liuzl/tokenizer"
 	"gorm.io/gorm"
 	"log"
@@ -142,18 +143,27 @@ func ScrapData() {
 	}
 }
 
+func healthCheck(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{
+		"status": "healthy",
+	})
+}
+
+func triggerScrape(c *gin.Context) {
+	go ScrapData()
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Scraping started",
+	})
+}
+
 func ScrapRepetead() {
 	ticker := time.NewTicker(5 * time.Minute)
 	for {
-		go func() {
-			for {
-				select {
-				case <-ticker.C:
-					log.Println("Starting new scraping cycle...")
-					ScrapData()
-				}
-			}
-		}()
+		select {
+		case <-ticker.C:
+			log.Println("Starting new scraping cycle...")
+			ScrapData()
+		}
 	}
 }
 
@@ -172,6 +182,15 @@ func main() {
 		log.Fatalf("cannot migrate schema: %v", err)
 	}
 
-	ScrapRepetead()
+	go ScrapRepetead()
 
+	r := gin.Default()
+
+	r.GET("/health", healthCheck)
+	r.POST("/scrape", triggerScrape)
+
+	log.Printf("Starting server on port %s", *scrapport)
+	if err := r.Run(*scrapport); err != nil {
+		log.Fatalf("Failed to start server: %v", err)
+	}
 }
