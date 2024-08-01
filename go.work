@@ -6,5 +6,6 @@ use (
 	adserver
 	panel
 	publisherwebsite
+	./reporter
 	./screper
 )

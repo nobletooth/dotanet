@@ -16,6 +16,7 @@ var (
 	port            = flag.String("dbport", "5432", "Database port")
 	host            = flag.String("dbhost", "95.217.125.139", "Database host")
 	EventserviceUrl = flag.String("eventserviceurl", ":8082", "Panel port")
+	kafkaendpoint   = flag.String("kafkaendpoint", "localhost:9092", "kafka end point")
 )
 
 func OpenDbConnection() (*gorm.DB, error) {
