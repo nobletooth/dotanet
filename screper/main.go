@@ -14,10 +14,9 @@ import (
 )
 
 type PublisherToken struct {
-	ID          uint     `gorm:"primaryKey"`
-	PublisherID uint     `gorm:"column:publisher_id;index"`
-	Name        string   `gorm:"column:name;not null"`
-	Url         string   `gorm:"column:url;unique;not null"`
+	ID          uint     `gorm:"primaryKey;autoIncrement"`
+	PublisherID uint     `gorm:"index"`
+	Url         string   `gorm:"unique;not null"`
 	Tokens      []*Token `gorm:"many2many:publisher_token_associations;"`
 }
 
@@ -31,14 +30,13 @@ type Publisher struct {
 }
 
 type Token struct {
-	ID              uint              `gorm:"primaryKey"`
-	Value           string            `gorm:"unique;not null"`
+	Value           string            `gorm:"primaryKey;index;unique;not null"`
 	PublisherTokens []*PublisherToken `gorm:"many2many:publisher_token_associations;"`
 }
 
 type PublisherTokenAssociation struct {
-	PublisherTokenID uint `gorm:"primaryKey"`
-	TokenID          uint `gorm:"primaryKey"`
+	PublisherTokenID uint   `gorm:"primaryKey"`
+	TokenValue       string `gorm:"primaryKey"`
 }
 
 func htmlTokenizer(htmlText string) []string {
@@ -83,7 +81,6 @@ func createPubToken() {
 			if errors.Is(err, gorm.ErrRecordNotFound) {
 				publisherToken := PublisherToken{
 					PublisherID: publisher.ID,
-					Name:        publisher.Name,
 					Url:         publisher.Url,
 				}
 				if err := DB.Create(&publisherToken).Error; err != nil {
@@ -140,7 +137,7 @@ func ScrapData() {
 				log.Printf("failed to associate Token with PublisherToken %d: %v", publisher.PublisherID, err)
 				continue
 			}
-			log.Printf("associated Token with value %s to PublisherToken %d", tokenValue, publisher.ID)
+			log.Printf("associated Token with value %s to PublisherToken %d", tokenValue, publisher.PublisherID)
 		}
 	}
 }
@@ -167,7 +164,11 @@ func main() {
 		log.Fatalf("cannot create database: %v", err)
 	}
 
-	if err := DB.AutoMigrate(&PublisherToken{}, &Token{}, &PublisherTokenAssociation{}); err != nil {
+	if DB == nil {
+		log.Fatal("Database connection is nil")
+	}
+
+	if err := DB.AutoMigrate(&Token{}, &PublisherToken{}, &PublisherTokenAssociation{}); err != nil {
 		log.Fatalf("cannot migrate schema: %v", err)
 	}
 

@@ -1,14 +1,15 @@
 package main
 
 import (
+	"common"
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"math/rand"
 	"net/http"
+	"slices"
+	_ "slices"
 	"strconv"
 	"time"
-
-	"common"
-	"github.com/gin-gonic/gin"
 )
 
 func GetImage(adID uint) (string, error) {
@@ -23,12 +24,20 @@ func GetAdHandler(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"error": "No ads available"})
 		return
 	}
+	pubidint, _ := strconv.Atoi(pubID)
 
 	var newAds []common.AdWithMetrics
 	var experiencedAds []common.AdWithMetrics
 	var ctrPrices []float64
+	var acceptbleadd []common.AdWithMetrics
+	for _, firstad := range allAds {
+		if slices.Contains(firstad.PreferdPubID, uint(pubidint)) || firstad.PreferdPubID[0] == 0 {
+			acceptbleadd = append(acceptbleadd, firstad)
+		}
 
-	for _, ad := range allAds {
+	}
+
+	for _, ad := range acceptbleadd {
 		if ad.ImpressionCount < *NewAdImpressionThreshold {
 			newAds = append(newAds, ad)
 		} else {
@@ -84,7 +93,6 @@ func sendAdResponse(c *gin.Context, ad common.AdWithMetrics, pubID string) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid publisher ID"})
 		return
 	}
-
 	response := gin.H{
 		"Title":          ad.Title,
 		"ImageData":      imageDataurl,

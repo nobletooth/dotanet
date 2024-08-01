@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"github.com/lib/pq"
 	"github.com/nobletooth/dotanet/panel/database"
+	_ "github.com/nobletooth/dotanet/panel/publisher"
+	"log"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -172,6 +174,27 @@ func LoadAdPictureHandler(c *gin.Context) {
 	c.File(imageFilePath)
 }
 
+func GetPublisherIDsWithAllKeywords(keywords []string) ([]uint, error) {
+	var publisherIDs []uint
+
+	err := database.DB.Table("publishers").
+		Select("publishers.id").
+		Distinct().
+		Joins("JOIN publisher_tokens ON publishers.id = publisher_tokens.publisher_id").
+		Joins("JOIN publisher_token_associations ON publisher_tokens.id = publisher_token_associations.publisher_token_id").
+		Joins("JOIN tokens ON publisher_token_associations.token_value = tokens.value").
+		Where("tokens.value IN ?", keywords).
+		Group("publishers.id").
+		Having("COUNT(DISTINCT tokens.value) = ?", len(keywords)).
+		Pluck("publishers.id", &publisherIDs).
+		Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	return publisherIDs, nil
+}
 func ListAllAds(c *gin.Context) {
 	var ads []Ad
 	result := database.DB.Find(&ads)
@@ -204,11 +227,21 @@ func ListAllAds(c *gin.Context) {
 			Status:       ad.Status,
 			Title:        ad.Title,
 		}
-
+		var pubids []uint
+		if ad.Keyword == nil {
+			pubids = []uint{0}
+		} else {
+			var err error
+			pubids, err = GetPublisherIDsWithAllKeywords(ad.Keyword)
+			if err != nil {
+				log.Println(err)
+			}
+		}
 		adMetrics = append(adMetrics, common.AdWithMetrics{
 			AdInfo:          adinfo,
 			ClickCount:      clickCount,
 			ImpressionCount: impressionCount,
+			PreferdPubID:    pubids,
 		})
 	}
 
