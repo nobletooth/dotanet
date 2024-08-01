@@ -23,6 +23,8 @@ services:
       context: .
       dockerfile: Dockerfile
       target: adserver
+    ports:
+      - "8081:8081"
     command: [
       "./bin",
       "-adserverurl", "${ADSERVER_URL_PROJECT}",
@@ -47,7 +49,8 @@ services:
       context: .
       dockerfile: Dockerfile
       target: eventservice
-    image: eventservice
+    ports:
+      - "8085:8085"
     command: [
       "./bin",
       "-dbuser", "${DB_USER}",
