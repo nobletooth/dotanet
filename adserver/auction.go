@@ -4,15 +4,13 @@ import (
 	"common"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 	"math/rand"
 	"net/http"
 	"slices"
 	_ "slices"
 	"strconv"
 	"time"
-
-	"common"
-	"github.com/gin-gonic/gin"
 )
 
 func GetImage(adID uint) (string, error) {

@@ -1,4 +1,22 @@
 services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.2.1
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+  kafka:
+    image: confluentinc/cp-kafka:7.2.1
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
   postgres:
     image: postgres:latest
     container_name: postgres
@@ -63,7 +81,30 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+
     container_name: eventservice
+    networks:
+      - dotanet-net
+
+  reporter:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: reporter
+    command: [
+      "./bin",
+      "-dbuser", "${DB_USER}",
+      "-dbpassword", "${DB_PASSWORD}",
+      "-dbname", "${DB_NAME}",
+      "-dbport", "${DB_PORT}",
+      "-dbhost", "${DB_HOST}",
+    ]
+    depends_on:
+      postgres:
+        condition: service_healthy
+      eventservice:
+        condition: service_started
+    container_name: reporter
     networks:
       - dotanet-net
 
@@ -117,7 +158,6 @@ services:
     networks:
       - dotanet-net
 
-
   screper:
     build:
       context: .
@@ -140,7 +180,6 @@ services:
         condition: service_healthy
       panel:
         condition: service_started
-
       publisherwebsite:
         condition: service_started
     container_name: screper
