@@ -2,6 +2,7 @@ package main
 
 import (
 	"common"
+	"fmt"
 	"net/http"
 	"strconv"
 	"time"
@@ -24,7 +25,9 @@ func impressionHandler() gin.HandlerFunc {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
-		impressionId := uuid.MustParse(c.Param("impressionid"))
+		impressionId := uuid.MustParse(c.Param("impressionid")) //primary key : uuid
+		fmt.Printf("\n\n\nImpressionId: %x\n\n\n", impressionId)
+
 		impressionTime := time.Now()
 		var updateApi = common.EventServiceApiModel{
 			Time:         impressionTime,
@@ -33,6 +36,7 @@ func impressionHandler() gin.HandlerFunc {
 			IsClicked:    false,
 			ImpressionID: impressionId,
 		}
+
 		eventsMutex.Lock()
 		impressionEvents = append(impressionEvents, updateApi)
 		eventsMutex.Unlock()

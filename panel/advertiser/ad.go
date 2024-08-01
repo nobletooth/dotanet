@@ -154,10 +154,12 @@ func LoadAdPictureHandler(c *gin.Context) {
 		return
 	}
 
-	imageFilePath := ad.Image
+	imageFilePath := "./image/" + ad.Image
 
+	fmt.Println("\n\n\n\n\n\n image file path: " + imageFilePath)
 	file, err := os.Open(imageFilePath)
 	if err != nil {
+		fmt.Println("500")
 		c.HTML(http.StatusInternalServerError, "advertiser_ads", gin.H{"error": "Failed to open image file"})
 		return
 	}
@@ -188,7 +190,13 @@ func ListAllAds(c *gin.Context) {
 			return
 		}
 
-		if advertiser.Credit <= 0 {
+		// Check if the ad status is active
+		if !ad.Status {
+			continue
+		}
+
+		// Advertiser credit check
+		if float64(advertiser.Credit) <= ad.Price {
 			continue
 		}
 
