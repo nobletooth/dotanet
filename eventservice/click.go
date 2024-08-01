@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"common"
 	"encoding/json"
 	"fmt"
@@ -105,6 +106,16 @@ func panelApiCall(ch chan common.EventServiceApiModel, producer *kafka.Producer)
 			if err != nil {
 				fmt.Printf("can not umarshal event %s\n", err)
 			}
+
+			resp, err := http.Post("http://localhost:8085/eventservice", "application/json", bytes.NewBuffer(jsonData))
+			if err != nil {
+				fmt.Errorf("Error making POST request: %s\n", err)
+			}
+			//defer resp.Body.Close()
+			if resp.StatusCode != http.StatusOK {
+				fmt.Printf("Received non-OK response status: %s\n", resp.Status)
+			}
+
 			err = producer.Produce(&kafka.Message{
 				TopicPartition: kafka.TopicPartition{Topic: &[]string{"clickview"}[0], Partition: kafka.PartitionAny},
 				Value:          jsonData,
