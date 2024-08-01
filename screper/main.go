@@ -143,7 +143,7 @@ func ScrapData() {
 }
 
 func ScrapRepetead() {
-	ticker := time.NewTicker(5 * time.Second)
+	ticker := time.NewTicker(5 * time.Minute)
 	for {
 		go func() {
 			for {
@@ -172,6 +172,6 @@ func main() {
 		log.Fatalf("cannot migrate schema: %v", err)
 	}
 
-	ScrapData()
+	ScrapRepetead()
 
 }
