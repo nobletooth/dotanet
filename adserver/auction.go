@@ -81,11 +81,13 @@ func sendAdResponse(c *gin.Context, ad *common.AdWithMetrics, pubID string) {
 	imageDataurl, err := GetImage(ad.AdInfo.Id)
 
 	if err != nil {
+		fmt.Printf("\nFailed to get image\n")
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get image"})
 		return
 	}
 	publisherID, err := strconv.ParseUint(pubID, 10, 64)
 	if err != nil {
+		fmt.Printf("\nFailed to get publisherID\n")
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid publisher ID"})
 		return
 	}
