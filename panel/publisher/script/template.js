@@ -58,8 +58,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     var observer = new IntersectionObserver(function(entries) {
         entries.forEach(entry => {
-            if (entry.isIntersecting && !adSeen) {
-                adSeen = true;
+            if (entry.isIntersecting) {
                 callAdSeenApi();
             }
         });
