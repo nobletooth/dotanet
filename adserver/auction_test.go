@@ -178,5 +178,24 @@ func TestGetAdHandler(t *testing.T) {
 			expectedCode:  http.StatusOK,
 			expectedTitle: "Ad 500",
 		},
+		{
+			name: "Large number of new ads",
+			allAds: func() []common.AdWithMetrics {
+				ads := make([]common.AdWithMetrics, 1000)
+				for i := 0; i < 1000; i++ {
+					ads[i] = common.AdWithMetrics{
+						AdInfo:          common.AdInfo{Id: uint(i), Title: "Ad " + strconv.Itoa(i), Price: 1},
+						ImpressionCount: 4,
+						ClickCount:      1,
+					}
+				}
+				return ads
+			}(),
+			randFloat:     0.9999,
+			randInt:       500,
+			expectedCode:  http.StatusOK,
+			expectedTitle: "Ad 500",
+		},
 	}
+
 }
