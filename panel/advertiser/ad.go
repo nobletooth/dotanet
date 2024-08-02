@@ -178,7 +178,7 @@ func LoadAdPictureHandler(c *gin.Context) {
 		return
 	}
 
-	imageFilePath := "./image/" + ad.Image
+	imageFilePath := ad.Image
 
 	fmt.Println("\n image file path: " + imageFilePath)
 	file, err := os.Open(imageFilePath) //TODO
