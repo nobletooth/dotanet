@@ -23,23 +23,23 @@ services:
         KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       networks:
         - dotanet-net
-      command:  >
-        sh -c " 
-        # Wait for Zookeeper to start
-        while ! nc -z zookeeper 2181; do sleep 1; done;
-
-        # Start Kafka
-        /etc/confluent/docker/run &
-
-        # Wait for Kafka to be ready
-        while ! nc -z localhost 9092; do sleep 1; done;
-
-        # Create the topic
-        kafka-topics --create --topic clickview --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1;
-
-        # Keep the container running
-        tail -f /dev/null
-        "
+#      command:  >
+#        sh -c "
+#        # Wait for Zookeeper to start
+#        while ! nc -z zookeeper 2181; do sleep 1; done;
+#
+#        # Start Kafka
+#        /etc/confluent/docker/run &
+#
+#        # Wait for Kafka to be ready
+#        while ! nc -z localhost 9092; do sleep 1; done;
+#
+#        # Create the topic
+#        kafka-topics --create --topic clickview --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1;
+#
+#        # Keep the container running
+#        tail -f /dev/null
+#        "
 
   postgres:
     image: postgres:latest
