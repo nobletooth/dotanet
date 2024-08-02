@@ -29,6 +29,8 @@ services:
     image: confluentinc/cp-kafka:7.2.1
     depends_on:
       - kafka
+    networks:
+      - dotanet-net
     entrypoint: [ '/bin/sh', '-c' ]
     command: |
       "
