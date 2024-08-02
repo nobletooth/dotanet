@@ -67,14 +67,14 @@ func handlebatch(ch chan common.EventServiceApiModel) {
 }
 
 func ComsumeMessageKafka() {
-	//config := kafka.ConfigMap{
-	//	"bootstrap.servers": "172.18.0.1:9092",
-	//	"group.id":          "my-group",
-	//	"auto.offset.reset": "earliest",
-	//}
+	config := kafka.ConfigMap{
+		"bootstrap.servers": "172.18.0.1:9092",
+		"group.id":          "my-group",
+		"auto.offset.reset": "earliest",
+	}
 
 	// Create a new Kafka consumer
-	consumer, err := kafka.NewConsumer(&kafka.ConfigMap{"bootstrap.servers": "172.18.0.1:9092"})
+	consumer, err := kafka.NewConsumer(&config)
 	if err != nil {
 		fmt.Println("Error creating consumer: %v", err)
 	}
