@@ -92,5 +92,17 @@ func TestGetAdHandler(t *testing.T) {
 			expectedCode:  http.StatusOK,
 			expectedTitle: "Experienced Ad 1",
 		},
+		{
+			name: "Higher ctr*Price ad selected",
+			allAds: []common.AdWithMetrics{
+				{AdInfo: common.AdInfo{Id: 7, Title: "Low CTR Ad 1", Price: 1}, ImpressionCount: 10, ClickCount: 1},
+				{AdInfo: common.AdInfo{Id: 8, Title: "High CTR Ad 1", Price: 1}, ImpressionCount: 5, ClickCount: 2},
+				{AdInfo: common.AdInfo{Id: 9, Title: "High CTR Ad 2", Price: 1.5}, ImpressionCount: 5, ClickCount: 2},
+			},
+			randFloat:     0.5,
+			randInt:       2,
+			expectedCode:  http.StatusOK,
+			expectedTitle: "High CTR Ad 2",
+		},
 	}
 }
