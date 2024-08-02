@@ -137,6 +137,8 @@ services:
       dockerfile: Dockerfile
       target: reporter
     image: reporter
+    ports:
+      - "8080:8080"
     command: [
       "./bin",
       "-dbuser", "${DB_USER}",
@@ -144,7 +146,7 @@ services:
       "-dbname", "${DB_NAME}",
       "-dbport", "${DB_PORT}",
       "-dbhost", "${DB_HOST}",
-#      "-kafkaendpoint", "${KAFKA_ENDPOINT}",
+      "-kafkaendpoint", "${KAFKA_ENDPOINT}",
     ]
     depends_on:
       postgres:
@@ -163,6 +165,8 @@ services:
     image: panel
     ports:
       - "8085:8085"
+    volumes:
+      - ./panel/image:/app/panel/image
     command: [
       "./bin",
       "-dbuser", "${DB_USER}",
