@@ -68,7 +68,7 @@ func handlebatch(ch chan common.EventServiceApiModel) {
 
 func ComsumeMessageKafka() {
 	config := kafka.ConfigMap{
-		"bootstrap.servers": *kafkaendpoint,
+		"bootstrap.servers": "172.18.0.1:9092",
 		"group.id":          "my-group",
 		"auto.offset.reset": "earliest",
 	}
