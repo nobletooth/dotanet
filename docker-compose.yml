@@ -137,6 +137,8 @@ services:
       dockerfile: Dockerfile
       target: reporter
     image: reporter
+    ports:
+      - "8080:8080"
     command: [
       "./bin",
       "-dbuser", "${DB_USER}",
