@@ -3,13 +3,13 @@ package main
 import (
 	"common"
 	"fmt"
-	"math/rand"
-	"net/http"
-	"strconv"
-	"time"
-
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"math/rand"
+	"net/http"
+	_ "slices"
+	"strconv"
+	"time"
 )
 
 var RandomGenerator randomGenerator = &defaultRandomGenerator{}
