@@ -2,12 +2,15 @@
 <html>
 <head>
     <title>Create Publisher</title>
+    <link rel="stylesheet" href="styles4.css">
 </head>
 <body>
 <h1>Create Publisher</h1>
 <form action="/publishers" method="POST">
     <label for="name">Name:</label>
     <input type="text" id="name" name="name" required>
+    <label for="url">Url:</label>
+    <input type="text" id="url" name="url" required>
     <button type="submit">Create</button>
 </form>
 <a href="/publishers">Back to Publishers</a>

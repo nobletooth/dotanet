@@ -4,11 +4,14 @@ import (
 	"common"
 	"errors"
 	"fmt"
+	"github.com/lib/pq"
 	"github.com/nobletooth/dotanet/panel/database"
+	"log"
 	"net/http"
 	"os"
 	"path/filepath"
 	"strconv"
+	"strings"
 	"time"
 
 	"gorm.io/gorm"
@@ -17,16 +20,26 @@ import (
 )
 
 type Ad struct {
-	Id           uint     `gorm:"column:id;primary_key"`
-	Title        string   `gorm:"column:title"`
-	Image        string   `gorm:"column:image"`
-	Price        float64  `gorm:"column:price"`
-	Status       bool     `gorm:"column:status"`
-	Clicks       int      `gorm:"column:clicks"`
-	Impressions  int      `gorm:"column:impressions"`
-	Url          string   `gorm:"column:url"`
-	AdvertiserId uint64   `gorm:"foreignKey:AdvertiserId"`
-	AdLimit      *float64 `gorm:"column:ad_limit"`
+	Id           uint           `gorm:"column:id;primary_key"`
+	Title        string         `gorm:"column:title"`
+	Image        string         `gorm:"column:image"`
+	Price        float64        `gorm:"column:price"`
+	Status       bool           `gorm:"column:status"`
+	Clicks       int            `gorm:"column:clicks"`
+	Impressions  int            `gorm:"column:impressions"`
+	Url          string         `gorm:"column:url"`
+	Keyword      pq.StringArray `gorm:"type:text[]"`
+	AdvertiserId uint64         `gorm:"foreignKey:AdvertiserId"`
+	AdLimit      *float64       `gorm:"column:ad_limit"`
+}
+
+func handlekeyword(keyword string, clearkeyword bool, ad *Ad) {
+	if clearkeyword == true {
+		ad.Keyword = nil
+	} else if keyword != "" {
+		ad.Keyword = strings.Split(keyword, ",")
+	}
+
 }
 
 func CreateAdHandler(c *gin.Context) {
@@ -34,6 +47,10 @@ func CreateAdHandler(c *gin.Context) {
 	ad.Title = c.PostForm("title")
 	ad.Price, _ = strconv.ParseFloat(c.PostForm("price"), 64)
 	ad.Url = c.PostForm("url")
+	keyword := c.PostForm("keyword")
+	if keyword != "" {
+		ad.Keyword = strings.Split(keyword, ",")
+	}
 	ad.AdvertiserId, _ = strconv.ParseUint(c.PostForm("advertiser_id"), 10, 32)
 	ad.Status = true
 
@@ -51,8 +68,13 @@ func CreateAdHandler(c *gin.Context) {
 	}
 
 	newFilename := fmt.Sprintf("%v-%s", ad.AdvertiserId, file.Filename)
+	imageDir := filepath.Join(os.Getenv("HOME"), "Desktop", "dotanet", "panel", "image")
+	imagePath := filepath.Join(imageDir, newFilename)
 
-	imagePath := filepath.Join("./image", newFilename)
+	if err := os.MkdirAll(imageDir, os.ModePerm); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create directory"})
+		return
+	}
 
 	if err := c.SaveUploadedFile(file, imagePath); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save image"})
@@ -60,7 +82,6 @@ func CreateAdHandler(c *gin.Context) {
 	}
 
 	ad.Image = newFilename
-
 	if err := database.DB.Create(&ad).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Creating ad failed"})
 		return
@@ -112,6 +133,9 @@ func UpdateAdHandler(c *gin.Context) {
 	ad.Price, _ = strconv.ParseFloat(c.PostForm("price"), 64)
 	ad.Url = c.PostForm("url")
 	ad.Status = c.PostForm("status") == "on"
+	clearkeyword := c.PostForm("clear-keyword-button") == "on"
+	keyword := c.PostForm("keyword")
+	handlekeyword(keyword, clearkeyword, &ad)
 
 	if adLimitStr := c.PostForm("ad_limit"); adLimitStr != "" {
 		adLimit, _ := strconv.ParseFloat(adLimitStr, 64)
@@ -154,10 +178,10 @@ func LoadAdPictureHandler(c *gin.Context) {
 		return
 	}
 
-	imageFilePath := "./image/" + ad.Image
+	imageFilePath := ad.Image
 
-	fmt.Println("\n\n\n\n\n\n image file path: " + imageFilePath)
-	file, err := os.Open(imageFilePath)
+	fmt.Println("\n image file path: " + imageFilePath)
+	file, err := os.Open(imageFilePath) //TODO
 	if err != nil {
 		fmt.Println("500")
 		c.HTML(http.StatusInternalServerError, "advertiser_ads", gin.H{"error": "Failed to open image file"})
@@ -170,6 +194,27 @@ func LoadAdPictureHandler(c *gin.Context) {
 	c.File(imageFilePath)
 }
 
+func GetPublisherIDsWithAllKeywords(keywords []string) ([]uint, error) {
+	var publisherIDs []uint
+
+	err := database.DB.Table("publishers").
+		Select("publishers.id").
+		Distinct().
+		Joins("JOIN publisher_tokens ON publishers.id = publisher_tokens.publisher_id").
+		Joins("JOIN publisher_token_associations ON publisher_tokens.id = publisher_token_associations.publisher_token_id").
+		Joins("JOIN tokens ON publisher_token_associations.token_value = tokens.value").
+		Where("tokens.value IN ?", keywords).
+		Group("publishers.id").
+		Having("COUNT(DISTINCT tokens.value) = ?", len(keywords)).
+		Pluck("publishers.id", &publisherIDs).
+		Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	return publisherIDs, nil
+}
 func ListAllAds(c *gin.Context) {
 	var ads []Ad
 	result := database.DB.Find(&ads)
@@ -231,13 +276,24 @@ func ListAllAds(c *gin.Context) {
 			Status:       ad.Status,
 			Title:        ad.Title,
 		}
-
+		var pubids []uint
+		if ad.Keyword == nil {
+			pubids = []uint{0}
+		} else {
+			var err error
+			pubids, err = GetPublisherIDsWithAllKeywords(ad.Keyword)
+			if err != nil {
+				log.Println(err)
+			}
+		}
 		adMetrics = append(adMetrics, common.AdWithMetrics{
 			AdInfo:          adinfo,
 			ClickCount:      clickCount,
 			ImpressionCount: impressionCount,
+			PreferdPubID:    pubids,
 		})
 	}
+	fmt.Printf("%v", adMetrics[0].PreferdPubID)
 
 	c.JSON(http.StatusOK, gin.H{"ads": adMetrics})
 }

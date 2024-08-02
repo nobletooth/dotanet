@@ -5,6 +5,7 @@ import (
 	"common"
 	"encoding/json"
 	"fmt"
+	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"net/http"
 	"strconv"
 	"time"
@@ -95,7 +96,7 @@ func checkDuplicateClick(impressionId uuid.UUID) bool {
 	return false
 }
 
-func panelApiCall(ch chan common.EventServiceApiModel) {
+func panelApiCall(ch chan common.EventServiceApiModel, producer *kafka.Producer) {
 	for {
 		select {
 		case event := <-ch:
@@ -105,18 +106,23 @@ func panelApiCall(ch chan common.EventServiceApiModel) {
 			if err != nil {
 				fmt.Printf("can not umarshal event %s\n", err)
 			}
-			fmt.Printf("event %s\n", jsonData)
-			http.Post("http://localhost:8085/eventservice", "application/json", bytes.NewReader(jsonData))
+			panelUrl := *Panelserviceurl + "/eventservice"
+			resp, err := http.Post(panelUrl, "application/json", bytes.NewBuffer(jsonData))
+			if err != nil {
+				fmt.Errorf("Error making POST request: %s\n", err)
+			}
+			if resp.StatusCode != http.StatusOK {
+				fmt.Printf("Received non-OK response status: %s\n", resp.Status)
+			}
 
+			err = producer.Produce(&kafka.Message{
+				TopicPartition: kafka.TopicPartition{Topic: &[]string{"clickview"}[0], Partition: kafka.PartitionAny},
+				Value:          jsonData,
+			}, nil)
 
-			// err = p.Produce(&kafka.Message{
-			// 	TopicPartition: kafka.TopicPartition{Topic: &[]string{"my_topic"}[0], Partition: kafka.PartitionAny},
-			// 	Value:          jsonData,
-			// }, nil)
-
-			// if err != nil {
-			// 	fmt.Printf("Error Posting to kafka %s\n", err)
-			// }
+			if err != nil {
+				fmt.Printf("Error Posting to kafka %s\n", err)
+			}
 		default:
 		}
 	}

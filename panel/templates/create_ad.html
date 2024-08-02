@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Create Ad</title>
+    <link rel="stylesheet" href="styles4.css">
 </head>
 <body>
 <h1>Create Ad for {{.Advertiser.Name}}</h1>
@@ -20,6 +21,10 @@
     <br>
     <label for="ad_limit">Ad Limit (optional):</label>
     <input type="number" id="ad_limit" name="ad_limit" step="0.01" placeholder="Enter Ad Limit">
+    <br>
+    <br>
+    <label for="keyword">keyword-you-need-most:</label>
+    <input type="text" id="keyword" name="keyword">
     <br>
     <input type="hidden" id="advertiser_id" name="advertiser_id" value="{{.Advertiser.ID}}">
     <br>

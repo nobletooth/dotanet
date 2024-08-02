@@ -1,9 +1,8 @@
-package database
+package main
 
 import (
 	"flag"
 	"fmt"
-
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -11,13 +10,13 @@ import (
 var DB *gorm.DB
 
 var (
-	user        = flag.String("dbuser", "user", "Database user")
-	password    = flag.String("dbpassword", "password", "Database password")
-	dbname      = flag.String("dbname", "dotanet", "Database name")
-	port        = flag.String("dbport", "5432", "Database port")
-	host        = flag.String("dbhost", "95.217.125.139", "Database host") //95.217.125.139
-	PanelUrl    = flag.String("panelurl", "0.0.0.0:8085", "Panel port")
-	AdServerURL = flag.String("adserverurl", "http://localhost:8081", "ad server Url")
+	user      = flag.String("dbuser", "user", "Database user")
+	password  = flag.String("dbpassword", "password", "Database password")
+	dbname    = flag.String("dbname", "dotanet", "Database name")
+	port      = flag.String("dbport", "5432", "Database port")
+	host      = flag.String("dbhost", "95.217.125.139", "Database host") //95.217.125.139
+	scrapport = flag.String("port", ":8089", "port for scrapper check")  //95.217.125.139
+
 )
 
 func NewDatabase() error {

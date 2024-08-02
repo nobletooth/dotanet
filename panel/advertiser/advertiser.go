@@ -35,7 +35,7 @@ type Service interface {
 }
 
 func HandleAdvertiserCredit(tx *gorm.DB, ad Ad) error {
-	creditDeduction := int(math.Ceil(ad.Price * 0.8))
+	creditDeduction := int(math.Ceil(ad.Price))
 	result := tx.Model(&Entity{}).Where("ID = ?", ad.AdvertiserId).Update("Credit", gorm.Expr("Credit - ?", creditDeduction))
 	if result.Error != nil {
 		return result.Error
