@@ -4,6 +4,7 @@ import (
 	"common"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
 	"testing"
 )
 
@@ -158,6 +159,24 @@ func TestGetAdHandler(t *testing.T) {
 			randInt:       1,
 			expectedCode:  http.StatusOK,
 			expectedTitle: "Non-Zero Price Ad",
+		},
+		{
+			name: "Large number of experienced ads",
+			allAds: func() []common.AdWithMetrics {
+				ads := make([]common.AdWithMetrics, 1000)
+				for i := 0; i < 1000; i++ {
+					ads[i] = common.AdWithMetrics{
+						AdInfo:          common.AdInfo{Id: uint(i), Title: "Ad " + strconv.Itoa(i), Price: 1},
+						ImpressionCount: 10,
+						ClickCount:      1,
+					}
+				}
+				return ads
+			}(),
+			randFloat:     0.5001,
+			randInt:       999,
+			expectedCode:  http.StatusOK,
+			expectedTitle: "Ad 500",
 		},
 	}
 }
