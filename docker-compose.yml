@@ -144,7 +144,7 @@ services:
       "-dbname", "${DB_NAME}",
       "-dbport", "${DB_PORT}",
       "-dbhost", "${DB_HOST}",
-#      "-kafkaendpoint", "${KAFKA_ENDPOINT}",
+      "-kafkaendpoint", "${KAFKA_ENDPOINT}",
     ]
     depends_on:
       postgres:
