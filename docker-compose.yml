@@ -11,6 +11,8 @@ services:
 
   kafka:
     image: confluentinc/cp-kafka:7.2.1
+    networks:
+      - dotanet-net
     depends_on:
       - zookeeper
     ports:
@@ -23,8 +25,6 @@ services:
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
       KAFKA_LISTENERS: PLAINTEXT://kafka:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-    networks:
-      - dotanet-net
 
   init-kafka:
     image: confluentinc/cp-kafka:7.2.1
