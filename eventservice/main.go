@@ -23,7 +23,7 @@ var (
 
 func main() {
 	flag.Parse()
-	producer, err := kafka.NewProducer(&kafka.ConfigMap{"bootstrap.servers": *kafkaendpoint})
+	producer, err := kafka.NewProducer(&kafka.ConfigMap{"bootstrap.servers": "172.18.0.1:9092"})
 	if err != nil {
 		fmt.Printf("\nerror opening kafka connection: %v\n", err)
 	}
