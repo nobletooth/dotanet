@@ -7,6 +7,8 @@ services:
         ZOOKEEPER_TICK_TIME: 2000
       ports:
         - "2181:2181"
+      networks:
+        - dotanet-net
 
     kafka:
       image: confluentinc/cp-kafka:7.2.1
@@ -21,8 +23,8 @@ services:
         KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       networks:
         - dotanet-net
-      command: [
-        " 
+      command:  >
+        sh -c " 
         # Wait for Zookeeper to start
         while ! nc -z zookeeper 2181; do sleep 1; done;
 
@@ -38,7 +40,6 @@ services:
         # Keep the container running
         tail -f /dev/null
         "
-      ]
 
   postgres:
     image: postgres:latest
