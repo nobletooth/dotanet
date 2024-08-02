@@ -3,10 +3,7 @@ package main
 import (
 	"common"
 	"github.com/gin-gonic/gin"
-	"github.com/stretchr/testify/assert"
 	"net/http"
-	"net/http/httptest"
-	"strconv"
 	"testing"
 )
 
@@ -130,5 +127,16 @@ func TestGetAdHandler(t *testing.T) {
 			expectedCode:  http.StatusOK,
 			expectedTitle: "New Ad 1",
 		},
-
+		{
+			name: "Ad selection probability one",
+			allAds: []common.AdWithMetrics{
+				{AdInfo: common.AdInfo{Id: 1, Title: "New Ad 1", Price: 1}, ImpressionCount: 1},
+				{AdInfo: common.AdInfo{Id: 2, Title: "Experienced Ad 1", Price: 1}, ImpressionCount: 5, ClickCount: 1},
+			},
+			randFloat:     1.0, // Probability one, should select experienced ad
+			randInt:       0,
+			expectedCode:  http.StatusOK,
+			expectedTitle: "Experienced Ad 1",
+		},
+	}
 }
