@@ -108,7 +108,7 @@ func ScrapData() {
 	}
 
 	for _, publisher := range publishertoken {
-		text, err := fetchPageText(publisher.Url)
+		text, err := fetchPageText(publisher.Url) // it can be problem
 		if err != nil {
 			log.Printf("failed to fetch page text for URL %s: %v", publisher.Url, err)
 			continue
