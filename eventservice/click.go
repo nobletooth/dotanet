@@ -106,8 +106,8 @@ func panelApiCall(ch chan common.EventServiceApiModel, producer *kafka.Producer)
 			if err != nil {
 				fmt.Printf("can not umarshal event %s\n", err)
 			}
-
-			resp, err := http.Post("http://localhost:8085/eventservice", "application/json", bytes.NewBuffer(jsonData))
+			panelUrl := *Panelserviceurl + "/eventservice"
+			resp, err := http.Post(panelUrl, "application/json", bytes.NewBuffer(jsonData))
 			if err != nil {
 				fmt.Errorf("Error making POST request: %s\n", err)
 			}

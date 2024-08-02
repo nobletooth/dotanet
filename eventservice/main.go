@@ -22,12 +22,12 @@ var (
 )
 
 func main() {
+	flag.Parse()
 	producer, err := kafka.NewProducer(&kafka.ConfigMap{"bootstrap.servers": *kafkaendpoint})
 	if err != nil {
 		fmt.Printf("\nerror opening kafka connection: %v\n", err)
 	}
 	go panelApiCall(ch, producer)
-	flag.Parse()
 	if db, err := OpenDbConnection(); err != nil {
 		fmt.Printf("\nerror opening db connection: %v\n", err)
 	} else {

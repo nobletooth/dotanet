@@ -6,17 +6,44 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
     ports:
       - "2181:2181"
+    networks:
+      - dotanet-net
+
   kafka:
     image: confluentinc/cp-kafka:7.2.1
     depends_on:
       - zookeeper
     ports:
       - "9092:9092"
+    expose:
+      - '9092'
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    networks:
+      - dotanet-net
+
+  init-kafka:
+    image: confluentinc/cp-kafka:7.2.1
+    depends_on:
+      - kafka
+    networks:
+      - dotanet-net
+    entrypoint: [ '/bin/sh', '-c' ]
+    command: |
+      "
+      # blocks until kafka is reachable
+      kafka-topics --bootstrap-server kafka:9092 --list
+      
+      echo -e 'Creating kafka topics'
+      kafka-topics --bootstrap-server kafka:9092 --create --if-not-exists --topic clickview --replication-factor 1 --partitions 1
+      
+      echo -e 'Successfully created the following topics:'
+      kafka-topics --bootstrap-server kafka:9092 --list
+      "
+
   postgres:
     image: postgres:latest
     container_name: postgres
@@ -41,6 +68,7 @@ services:
       context: .
       dockerfile: Dockerfile
       target: adserver
+    image: adserver
     ports:
       - "8081:8081"
     command: [
@@ -67,6 +95,7 @@ services:
       context: .
       dockerfile: Dockerfile
       target: eventservice
+    image: eventservice
     ports:
       - "8082:8082"
     command: [
@@ -76,7 +105,9 @@ services:
       "-dbname", "${DB_NAME}",
       "-dbport", "${DB_PORT}",
       "-dbhost", "${DB_HOST}",
-      "-eventserviceurl", "${EVENTSERVICE_URL_PROJECT}"
+      "-eventserviceurl", "${EVENTSERVICE_URL_PROJECT}",
+      "-panelserviceurl", "${PANEL_URL_INSIDE}",
+      "-kafkaendpoint", "${KAFKA_ENDPOINT}"
     ]
     depends_on:
       postgres:
@@ -91,6 +122,7 @@ services:
       context: .
       dockerfile: Dockerfile
       target: reporter
+    image: reporter
     command: [
       "./bin",
       "-dbuser", "${DB_USER}",
@@ -98,6 +130,7 @@ services:
       "-dbname", "${DB_NAME}",
       "-dbport", "${DB_PORT}",
       "-dbhost", "${DB_HOST}",
+      "-kafkaendpoint", "${KAFKA_ENDPOINT}",
     ]
     depends_on:
       postgres:
