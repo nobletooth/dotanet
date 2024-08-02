@@ -3,7 +3,9 @@ package main
 import (
 	"common"
 	"github.com/gin-gonic/gin"
+	"github.com/stretchr/testify/assert"
 	"net/http"
+	"net/http/httptest"
 	"strconv"
 	"testing"
 )
@@ -198,4 +200,23 @@ func TestGetAdHandler(t *testing.T) {
 		},
 	}
 
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			// Setup
+			router := setupRouter()
+			RandomGenerator = &mockRandomGenerator{float64Result: test.randFloat, intnResult: test.randInt}
+			allAds = test.allAds
+
+			// Test request
+			req, _ := http.NewRequest("GET", "/ad/1", nil) // Valid pubID
+			w := httptest.NewRecorder()
+			router.ServeHTTP(w, req)
+
+			// Assertions
+			assert.Equal(t, test.expectedCode, w.Code)
+			if test.expectedCode == http.StatusOK {
+				assert.Contains(t, w.Body.String(), test.expectedTitle)
+			}
+		})
+	}
 }
