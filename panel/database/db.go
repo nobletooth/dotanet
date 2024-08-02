@@ -16,7 +16,7 @@ var (
 	dbname      = flag.String("dbname", "dotanet", "Database name")
 	port        = flag.String("dbport", "5432", "Database port")
 	host        = flag.String("dbhost", "95.217.125.139", "Database host") //95.217.125.139
-	PanelUrl    = flag.String("panelurl", ":8085", "Panel port")
+	PanelUrl    = flag.String("panelurl", "0.0.0.0:8085", "Panel port")
 	AdServerURL = flag.String("adserverurl", "http://localhost:8081", "ad server Url")
 )
 
