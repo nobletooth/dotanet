@@ -111,7 +111,6 @@ func panelApiCall(ch chan common.EventServiceApiModel, producer *kafka.Producer)
 			if err != nil {
 				fmt.Errorf("Error making POST request: %s\n", err)
 			}
-			//defer resp.Body.Close()
 			if resp.StatusCode != http.StatusOK {
 				fmt.Printf("Received non-OK response status: %s\n", resp.Status)
 			}

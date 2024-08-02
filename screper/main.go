@@ -157,7 +157,7 @@ func triggerScrape(c *gin.Context) {
 }
 
 func ScrapRepetead() {
-	ticker := time.NewTicker(5 * time.Minute)
+	ticker := time.NewTicker(1 * time.Hour)
 	for {
 		select {
 		case <-ticker.C:
@@ -182,6 +182,7 @@ func main() {
 		log.Fatalf("cannot migrate schema: %v", err)
 	}
 
+	ScrapData()
 	go ScrapRepetead()
 
 	r := gin.Default()
