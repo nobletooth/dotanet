@@ -1,5 +1,5 @@
 # Builder
-FROM golang:latest AS builder
+FROM --platform=linux/amd64 golang:latest AS builder
 WORKDIR /app
 COPY . .
 RUN go work sync && go mod download
@@ -7,7 +7,7 @@ RUN go work sync && go mod download
 # Ad Server Stage
 FROM builder AS adserver
 WORKDIR /app
-RUN  go build -o ./adserver/bin ./adserver
+RUN go build -o ./adserver/bin ./adserver
 EXPOSE 8081
 WORKDIR /app/adserver
 CMD ["./adserver/bin"]
@@ -15,6 +15,7 @@ CMD ["./adserver/bin"]
 # Event Server Stage
 FROM builder AS eventservice
 WORKDIR /app
+RUN apt-get update && apt-get install -y librdkafka-dev
 RUN go build -o ./eventservice/bin ./eventservice
 EXPOSE 8082
 WORKDIR /app/eventservice
