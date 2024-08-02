@@ -80,6 +80,7 @@ services:
       "-dbport", "${DB_PORT}",
       "-dbhost", "${DB_HOST}",
       "-eventserviceurl", "${EVENTSERVICE_URL_PROJECT}",
+      "-panelserviceurl", "${PANEL_URL_INSIDE}",
       "-kafkaendpoint", "${KAFKA_ENDPOINT}"
     ]
     depends_on:
