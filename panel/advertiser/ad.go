@@ -30,8 +30,7 @@ type Ad struct {
 	Url          string         `gorm:"column:url"`
 	Keyword      pq.StringArray `gorm:"type:text[]"`
 	AdvertiserId uint64         `gorm:"foreignKey:AdvertiserId"`
-	AdLimit      *float64 `gorm:"column:ad_limit"`
-
+	AdLimit      *float64       `gorm:"column:ad_limit"`
 }
 
 func handlekeyword(keyword string, clearkeyword bool, ad *Ad) {
