@@ -73,6 +73,9 @@ func ComsumeMessageKafka() {
 		"group.id":          "my-group",
 		"auto.offset.reset": "earliest",
 	}
+	config.SetKey("bootstrap.servers", *kafkaendpoint)
+	configvalue, err := config.Get("bootstrap.servers", "not found")
+	fmt.Printf("\n\n\nkafka :%v \n\n\n", configvalue)
 
 	// Create a new Kafka consumer
 	consumer, err := kafka.NewConsumer(&config)
