@@ -165,8 +165,6 @@ services:
     image: panel
     ports:
       - "8085:8085"
-    volumes:
-      - ./panel/image:/app/panel/image
     command: [
       "./bin",
       "-dbuser", "${DB_USER}",
@@ -188,6 +186,8 @@ services:
       retries: 3
     networks:
       - dotanet-net
+    volumes:
+      - ./panel/image:/app/panel/image
 
   publisherwebsite:
     build:

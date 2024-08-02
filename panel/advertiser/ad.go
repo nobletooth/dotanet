@@ -68,20 +68,22 @@ func CreateAdHandler(c *gin.Context) {
 	}
 
 	newFilename := fmt.Sprintf("%v-%s", ad.AdvertiserId, file.Filename)
-	imageDir := filepath.Join(os.Getenv("HOME"), "Desktop", "dotanet", "panel", "image")
+	imageDir := "/app/panel/image"
 	imagePath := filepath.Join(imageDir, newFilename)
 
 	if err := os.MkdirAll(imageDir, os.ModePerm); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create directory"})
+		log.Printf("Failed to create directory: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Failed to create directory: %v", err)})
 		return
 	}
 
 	if err := c.SaveUploadedFile(file, imagePath); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save image"})
+		log.Printf("Failed to save image: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Failed to save image: %v", err)})
 		return
 	}
 
-	ad.Image = newFilename
+	ad.Image = imagePath
 	if err := database.DB.Create(&ad).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Creating ad failed"})
 		return
