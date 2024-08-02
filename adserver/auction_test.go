@@ -148,5 +148,16 @@ func TestGetAdHandler(t *testing.T) {
 			expectedCode:  http.StatusOK,
 			expectedTitle: "Zero Impressions Ad",
 		},
+		{
+			name: "Non-Zero Price Ad selected",
+			allAds: []common.AdWithMetrics{
+				{AdInfo: common.AdInfo{Id: 1, Title: "Zero bid Ad", Price: 0}, ImpressionCount: 10, ClickCount: 1},
+				{AdInfo: common.AdInfo{Id: 2, Title: "Non-Zero Price Ad", Price: 1}, ImpressionCount: 10, ClickCount: 2},
+			},
+			randFloat:     0.9,
+			randInt:       1,
+			expectedCode:  http.StatusOK,
+			expectedTitle: "Non-Zero Price Ad",
+		},
 	}
 }
