@@ -21,7 +21,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function getAdInfo() {
         try {
-            const response = await fetch(`${adserverurl}/getadinfo/${publisherId}`);
+            const response = await fetch(`${adserverurl}/getadinfo/${publisherId}`, {
+                credentials: 'include'
+            });
             const data = await response.json();
             adImage.src = data.ImageData;
             window.ImpressionsURL = `${data.ImpressionsURL}`;
@@ -36,7 +38,8 @@ document.addEventListener('DOMContentLoaded', function() {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
-            }
+            },
+            credentials: 'include'
         }).then(response => response.json())
         .catch(error => console.error('Error:', error));
     }
@@ -47,7 +50,8 @@ document.addEventListener('DOMContentLoaded', function() {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
-            }
+            },
+            credentials: 'include'
         })
         .then(response => response.json())
         .then(data => {

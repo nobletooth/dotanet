@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"common"
+
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/multitemplate"
 	"github.com/gin-gonic/gin"
@@ -17,11 +18,13 @@ import (
 )
 
 var config = cors.Config{
-	AllowAllOrigins:  true,
+	AllowOriginFunc: func(origin string) bool {
+		return true
+	},
 	AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"},
 	AllowHeaders:     []string{"*"},
 	ExposeHeaders:    []string{"*"},
-	AllowCredentials: false,
+	AllowCredentials: true,
 	MaxAge:           12 * time.Hour,
 }
 
@@ -33,6 +36,7 @@ func eventservice(event common.EventServiceApiModel) error {
 	if event.IsClicked {
 		clickedEvent := common.ClickedEvent{
 			ID:           event.ClickID,
+			UserID:       event.UserID,
 			ImpressionID: event.ImpressionID,
 			Pid:          event.PubId,
 			AdId:         event.AdId,
@@ -72,10 +76,11 @@ func eventservice(event common.EventServiceApiModel) error {
 
 	} else {
 		viewedEvent := common.ViewedEvent{
-			ID:   event.ImpressionID,
-			Pid:  event.PubId,
-			AdId: event.AdId,
-			Time: event.Time,
+			ID:     event.ImpressionID,
+			UserID: event.UserID,
+			Pid:    event.PubId,
+			AdId:   event.AdId,
+			Time:   event.Time,
 		}
 
 		result := tx.Create(&viewedEvent)

@@ -14,57 +14,75 @@ import (
 
 func clickHandler() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		responseBody := make(map[string]string)
 
 		// decryption
 		encryptedClickParams := c.Param("encryptedClickParams")
 		decryptedClickParams, _ := decrypt(encryptedClickParams)
-		fmt.Println(decryptedClickParams)
-		var clickParams common.ClickedEvent
+		var clickParams common.UrlClickParameters
 		json.Unmarshal(decryptedClickParams, &clickParams)
-		adID := clickParams.AdId
-		pubID := clickParams.Pid
-		clickId := clickParams.ID
-		impressionId := clickParams.ImpressionID
 
-		// deduplicate click
-		if !checkDuplicateClick(impressionId) {
-			clickTime := time.Now()
+		// refresh and click tracker
+		userID, err := c.Cookie("userId")
+		if err != nil {
+			responseBody["cookie error"] = "No cookie provided."
+		}
+		userClickMutex.Lock()
+		defer userClickMutex.Unlock()
 
-			// click expiration and daskhor
-			eventsMutex.Lock()
-			for i, event := range impressionEvents {
-				if event.ImpressionID == impressionId {
-					timeDiff := clickTime.Sub(event.Time).Seconds()
-					if timeDiff > 2 && timeDiff < 30 {
-						impressionEvents[i].IsClicked = true
-						impressionEvents[i].ClickID = clickId
-						var updateApi = common.EventServiceApiModel{
-							Time:         clickTime,
-							PubId:        pubID,
-							AdId:         adID,
-							IsClicked:    true,
-							ClickID:      clickId,
-							ImpressionID: impressionId,
-						}
-						ch <- updateApi
-					} else {
-						c.JSON(http.StatusBadRequest, gin.H{"error": "Click time is not in the valid range"})
-					}
-					break
-				}
-			}
-			eventsMutex.Unlock()
+		currentTime := time.Now()
+
+		// cutoff : 5 minutes ago
+		cutoff := currentTime.Add(*userClickCutoff)
+		userClickTracker[userID] = filterRecentClicks(userClickTracker[userID], cutoff)
+
+		if len(userClickTracker[userID]) >= *limitUserClick {
+			responseBody["cookie error"] = "Same cookie clicked more than 10 times whithin 5 minutes."
 		} else {
-			c.JSON(http.StatusConflict, gin.H{"error": "Duplicate click"})
-			return
+			userClickTracker[userID] = append(userClickTracker[userID], currentTime)
+
+			// deduplicate click
+			if !checkDuplicateClick(clickParams.ImpressionID) {
+				clickTime := time.Now()
+
+				// click expiration and daskhor
+				eventsMutex.Lock()
+				for i, event := range impressionEvents {
+					if event.ID == clickParams.ImpressionID {
+						// timeDiff := clickTime.Sub(event.Time).Seconds()
+						timeDiff := clickParams.ExpTime.Sub(clickTime).Seconds()
+						if timeDiff > 10 && timeDiff < 30 {
+							impressionEvents[i].IsClicked = true
+							impressionEvents[i].ClickID = clickParams.ID
+							var updateApi = common.EventServiceApiModel{
+								Time:         clickTime,
+								UserID:       uuid.MustParse(userID),
+								PubId:        clickParams.Pid,
+								AdId:         clickParams.AdId,
+								IsClicked:    true,
+								ClickID:      clickParams.ID,
+								ImpressionID: clickParams.ImpressionID,
+							}
+							ch <- updateApi
+						} else {
+							responseBody["click time error"] = "Click time is not in the valid range"
+						}
+						break
+					}
+				}
+				eventsMutex.Unlock()
+			} else {
+				responseBody["duplicate error"] = "Duplicate click"
+			}
 		}
 		var ad common.Ad
-		result := Db.First(&ad, adID)
+		result := Db.First(&ad, clickParams.AdId)
 		if result.RowsAffected == 0 {
 			c.JSON(http.StatusNotFound, gin.H{"error": "adNum not found"})
 			return
 		}
-		c.JSON(http.StatusOK, gin.H{"AdURL": ad.Url})
+		responseBody["AdURL"] = ad.Url
+		c.JSON(http.StatusOK, responseBody)
 	}
 }
 
@@ -72,11 +90,21 @@ func checkDuplicateClick(impressionId uuid.UUID) bool {
 	eventsMutex.Lock()
 	defer eventsMutex.Unlock()
 	for _, event := range impressionEvents {
-		if event.ImpressionID == impressionId && event.IsClicked {
+		if event.ID == impressionId && event.IsClicked {
 			return true
 		}
 	}
 	return false
+}
+
+func filterRecentClicks(clicks []time.Time, cutoff time.Time) []time.Time {
+	recent := clicks[:0]
+	for _, click := range clicks {
+		if click.After(cutoff) {
+			recent = append(recent, click)
+		}
+	}
+	return recent
 }
 
 func panelApiCall(ch chan common.EventServiceApiModel) {

@@ -19,22 +19,27 @@ import (
 var (
 	Db               *gorm.DB
 	ch               = make(chan common.EventServiceApiModel, 10)
-	impressionEvents []common.EventServiceApiModel
+	impressionEvents []common.UrlImpressionParameters
 	eventsMutex      sync.Mutex
+	userClickTracker = make(map[string][]time.Time)
+	userClickMutex   sync.Mutex
 )
 
 func main() {
 	go panelApiCall(ch)
+	go cleanOldEvents()
+	go cleanOldClickData()
 	flag.Parse()
 	if db, err := OpenDbConnection(); err != nil {
 		fmt.Errorf("error opening db connection: %v", err)
 	} else {
 		Db = db
 	}
-	go cleanOldEvents()
 	router := gin.Default()
 	router.Use(cors.New(cors.Config{
-		AllowAllOrigins:  true, // Change to your frontend domain
+		AllowOriginFunc: func(origin string) bool {
+			return true
+		},
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Accept"},
 		ExposeHeaders:    []string{"Content-Length"},
@@ -67,4 +72,23 @@ func decrypt(encodedData string) ([]byte, error) {
 	stream.XORKeyStream(ciphertext, ciphertext)
 
 	return ciphertext, nil
+}
+
+func cleanOldClickData() {
+	ticker := time.NewTicker(1 * time.Minute)
+	defer ticker.Stop()
+	for {
+		select {
+		case <-ticker.C:
+			userClickMutex.Lock()
+			for userID, clicks := range userClickTracker {
+				cutoff := time.Now().Add(*userClickCutoff)
+				userClickTracker[userID] = filterRecentClicks(clicks, cutoff)
+				if len(userClickTracker[userID]) == 0 {
+					delete(userClickTracker, userID)
+				}
+			}
+			userClickMutex.Unlock()
+		}
+	}
 }

@@ -25,6 +25,14 @@ func GetImage(adID uint) (string, error) {
 
 func GetAdHandler(c *gin.Context) {
 	pubID := c.Param("pubID")
+
+	// set cookie
+	_, err := c.Cookie("userId")
+	if err != nil {
+		userID := uuid.New().String()
+		c.SetCookie("userId", userID, 24*180*60*60, "/", "", false, true)
+	}
+
 	if len(allAds) == 0 {
 		sendAdResponse(c, nil, pubID)
 		return
@@ -92,17 +100,20 @@ func sendAdResponse(c *gin.Context, ad *common.AdWithMetrics, pubID string) {
 		return
 	}
 
-	var impression = common.ViewedEvent{
-		ID:   uuid.New(),
-		Pid:  int(publisherID),
-		AdId: int(ad.Id),
+	var impression = common.UrlImpressionParameters{
+		ID:         uuid.New(),
+		Pid:        int(publisherID),
+		AdId:       int(ad.Id),
+		IsClicked:  false,
+		LoadAdTime: time.Now(),
 	}
 
-	var click = common.ClickedEvent{
+	var click = common.UrlClickParameters{
 		ID:           uuid.New(),
 		Pid:          int(publisherID),
 		AdId:         int(ad.Id),
 		ImpressionID: impression.ID,
+		ExpTime:      time.Now().Add(clickExpirationTime),
 	}
 
 	// encryption
