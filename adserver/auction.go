@@ -8,10 +8,29 @@ import (
 	"math/rand"
 	"net/http"
 	"slices"
+
 	_ "slices"
 	"strconv"
 	"time"
 )
+
+
+var RandomGenerator randomGenerator = &defaultRandomGenerator{}
+
+type randomGenerator interface {
+	Float64() float64
+	Intn(n int) int
+}
+
+type defaultRandomGenerator struct{}
+
+func (r *defaultRandomGenerator) Float64() float64 {
+	return rand.Float64()
+}
+
+func (r *defaultRandomGenerator) Intn(n int) int {
+	return rand.Intn(n)
+}
 
 func GetImage(adID uint) (string, error) {
 	url := fmt.Sprintf("%v/ads/%d/picture", *PanelUrlPicUrl, adID)
@@ -19,6 +38,8 @@ func GetImage(adID uint) (string, error) {
 }
 
 func GetAdHandler(c *gin.Context) {
+	rand.Seed(time.Now().UnixNano())
+
 	pubID := c.Param("pubID")
 
 	if len(allAds) == 0 {
@@ -45,19 +66,19 @@ func GetAdHandler(c *gin.Context) {
 		if ad.ImpressionCount < *NewAdImpressionThreshold {
 			newAds = append(newAds, ad)
 		} else {
-			ctrPrice := float64(ad.ClickCount) / float64(ad.ImpressionCount) * ad.Price
-			ctrPrices = append(ctrPrices, ctrPrice)
-			experiencedAds = append(experiencedAds, ad)
+			if ad.Price > 0 {
+				ctrPrice := float64(ad.ClickCount) / float64(ad.ImpressionCount) * ad.Price
+				ctrPrices = append(ctrPrices, ctrPrice)
+				experiencedAds = append(experiencedAds, ad)
+			}
 		}
 	}
 
-	rand.Seed(time.Now().UnixNano())
-	selectNewAd := rand.Float64() < *NewAdSelectionProbability
+	selectNewAd := RandomGenerator.Float64() < *NewAdSelectionProbability
 
 	var finalAd *common.AdWithMetrics
 	if selectNewAd && len(newAds) > 0 {
-		rand.Seed(time.Now().UnixNano())
-		selectedAd := newAds[rand.Intn(len(newAds))]
+		selectedAd := newAds[RandomGenerator.Intn(len(newAds))]
 		finalAd = &selectedAd
 	} else if len(experiencedAds) > 0 {
 		totalScore := 0.0
@@ -65,8 +86,7 @@ func GetAdHandler(c *gin.Context) {
 			totalScore += ctrPrice
 		}
 
-		rand.Seed(time.Now().UnixNano())
-		randomPoint := rand.Float64() * totalScore
+		randomPoint := RandomGenerator.Float64() * totalScore
 		currentSum := 0.0
 		for i, ad := range experiencedAds {
 			currentSum += ctrPrices[i]
@@ -75,6 +95,10 @@ func GetAdHandler(c *gin.Context) {
 				break
 			}
 		}
+	} else if len(newAds) > 0 {
+		// Handle fall back
+		selectedAd := newAds[RandomGenerator.Intn(len(newAds))]
+		finalAd = &selectedAd
 	} else {
 		finalAd = nil
 	}
