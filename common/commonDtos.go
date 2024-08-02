@@ -17,8 +17,28 @@ type AdInfo struct {
 	AdvertiserId uint64  `json:"advertiserId"`
 }
 
+type UrlClickParameters struct {
+	ID           uuid.UUID `json:"id"`
+	Pid          int       `json:"pid"`
+	AdId         int       `json:"adid"`
+	Time         time.Time `json:"time"`
+	ImpressionID uuid.UUID `json:"impressionid"`
+	ExpTime      time.Time `json:"exptime"`
+}
+
+type UrlImpressionParameters struct {
+	ID         uuid.UUID `json:"id"`
+	Pid        int       `json:"pid"`
+	AdId       int       `json:"adid"`
+	Time       time.Time `json:"time"`
+	IsClicked  bool      `json:"isclicked"`
+	LoadAdTime time.Time `json:"loadadtime"`
+	ClickID    uuid.UUID `json:"clickid"`
+}
+
 type ClickedEvent struct {
 	ID           uuid.UUID `gorm:"type:uuid;primary_key;default:gen_random_uuid()"`
+	UserID       uuid.UUID `gorm:"type:uuid"`
 	Pid          int       `gorm:"index"`
 	AdId         int       `gorm:"index"`
 	Time         time.Time `gorm:"index"`
@@ -26,13 +46,15 @@ type ClickedEvent struct {
 }
 
 type ViewedEvent struct {
-	ID   uuid.UUID `gorm:"type:uuid;primary_key;default:gen_random_uuid()"`
-	Pid  int       `gorm:"index"`
-	AdId int       `gorm:"index"`
-	Time time.Time `gorm:"index"`
+	ID     uuid.UUID `gorm:"type:uuid;primary_key;default:gen_random_uuid()"`
+	UserID uuid.UUID `gorm:"type:uuid"`
+	Pid    int       `gorm:"index"`
+	AdId   int       `gorm:"index"`
+	Time   time.Time `gorm:"index"`
 }
 
 type EventServiceApiModel struct {
+	UserID       uuid.UUID
 	Time         time.Time
 	PubId        int
 	AdId         int

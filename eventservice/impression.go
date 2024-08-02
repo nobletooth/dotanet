@@ -2,9 +2,8 @@ package main
 
 import (
 	"common"
-	"fmt"
+	"encoding/json"
 	"net/http"
-	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -13,43 +12,43 @@ import (
 
 func impressionHandler() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		adv := c.Param("adv") // should decrypt adv and pub.
-		pub := c.Param("pub") // should decrypt adv and pub.
-		pubInt, err := strconv.Atoi(pub)
-		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		}
-		adInt, err := strconv.Atoi(adv)
-		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		}
+		responseBody := make(map[string]string)
 
-		impressionId := uuid.MustParse(c.Param("impressionid")) //primary key : uuid
-		fmt.Printf("\n\n\nImpressionId: %x\n\n\n", impressionId)
+		// decryption
+		encryptedImpressionParams := c.Param("encryptedImpressionParams")
+		decryptedImpressionParams, _ := decrypt(encryptedImpressionParams)
+		var impressionParams common.UrlImpressionParameters
+		json.Unmarshal(decryptedImpressionParams, &impressionParams)
+
+		// cookie
+		userID, err := c.Cookie("userId")
+		if err != nil {
+			responseBody["cookie error"] = "No cookie provided."
+		}
 
 		// deduplicate impression
-		if !checkDuplicateImpression(impressionId) {
+		if !checkDuplicateImpression(impressionParams.ID) {
 
 			impressionTime := time.Now()
 			var updateApi = common.EventServiceApiModel{
 				Time:         impressionTime,
-				PubId:        pubInt,
-				AdId:         adInt,
-				IsClicked:    false,
-				ImpressionID: impressionId,
+				UserID:       uuid.MustParse(userID),
+				PubId:        impressionParams.AdId,
+				AdId:         impressionParams.Pid,
+				IsClicked:    impressionParams.IsClicked,
+				ImpressionID: impressionParams.ID,
 			}
-
-			eventsMutex.Lock()
-			impressionEvents = append(impressionEvents, updateApi)
-			eventsMutex.Unlock()
 			ch <- updateApi
 		} else {
-			c.JSON(http.StatusConflict, gin.H{"error": "Duplicate impression"})
-			return
+			responseBody["duplicate error"] = "Duplicate impression"
 		}
-		c.String(http.StatusOK, "its ok!")
+
+		eventsMutex.Lock()
+		impressionEvents = append(impressionEvents, impressionParams)
+		eventsMutex.Unlock()
+
+		responseBody["status"] = "its ok!"
+		c.JSON(http.StatusOK, responseBody)
 	}
 }
 
@@ -57,7 +56,7 @@ func checkDuplicateImpression(impressionId uuid.UUID) bool {
 	eventsMutex.Lock()
 	defer eventsMutex.Unlock()
 	for _, event := range impressionEvents {
-		if event.ImpressionID == impressionId && event.IsClicked {
+		if event.ID == impressionId {
 			return true
 		}
 	}
@@ -74,7 +73,7 @@ func cleanOldEvents() {
 			eventsMutex.Lock()
 			i := 0
 			for _, event := range impressionEvents {
-				if currentTime.Sub(event.Time) <= 30*time.Second {
+				if currentTime.Sub(event.LoadAdTime) <= 120*time.Second {
 					impressionEvents[i] = event
 					i++
 				}

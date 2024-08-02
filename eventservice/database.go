@@ -3,6 +3,8 @@ package main
 import (
 	"flag"
 	"fmt"
+	"time"
+
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -16,6 +18,9 @@ var (
 	port            = flag.String("dbport", "5432", "Database port")
 	host            = flag.String("dbhost", "95.217.125.139", "Database host")
 	EventserviceUrl = flag.String("eventserviceurl", ":8082", "Panel port")
+	secretKey       = flag.String("secretkey", "X9K3jM5nR7pL2qT8vW1cY6bF4hG0xA9E", "secret key")
+	limitUserClick  = flag.Int("limituserclick", 10, "limit user click")
+	userClickCutoff = flag.Duration("userclickcutoff", -5*time.Minute, "user click cutoff")
 	Panelserviceurl = flag.String("panelserviceurl", ":8085", "Panel port")
 	kafkaendpoint   = flag.String("kafkaendpoint", "localhost:9092", "kafka end point")
 )
