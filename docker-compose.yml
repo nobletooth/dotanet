@@ -224,4 +224,4 @@ volumes:
 
 networks:
   dotanet-net:
-    driver: host
+    driver: bridge
