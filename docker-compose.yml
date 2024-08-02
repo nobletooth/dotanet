@@ -1,28 +1,44 @@
 services:
-  services:
-    zookeeper:
-      image: confluentinc/cp-zookeeper:7.2.1
-      environment:
-        ZOOKEEPER_CLIENT_PORT: 2181
-        ZOOKEEPER_TICK_TIME: 2000
-      ports:
-        - "2181:2181"
-      networks:
-        - dotanet-net
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.2.1
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+    networks:
+      - dotanet-net
 
-    kafka:
-      image: confluentinc/cp-kafka:7.2.1
-      depends_on:
-        - zookeeper
-      ports:
-        - "9092:9092"
-      environment:
-        KAFKA_BROKER_ID: 1
-        KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-        KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
-        KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      networks:
-        - dotanet-net
+  kafka:
+    image: confluentinc/cp-kafka:7.2.1
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    networks:
+      - dotanet-net
+    command:  >
+      sh -c " 
+      # Wait for Zookeeper to start
+      while ! nc -z zookeeper 2181; do sleep 1; done;
+
+      # Start Kafka
+      /etc/confluent/docker/run &
+
+      # Wait for Kafka to be ready
+      while ! nc -z localhost 9092; do sleep 1; done;
+
+      # Create the topic
+      kafka-topics --create --topic clickview --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1;
+
+      # Keep the container running
+      tail -f /dev/null
+      "
 
   postgres:
     image: postgres:latest
