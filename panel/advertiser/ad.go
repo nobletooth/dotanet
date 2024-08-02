@@ -66,28 +66,27 @@ func CreateAdHandler(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Image file is required"})
 		return
 	}
+	log.Printf("Received file: %s, Size: %d", file.Filename, file.Size)
 
 	newFilename := fmt.Sprintf("%v-%s", ad.AdvertiserId, file.Filename)
-	imageDir := "/app/panel/image"
+	imageDir := "/app/panel/image" // Make sure this matches your volume mount point
 	imagePath := filepath.Join(imageDir, newFilename)
+
+	log.Printf("Attempting to save file to: %s", imagePath)
 
 	if err := os.MkdirAll(imageDir, os.ModePerm); err != nil {
 		log.Printf("Failed to create directory: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Failed to create directory: %v", err)})
 		return
 	}
+	log.Println("Directory created or already exists")
 
 	if err := c.SaveUploadedFile(file, imagePath); err != nil {
 		log.Printf("Failed to save image: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Failed to save image: %v", err)})
 		return
 	}
-
-	ad.Image = imagePath
-	if err := database.DB.Create(&ad).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Creating ad failed"})
-		return
-	}
+	log.Println("File saved successfully")
 	c.Redirect(http.StatusSeeOther, "/advertisers/"+strconv.Itoa(int(ad.AdvertiserId))+"/ads")
 }
 
