@@ -67,6 +67,7 @@ func handlebatch(ch chan common.EventServiceApiModel) {
 }
 
 func ComsumeMessageKafka() {
+	fmt.Printf("\n\n\nkafka :%v \n\n\n", *kafkaendpoint)
 	config := kafka.ConfigMap{
 		"bootstrap.servers": *kafkaendpoint,
 		"group.id":          "my-group",
