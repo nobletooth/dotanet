@@ -21,12 +21,12 @@ var (
 
 // set flags
 var (
-	dbuser        = flag.String("dbuser", "user", "Database user")
-	dbpassword    = flag.String("dbpassword", "password", "Database password")
-	dbname        = flag.String("dbname", "dotanet", "Database name")
-	dbport        = flag.String("dbport", "5432", "Database port")
-	dbhost        = flag.String("dbhost", "95.217.125.139", "Database host")
-	kafkaendpoint = flag.String("kafkaendpoint", "localhost:9092", "kafka end point")
+	dbuser     = flag.String("dbuser", "user", "Database user")
+	dbpassword = flag.String("dbpassword", "password", "Database password")
+	dbname     = flag.String("dbname", "dotanet", "Database name")
+	dbport     = flag.String("dbport", "5432", "Database port")
+	dbhost     = flag.String("dbhost", "95.217.125.139", "Database host")
+	//kafkaendpoint = flag.String("kafkaendpoint", "localhost:9092", "kafka end point")
 )
 
 func main() {
@@ -67,14 +67,14 @@ func handlebatch(ch chan common.EventServiceApiModel) {
 }
 
 func ComsumeMessageKafka() {
-	//config := kafka.ConfigMap{
-	//	"bootstrap.servers": "172.18.0.1:9092",
-	//	"group.id":          "my-group",
-	//	"auto.offset.reset": "earliest",
-	//}
+	config := kafka.ConfigMap{
+		"bootstrap.servers": "172.18.0.1:9092",
+		"group.id":          "my-group",
+		"auto.offset.reset": "earliest",
+	}
 
 	// Create a new Kafka consumer
-	consumer, err := kafka.NewConsumer(&kafka.ConfigMap{"bootstrap.servers": "172.18.0.1:9092"})
+	consumer, err := kafka.NewConsumer(&config)
 	if err != nil {
 		fmt.Println("Error creating consumer: %v", err)
 	}
