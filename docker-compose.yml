@@ -21,8 +21,8 @@ services:
         KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       networks:
         - dotanet-net
-      command: >
-        sh -c " 
+      command: [
+        " 
         # Wait for Zookeeper to start
         while ! nc -z zookeeper 2181; do sleep 1; done;
 
@@ -38,6 +38,7 @@ services:
         # Keep the container running
         tail -f /dev/null
         "
+      ]
 
   postgres:
     image: postgres:latest
