@@ -165,6 +165,8 @@ services:
     image: panel
     ports:
       - "8085:8085"
+    volumes:
+      - ./panel/image:/app/panel/image
     command: [
       "./bin",
       "-dbuser", "${DB_USER}",
