@@ -21,12 +21,12 @@ var (
 
 // set flags
 var (
-	dbuser        = flag.String("dbuser", "user", "Database user")
-	dbpassword    = flag.String("dbpassword", "password", "Database password")
-	dbname        = flag.String("dbname", "dotanet", "Database name")
-	dbport        = flag.String("dbport", "5432", "Database port")
-	dbhost        = flag.String("dbhost", "95.217.125.139", "Database host")
-	kafkaendpoint = flag.String("kafkaendpoint", "localhost:9092", "kafka end point")
+	dbuser     = flag.String("dbuser", "user", "Database user")
+	dbpassword = flag.String("dbpassword", "password", "Database password")
+	dbname     = flag.String("dbname", "dotanet", "Database name")
+	dbport     = flag.String("dbport", "5432", "Database port")
+	dbhost     = flag.String("dbhost", "95.217.125.139", "Database host")
+	//kafkaendpoint = flag.String("kafkaendpoint", "localhost:9092", "kafka end point")
 )
 
 func main() {
