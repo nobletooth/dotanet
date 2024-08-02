@@ -42,5 +42,17 @@ func TestGetAdHandler(t *testing.T) {
 			expectedCode:  http.StatusNotFound,
 			expectedTitle: "",
 		},
+		{
+			name: "Only new ads available",
+			allAds: []common.AdWithMetrics{
+				{AdInfo: common.AdInfo{Id: 1, Title: "New Ad 1", Price: 1}, ImpressionCount: 1},
+				{AdInfo: common.AdInfo{Id: 2, Title: "New Ad 2", Price: 1.5}, ImpressionCount: 2},
+				{AdInfo: common.AdInfo{Id: 3, Title: "New Ad 3", Price: 2}, ImpressionCount: 1},
+			},
+			randFloat:     0.1,
+			randInt:       1,
+			expectedCode:  http.StatusOK,
+			expectedTitle: "New Ad 2",
+		},
 	}
 }
