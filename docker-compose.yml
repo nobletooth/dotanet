@@ -18,10 +18,8 @@ services:
    container_name: kafka1
    ports:
      - "9092:9092"
-     - "29092:29092"
-     - "9999:9999"
    environment:
-     KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka1:9092,EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:9092,DOCKER://kafka1:29092
+     KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka1:9092,EXTERNAL://${DOCKER_HOST_IP:-127.0.0.1}:9092,DOCKER://kafka1:9092
      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT,DOCKER:PLAINTEXT
      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
      KAFKA_ZOOKEEPER_CONNECT: "zoo1:2181"
@@ -50,13 +48,13 @@ services:
    command: |
      "
      # blocks until kafka is reachable
-     kafka-topics --bootstrap-server kafka1:29092 --list
+     kafka-topics --bootstrap-server kafka1:9092 --list
 
      echo -e 'Creating kafka topics'
-     kafka-topics --bootstrap-server kafka1:29092 --create --if-not-exists --topic clickview --replication-factor 1 --partitions 1
+     kafka-topics --bootstrap-server kafka1:9092 --create --if-not-exists --topic clickview --replication-factor 1 --partitions 1
 
      echo -e 'Successfully created the following topics:'
-     kafka-topics --bootstrap-server kafka1:29092 --list
+     kafka-topics --bootstrap-server kafka1:9092 --list
      "
 
   postgres:
