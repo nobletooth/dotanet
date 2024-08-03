@@ -28,10 +28,10 @@ var (
 )
 
 func main() {
+	flag.Parse()
 	go panelApiCall(ch, producer)
 	go cleanOldEvents()
 	go cleanOldClickData()
-	flag.Parse()
 	producer, err := kafka.NewProducer(&kafka.ConfigMap{"bootstrap.servers": "172.18.0.1:9092"})
 	if err != nil {
 		fmt.Printf("\nerror opening kafka connection: %v\n", err)

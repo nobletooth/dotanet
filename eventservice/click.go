@@ -9,7 +9,6 @@ import (
 	"time"
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
-
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
