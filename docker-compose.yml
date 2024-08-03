@@ -184,6 +184,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      kafka:
+        condition: service_healthy
     container_name: eventservice
 
   reporter:
