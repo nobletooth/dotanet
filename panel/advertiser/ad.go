@@ -86,7 +86,12 @@ func CreateAdHandler(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Failed to save image: %v", err)})
 		return
 	}
+
 	ad.Image = imagePath
+	if err := database.DB.Create(&ad).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Creating ad failed"})
+		return
+	}
 	log.Println("File saved successfully")
 	c.Redirect(http.StatusSeeOther, "/advertisers/"+strconv.Itoa(int(ad.AdvertiserId))+"/ads")
 }
