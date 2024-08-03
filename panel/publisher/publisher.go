@@ -2,7 +2,6 @@ package publisher
 
 import (
 	"bytes"
-	"common"
 	"fmt"
 	"math"
 	"net/http"
@@ -141,29 +140,17 @@ func GetPublisherReports(c *gin.Context) {
 		var clickCount, impressionCount int64
 		var income float32 = 0
 
-		database.DB.Model(&common.ClickedEvent{}).
+		database.DB.Model("clicked_events").
 			Where("pid = ? AND time BETWEEN ? AND ?", publisherID, date, date.Add(time.Minute)).
 			Count(&clickCount)
 
-		database.DB.Model(&common.ViewedEvent{}).
+		database.DB.Table("viewed_events").
 			Where("pid = ? AND time BETWEEN ? AND ?", publisherID, date, date.Add(time.Minute)).
 			Count(&impressionCount)
 
-		//	query := `
-		//SELECT COALESCE(SUM(ads.price * 0.2), 0)
-		//FROM "clicked_events"
-		//JOIN ads ON clicked_events.ad_id = ads.id
-		//WHERE clicked_events.pid = $1
-		//AND clicked_events.time BETWEEN $2 AND $3;`
-		//
-		//	err := database.DB.Raw(query, publisherID, startDate, endDate).Scan(&income).Error
-		//	if err != nil {
-		//		fmt.Printf("Error executing query: %v", err)
-		//		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to execute query"})
-		//		return
-		//	}
 		database.DB.Table("clicked_events").
-			Select("SUM(ads.price)").
+			Select("COALESCE(SUM(ads.price * 0.2), 0)").        // Added COALESCE for cases with no matching ads
+			Joins("JOIN ads ON clicked_events.ad_id = ads.id"). // Added JOIN clause
 			Where("pid = ? AND time BETWEEN ? AND ?", publisherID, date, date.Add(time.Minute)).
 			Scan(&income)
 
