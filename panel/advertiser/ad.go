@@ -66,18 +66,24 @@ func CreateAdHandler(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Image file is required"})
 		return
 	}
+	log.Printf("Received file: %s, Size: %d", file.Filename, file.Size)
 
 	newFilename := fmt.Sprintf("%v-%s", ad.AdvertiserId, file.Filename)
-	imageDir := filepath.Join(os.Getenv("HOME"), "Desktop", "dotanet", "panel", "image")
+	imageDir := "/app/panel/image" // Make sure this matches your volume mount point
 	imagePath := filepath.Join(imageDir, newFilename)
 
+	log.Printf("Attempting to save file to: %s", imagePath)
+
 	if err := os.MkdirAll(imageDir, os.ModePerm); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create directory"})
+		log.Printf("Failed to create directory: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Failed to create directory: %v", err)})
 		return
 	}
+	log.Println("Directory created or already exists")
 
 	if err := c.SaveUploadedFile(file, imagePath); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save image"})
+		log.Printf("Failed to save image: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Failed to save image: %v", err)})
 		return
 	}
 
@@ -86,6 +92,7 @@ func CreateAdHandler(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Creating ad failed"})
 		return
 	}
+	log.Println("File saved successfully")
 	c.Redirect(http.StatusSeeOther, "/advertisers/"+strconv.Itoa(int(ad.AdvertiserId))+"/ads")
 }
 
@@ -178,8 +185,8 @@ func LoadAdPictureHandler(c *gin.Context) {
 		return
 	}
 
-	imageFilePath := ad.Image
-
+	imageFilename := ad.Image
+	imageFilePath := filepath.Join("/app/panel/image", imageFilename)
 	fmt.Println("\n image file path: " + imageFilePath)
 	file, err := os.Open(imageFilePath) //TODO
 	if err != nil {
@@ -293,7 +300,7 @@ func ListAllAds(c *gin.Context) {
 			PreferdPubID:    pubids,
 		})
 	}
-	fmt.Printf("%v", adMetrics[0].PreferdPubID)
+	//fmt.Printf("%v", adMetrics[0].PreferdPubID)
 
 	c.JSON(http.StatusOK, gin.H{"ads": adMetrics})
 }
