@@ -62,7 +62,7 @@ services:
   #    "
 
   postgres:
-    env_file: .env
+    env_file: .envProduct
     image: postgres:latest
     container_name: postgres
     environment:
@@ -82,7 +82,7 @@ services:
       - dotanet-net
 
   adserver:
-    env_file: .env
+    env_file: .envProduct
     build:
       context: .
       dockerfile: Dockerfile
@@ -110,7 +110,7 @@ services:
       - dotanet-net
 
   eventservice:
-    env_file: .env
+    env_file: .envProduct
     build:
       context: .
       dockerfile: Dockerfile
@@ -137,7 +137,7 @@ services:
       - dotanet-net
 
   reporter:
-    env_file: .env
+    env_file: .envProduct
     build:
       context: .
       dockerfile: Dockerfile
@@ -166,7 +166,7 @@ services:
       - dotanet-net
 
   panel:
-    env_file: .env
+    env_file: .envProduct
     build:
       context: .
       dockerfile: Dockerfile
@@ -199,7 +199,7 @@ services:
       - ./panel/image:/app/panel/image
 
   publisherwebsite:
-    env_file: .env
+    env_file: .envProduct
     build:
       context: .
       dockerfile: Dockerfile
@@ -220,7 +220,7 @@ services:
       - dotanet-net
 
   screper:
-    env_file: .env
+    env_file: .envProduct
     build:
       context: .
       dockerfile: Dockerfile
