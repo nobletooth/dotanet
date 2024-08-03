@@ -29,7 +29,6 @@ var (
 
 func main() {
 	flag.Parse()
-	go panelApiCall(ch, producer)
 	go cleanOldEvents()
 	go cleanOldClickData()
 	producer, err := kafka.NewProducer(&kafka.ConfigMap{"bootstrap.servers": "172.18.0.1:9092"})
