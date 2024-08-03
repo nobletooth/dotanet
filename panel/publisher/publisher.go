@@ -140,7 +140,7 @@ func GetPublisherReports(c *gin.Context) {
 		var clickCount, impressionCount int64
 		var income float32 = 0
 
-		database.DB.Model("clicked_events").
+		database.DB.Table("clicked_events").
 			Where("pid = ? AND time BETWEEN ? AND ?", publisherID, date, date.Add(time.Minute)).
 			Count(&clickCount)
 
