@@ -87,7 +87,7 @@ func CreateAdHandler(c *gin.Context) {
 		return
 	}
 
-	ad.Image = imagePath
+	ad.Image = newFilename
 	if err := database.DB.Create(&ad).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Creating ad failed"})
 		return
