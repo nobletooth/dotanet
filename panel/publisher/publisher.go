@@ -148,6 +148,7 @@ func GetPublisherReports(c *gin.Context) {
 			Where("pid = ? AND time BETWEEN ? AND ?", publisherID, date, date.Add(time.Minute)).
 			Count(&impressionCount)
 
+
 		database.DB.Table("clicked_events").
 			Select("COALESCE(SUM(ads.price * 0.2), 0)").        // Added COALESCE for cases with no matching ads
 			Joins("JOIN ads ON clicked_events.ad_id = ads.id"). // Added JOIN clause

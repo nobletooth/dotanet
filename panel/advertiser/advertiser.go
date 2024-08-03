@@ -157,7 +157,6 @@ func EditAdForm(c *gin.Context) {
 
 	c.HTML(http.StatusOK, "edit_ad", gin.H{"Ad": ad})
 }
-
 func GetAdvertiserAdReports(c *gin.Context) {
 	adIDStr := c.Param("id")
 	adID, err := strconv.Atoi(adIDStr)
@@ -175,18 +174,17 @@ func GetAdvertiserAdReports(c *gin.Context) {
 		var clickCount, impressionCount int64
 		var spent float64
 
-		database.DB.Table("clicked_events").
-			Joins("INNER JOIN viewed_events ON clicked_events.impression_id = viewed_events.id").
-			Where("viewed_events.ad_id = ? AND viewed_events.time BETWEEN ? AND ?", adID, startDate, endDate).
+		database.DB.Table("aggr_clicks").
+			Where("ad_id = ? AND created_at BETWEEN ? AND ?", adID, date, date.Add(time.Minute)).
 			Count(&clickCount)
 
-		database.DB.Table("viewed_events").
-			Where("ad_id = ? AND time BETWEEN ? AND ?", adID, startDate, endDate).
+		database.DB.Table("aggr_impressions").
+			Where("ad_id = ? AND created_at BETWEEN ? AND ?", adID, date, date.Add(time.Minute)).
 			Count(&impressionCount)
 
-		database.DB.Table("clicked_events").
-			Select("SUM(ads.price)").
-			Where("ad_id = ? AND time BETWEEN ? AND ?", adID, date, date.Add(time.Minute)).
+		database.DB.Table("aggr_clicks").
+			Select("SUM(price)").
+			Where("ad_id = ? AND created_at BETWEEN ? AND ?", adID, date, date.Add(time.Minute)).
 			Scan(&spent)
 
 		ctr := 0.0
