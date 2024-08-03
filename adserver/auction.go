@@ -12,15 +12,12 @@ import (
 	"math/rand"
 	"net/http"
 	"slices"
-
-	_ "slices"
 	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
-
 
 var RandomGenerator randomGenerator = &defaultRandomGenerator{}
 
