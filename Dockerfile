@@ -15,7 +15,7 @@ CMD ["./adserver/bin"]
 # Event Server Stage
 FROM builder AS eventservice
 WORKDIR /app
-RUN apt-get update && apt-get install -y librdkafka-dev
+# RUN apt-get update && apt-get install -y librdkafka-dev
 RUN go build -o ./eventservice/bin ./eventservice
 EXPOSE 8082
 WORKDIR /app/eventservice
