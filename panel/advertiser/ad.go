@@ -180,11 +180,10 @@ func LoadAdPictureHandler(c *gin.Context) {
 		return
 	}
 
-	imageFilePath := ad.Image
-
-	imageDir := "/app/panel/image"
+	imageFilename := ad.Image
+	imageFilePath := filepath.Join("/app/panel/image", imageFilename)
 	fmt.Println("\n image file path: " + imageFilePath)
-	file, err := os.Open(imageDir) //TODO
+	file, err := os.Open(imageFilePath) //TODO
 	if err != nil {
 		fmt.Println("500")
 		c.HTML(http.StatusInternalServerError, "advertiser_ads", gin.H{"error": "Failed to open image file"})
