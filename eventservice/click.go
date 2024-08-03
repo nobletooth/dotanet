@@ -5,83 +5,84 @@ import (
 	"common"
 	"encoding/json"
 	"fmt"
-	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"net/http"
-	"strconv"
 	"time"
 
+	"github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
 
 func clickHandler() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var (
-			err    error
-			advNum uint64
-		)
+		responseBody := make(map[string]string)
 
-		adv := c.Param("adv") // should decrypt adv and pub.
-		if advNum, err = strconv.ParseUint(adv, 10, 32); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		}
-		advNum32 := uint(advNum)
+		// decryption
+		encryptedClickParams := c.Param("encryptedClickParams")
+		decryptedClickParams, _ := decrypt(encryptedClickParams)
+		var clickParams common.UrlClickParameters
+		json.Unmarshal(decryptedClickParams, &clickParams)
 
-		pub := c.Param("pub") // should decrypt adv and pub.
-		pubInt, err := strconv.Atoi(pub)
+		// refresh and click tracker
+		userID, err := c.Cookie("userId")
 		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
+			responseBody["cookie error"] = "No cookie provided."
 		}
-		adInt, err := strconv.Atoi(adv)
-		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		}
+		userClickMutex.Lock()
+		defer userClickMutex.Unlock()
 
-		clickId := uuid.MustParse(c.Param("clickid"))
-		impressionId := uuid.MustParse(c.Param("impressionid"))
+		currentTime := time.Now()
 
-		// deduplicate click
-		if !checkDuplicateClick(impressionId) {
-			clickTime := time.Now()
+		// cutoff : 5 minutes ago
+		cutoff := currentTime.Add(*userClickCutoff)
+		userClickTracker[userID] = filterRecentClicks(userClickTracker[userID], cutoff)
 
-			// click expiration and daskhor
-			eventsMutex.Lock()
-			for i, event := range impressionEvents {
-				if event.ImpressionID == impressionId {
-					timeDiff := clickTime.Sub(event.Time).Seconds()
-					if timeDiff > 2 && timeDiff < 30 {
-						impressionEvents[i].IsClicked = true
-						impressionEvents[i].ClickID = clickId
-						var updateApi = common.EventServiceApiModel{
-							Time:         clickTime,
-							PubId:        pubInt,
-							AdId:         adInt,
-							IsClicked:    true,
-							ClickID:      clickId,
-							ImpressionID: impressionId,
-						}
-						ch <- updateApi
-					} else {
-						c.JSON(http.StatusBadRequest, gin.H{"error": "Click time is not in the valid range"})
-					}
-					break
-				}
-			}
-			eventsMutex.Unlock()
+		if len(userClickTracker[userID]) >= *limitUserClick {
+			responseBody["cookie error"] = "Same cookie clicked more than 10 times whithin 5 minutes."
 		} else {
-			c.JSON(http.StatusConflict, gin.H{"error": "Duplicate click"})
-			return
+			userClickTracker[userID] = append(userClickTracker[userID], currentTime)
+
+			// deduplicate click
+			if !checkDuplicateClick(clickParams.ImpressionID) {
+				clickTime := time.Now()
+
+				// click expiration and daskhor
+				eventsMutex.Lock()
+				for i, event := range impressionEvents {
+					if event.ID == clickParams.ImpressionID {
+						timeDiff := clickParams.ExpTime.Sub(clickTime).Seconds()
+						if timeDiff > 10 && timeDiff < 30 {
+							impressionEvents[i].IsClicked = true
+							impressionEvents[i].ClickID = clickParams.ID
+							var updateApi = common.EventServiceApiModel{
+								Time:         clickTime,
+								UserID:       uuid.MustParse(userID),
+								PubId:        clickParams.Pid,
+								AdId:         clickParams.AdId,
+								IsClicked:    true,
+								ClickID:      clickParams.ID,
+								ImpressionID: clickParams.ImpressionID,
+							}
+							ch <- updateApi
+						} else {
+							responseBody["click time error"] = "Click time is not in the valid range"
+						}
+						break
+					}
+				}
+				eventsMutex.Unlock()
+			} else {
+				responseBody["duplicate error"] = "Duplicate click"
+			}
 		}
 		var ad common.Ad
-		result := Db.First(&ad, advNum32)
+		result := Db.First(&ad, clickParams.AdId)
 		if result.RowsAffected == 0 {
 			c.JSON(http.StatusNotFound, gin.H{"error": "adNum not found"})
 			return
 		}
-		c.JSON(http.StatusOK, gin.H{"AdURL": ad.Url})
+		responseBody["AdURL"] = ad.Url
+		c.JSON(http.StatusOK, responseBody)
 	}
 }
 
@@ -89,11 +90,21 @@ func checkDuplicateClick(impressionId uuid.UUID) bool {
 	eventsMutex.Lock()
 	defer eventsMutex.Unlock()
 	for _, event := range impressionEvents {
-		if event.ImpressionID == impressionId && event.IsClicked {
+		if event.ID == impressionId && event.IsClicked {
 			return true
 		}
 	}
 	return false
+}
+
+func filterRecentClicks(clicks []time.Time, cutoff time.Time) []time.Time {
+	recent := clicks[:0]
+	for _, click := range clicks {
+		if click.After(cutoff) {
+			recent = append(recent, click)
+		}
+	}
+	return recent
 }
 
 func panelApiCall(ch chan common.EventServiceApiModel, producer *kafka.Producer) {

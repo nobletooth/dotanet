@@ -59,6 +59,67 @@ services:
 #      kafka-topics --bootstrap-server kafka1:29092 --list
 #      "
 
+  zookeeper:
+    # image: zookeeper:3.8.4
+    image: confluentinc/cp-zookeeper:7.5.0
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    restart: unless-stopped
+    ports:
+      - 2181:2181
+    volumes:
+      - zookeeper-data:/var/lib/zookeeper/data
+      # - zookeeper-data:/data
+      - zookeeper-logs:/var/lib/zookeeper/log
+      # - zookeeper-logs:/log
+    healthcheck:
+      test: nc -z localhost 2181 || exit -1
+      interval: 10s
+      timeout: 5s
+      retries: 3
+  kafka:
+    # image: apache/kafka:3.7.1
+    image: &kafka-image confluentinc/cp-server:7.5.0
+    depends_on:
+      zookeeper:
+        condition: service_healthy
+    #    ports:
+    #      - 29092:29092
+    #      - 9092:9092
+    restart: unless-stopped
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_CLUSTER_ID: "my-kafka-cluster"
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      # KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      # KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      # KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_ADVERTISED_LISTENERS: DOCKER://kafka:9092,HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: DOCKER:PLAINTEXT,HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: HOST
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      # KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      # KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      # KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      # KAFKA_CREATE_TOPICS: "click_events:3:1,impression_events:3:1"
+
+    volumes:
+      - kafka-data:/var/lib/kafka/data
+      # - kafka-data:/opt/kafka/data
+      - kafka-docker-sock:/var/run/docker.sock
+    healthcheck:
+      test: kafka-topics --bootstrap-server kafka:9092 --list
+      interval: 30s
+      timeout: 10s
+      retries: 3
+  init-kafka:
+    image: *kafka-image
+    entrypoint: /bin/bash -c "kafka-topics --create --if-not-exists --topic clickview --replication-factor=1 --partitions=3 --bootstrap-server kafka:9092 && exit 0"
+    depends_on:
+      kafka:
+        condition: service_healthy
+
   postgres:
     image: postgres:latest
     container_name: postgres
@@ -75,8 +136,6 @@ services:
       interval: 1s
       timeout: 10s
       retries: 5
-    networks:
-      - dotanet-net
 
   adserver:
     build:
@@ -102,8 +161,6 @@ services:
       panel:
         condition: service_healthy
     container_name: adserver
-    networks:
-      - dotanet-net
 
   eventservice:
     build:
@@ -122,14 +179,14 @@ services:
       "-dbhost", "${DB_HOST}",
       "-eventserviceurl", "${EVENTSERVICE_URL_PROJECT}",
       "-panelserviceurl", "${PANEL_URL_INSIDE}",
-#      "-kafkaendpoint", "${KAFKA_ENDPOINT}"
+      "-kafkaendpoint", "${KAFKA_ENDPOINT}"
     ]
     depends_on:
       postgres:
         condition: service_healthy
+      kafka:
+        condition: service_healthy
     container_name: eventservice
-    networks:
-      - dotanet-net
 
   reporter:
     build:
@@ -154,8 +211,6 @@ services:
       eventservice:
         condition: service_started
     container_name: reporter
-    networks:
-      - dotanet-net
 
   panel:
     build:
@@ -184,8 +239,6 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-    networks:
-      - dotanet-net
     volumes:
       - ./panel/image:/app/panel/image
 
@@ -206,8 +259,6 @@ services:
       postgres:
         condition: service_healthy
     container_name: publisherwebsite
-    networks:
-      - dotanet-net
 
   screper:
     build:
@@ -234,12 +285,10 @@ services:
       publisherwebsite:
         condition: service_started
     container_name: screper
-    networks:
-      - dotanet-net
 
 volumes:
   pgdata:
-
-networks:
-  dotanet-net:
-    driver: bridge
+  zookeeper-data:
+  zookeeper-logs:
+  kafka-data:
+  kafka-docker-sock:
