@@ -31,7 +31,7 @@ func main() {
 	flag.Parse()
 	go cleanOldEvents()
 	go cleanOldClickData()
-	producer, err := kafka.NewProducer(&kafka.ConfigMap{"bootstrap.servers": "172.18.0.1:9092"})
+	producer, err := kafka.NewProducer(&kafka.ConfigMap{"bootstrap.servers": *kafkaendpoint})
 	if err != nil {
 		fmt.Printf("\nerror opening kafka connection: %v\n", err)
 	}
