@@ -296,7 +296,7 @@ func ListAllAds(c *gin.Context) {
 			PreferdPubID:    pubids,
 		})
 	}
-	fmt.Printf("%v", adMetrics[0].PreferdPubID)
+	//fmt.Printf("%v", adMetrics[0].PreferdPubID)
 
 	c.JSON(http.StatusOK, gin.H{"ads": adMetrics})
 }
