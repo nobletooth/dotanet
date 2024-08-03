@@ -149,19 +149,23 @@ func GetPublisherReports(c *gin.Context) {
 			Where("pid = ? AND time BETWEEN ? AND ?", publisherID, date, date.Add(time.Minute)).
 			Count(&impressionCount)
 
-		query := `
-    SELECT COALESCE(SUM(ads.price * 0.2), 0)
-    FROM "clicked_events"
-    JOIN ads ON clicked_events.ad_id = ads.id
-    WHERE clicked_events.pid = $1
-    AND clicked_events.time BETWEEN $2 AND $3;`
-
-		err := database.DB.Raw(query, publisherID, startDate, endDate).Scan(&income).Error
-		if err != nil {
-			fmt.Printf("Error executing query: %v", err)
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to execute query"})
-			return
-		}
+		//	query := `
+		//SELECT COALESCE(SUM(ads.price * 0.2), 0)
+		//FROM "clicked_events"
+		//JOIN ads ON clicked_events.ad_id = ads.id
+		//WHERE clicked_events.pid = $1
+		//AND clicked_events.time BETWEEN $2 AND $3;`
+		//
+		//	err := database.DB.Raw(query, publisherID, startDate, endDate).Scan(&income).Error
+		//	if err != nil {
+		//		fmt.Printf("Error executing query: %v", err)
+		//		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to execute query"})
+		//		return
+		//	}
+		database.DB.Table("clicked_events").
+			Select("SUM(ads.price)").
+			Where("pid = ? AND time BETWEEN ? AND ?", publisherID, date, date.Add(time.Minute)).
+			Scan(&income)
 
 		reports = append(reports, Report{
 			Date:        date,
