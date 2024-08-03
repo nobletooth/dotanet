@@ -125,7 +125,7 @@ services:
       "-dbhost", "${DB_HOST}",
       "-eventserviceurl", "${EVENTSERVICE_URL_PROJECT}",
       "-panelserviceurl", "${PANEL_URL_INSIDE}",
-      "-kafkaendpoint", "kafka1:29092",
+      "-kafkaendpoint", "kafka1:9092",
     ]
     depends_on:
       postgres:
